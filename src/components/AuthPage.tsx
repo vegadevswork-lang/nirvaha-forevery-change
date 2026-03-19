@@ -5,6 +5,7 @@ import SignInForm from "./auth/SignInForm";
 import CreateAccountForm from "./auth/CreateAccountForm";
 import GuestAccess from "./auth/GuestAccess";
 import TrustBar from "./auth/TrustBar";
+import Particles from "./Particles";
 
 const AuthPage = () => {
   const [activeTab, setActiveTab] = useState<"signin" | "create">("signin");
