@@ -53,8 +53,8 @@ const SparkleEffect = ({ origin, trigger }: SparkleEffectProps) => {
             opacity: 1,
           }}
           animate={{
-            left: s.x + Math.cos(s.angle) * s.distance,
-            top: s.y + Math.sin(s.angle) * s.distance,
+            left: s.x + Math.cos(s.angle) * s.distance - s.size / 2,
+            top: s.y + Math.sin(s.angle) * s.distance - s.size / 2,
             scale: [0.3, 1.2, 0],
             opacity: [1, 0.8, 0],
           }}

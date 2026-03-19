@@ -1,20 +1,27 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import nirvahaLogo from "@/assets/nirvaha-logo.png";
 import Particles from "@/components/Particles";
 import OnboardingQuestion from "@/components/onboarding/OnboardingQuestion";
-import OnboardingComplete from "@/components/onboarding/OnboardingComplete";
+import OnboardingStepper from "@/components/onboarding/OnboardingStepper";
 import { questions } from "@/components/onboarding/onboardingData";
 
 const Onboarding = () => {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
+  const navigate = useNavigate();
   const isComplete = step >= questions.length;
   const current = questions[step];
 
   const handleSelect = (optionIndex: number) => {
     setAnswers((prev) => [...prev, optionIndex]);
-    setStep((s) => s + 1);
+    if (step + 1 >= questions.length) {
+      // Navigate to home after last question
+      setTimeout(() => navigate("/home"), 800);
+    } else {
+      setStep((s) => s + 1);
+    }
   };
 
   return (
@@ -50,7 +57,7 @@ const Onboarding = () => {
           <motion.img
             src={nirvahaLogo}
             alt="Nirvaha"
-            className="h-12 mb-6"
+            className="h-12 mb-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -71,40 +78,14 @@ const Onboarding = () => {
           </motion.div>
         )}
 
-        {/* Progress dots */}
+        {/* Stepper */}
         {!isComplete && (
-          <div className="flex gap-2 mb-8">
-            {questions.map((_, i) => (
-              <div
-                key={i}
-                className="h-1.5 rounded-full transition-all duration-500"
-                style={{
-                  width: i === step ? 28 : 10,
-                  background:
-                    i < step
-                      ? "hsl(var(--healing-green))"
-                      : i === step
-                        ? "hsl(var(--gold))"
-                        : "hsl(var(--border))",
-                }}
-              />
-            ))}
-          </div>
+          <OnboardingStepper currentStep={step} totalSteps={questions.length} />
         )}
 
-        {/* Question or Complete */}
+        {/* Question */}
         <AnimatePresence mode="wait">
-          {isComplete ? (
-            <motion.div
-              key="complete"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.6 }}
-            >
-              <OnboardingComplete />
-            </motion.div>
-          ) : (
+          {!isComplete && (
             <motion.div
               key={step}
               initial={{ opacity: 0, x: 40 }}
