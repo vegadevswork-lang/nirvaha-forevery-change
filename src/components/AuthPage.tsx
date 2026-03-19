@@ -5,12 +5,28 @@ import SignInForm from "./auth/SignInForm";
 import CreateAccountForm from "./auth/CreateAccountForm";
 import GuestAccess from "./auth/GuestAccess";
 import TrustBar from "./auth/TrustBar";
+import Particles from "./Particles";
 
 const AuthPage = () => {
   const [activeTab, setActiveTab] = useState<"signin" | "create">("signin");
 
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 py-8 overflow-hidden bg-background">
+      {/* Particles background */}
+      <div className="absolute inset-0 z-0">
+        <Particles
+          particleColors={["#ffffff"]}
+          particleCount={200}
+          particleSpread={10}
+          speed={0.1}
+          particleBaseSize={100}
+          moveParticlesOnHover
+          alphaParticles={false}
+          disableRotation={false}
+          pixelRatio={1}
+        />
+      </div>
+
       {/* Ambient orbs */}
       <div
         className="ambient-orb animate-pulse-soft"
