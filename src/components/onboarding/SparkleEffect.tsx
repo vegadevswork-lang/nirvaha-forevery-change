@@ -47,8 +47,8 @@ const SparkleEffect = ({ origin, trigger }: SparkleEffectProps) => {
           key={s.id}
           initial={{
             position: "fixed",
-            left: s.x,
-            top: s.y,
+            left: s.x - s.size / 2,
+            top: s.y - s.size / 2,
             scale: 0.3,
             opacity: 1,
           }}

@@ -40,7 +40,7 @@ const OnboardingQuestion = ({ question, options, microcopy, onSelect }: Props) =
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="font-display text-2xl sm:text-3xl text-center text-foreground mb-8 leading-relaxed px-2"
+        className="font-display text-2xl sm:text-3xl text-center text-foreground mb-8 leading-relaxed px-2 font-semibold"
       >
         {question}
       </motion.h2>
