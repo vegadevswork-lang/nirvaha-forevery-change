@@ -26,7 +26,7 @@ const IntroVideo = () => {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="fixed inset-0 z-50 bg-[#F8F5EF] flex items-center justify-center"
+          className="fixed inset-0 z-50 bg-black flex items-center justify-center overflow-hidden"
         >
           <video
             ref={videoRef}
@@ -35,7 +35,7 @@ const IntroVideo = () => {
             muted
             playsInline
             onEnded={handleEnd}
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-contain bg-black"
           />
           <button
             onClick={handleSkip}
