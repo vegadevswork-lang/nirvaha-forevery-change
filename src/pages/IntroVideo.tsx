@@ -35,8 +35,7 @@ const IntroVideo = () => {
             muted
             playsInline
             onEnded={handleEnd}
-            className="w-full h-full object-contain"
-            style={{ maxWidth: "100vw", maxHeight: "100vh" }}
+            className="w-full h-full object-cover"
           />
           <button
             onClick={handleSkip}
