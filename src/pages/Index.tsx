@@ -1,7 +1,7 @@
-import AuthPage from "@/components/AuthPage";
+import IntroVideo from "./IntroVideo";
 
 const Index = () => {
-  return <AuthPage />;
+  return <IntroVideo />;
 };
 
 export default Index;
