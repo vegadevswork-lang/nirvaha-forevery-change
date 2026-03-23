@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Bell, User } from "lucide-react";
+import { Bell } from "lucide-react";
 import SparkleEffect from "@/components/onboarding/SparkleEffect";
 import EmotionChips from "@/components/home/EmotionChips";
 import AiHeroCard from "@/components/home/AiHeroCard";
@@ -15,13 +15,6 @@ const Home = () => {
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
   const [sparkleOrigin, setSparkleOrigin] = useState<{ x: number; y: number } | null>(null);
   const [sparkleTrigger, setSparkleTrigger] = useState(0);
-
-  const greeting = () => {
-    const h = new Date().getHours();
-    if (h < 12) return "Good morning";
-    if (h < 17) return "Good afternoon";
-    return "Good evening";
-  };
 
   const handleEmotionTap = (label: string, e: React.MouseEvent) => {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
@@ -51,7 +44,7 @@ const Home = () => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center justify-between mb-6"
+          className="flex items-center justify-between mb-5"
         >
           <div>
             <h1 className="font-display text-xl text-foreground font-semibold leading-tight">
@@ -73,16 +66,6 @@ const Home = () => {
             <Bell size={18} className="text-muted-foreground" />
           </motion.button>
         </motion.div>
-
-        {/* Mood question */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="font-body text-sm text-muted-foreground mb-3"
-        >
-          How are you feeling right now?
-        </motion.p>
 
         <EmotionChips selected={selectedEmotion} onSelect={handleEmotionTap} />
 
