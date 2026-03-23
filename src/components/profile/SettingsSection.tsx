@@ -72,6 +72,7 @@ const SettingsSection = () => {
         </motion.button>
         <motion.button
           whileTap={{ scale: 0.97 }}
+          onClick={() => navigate("/journal")}
           className="flex-1 glass-card p-3.5 flex items-center justify-center gap-2"
           style={{
             background: "linear-gradient(135deg, hsla(var(--gold) / 0.08), hsla(var(--sage) / 0.06))",

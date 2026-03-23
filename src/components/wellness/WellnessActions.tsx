@@ -16,7 +16,7 @@ const WellnessActions = ({ avgMood }: WellnessActionsProps) => {
           { icon: Wind, label: "Calming practice", sub: "2-minute breathing exercise", route: "/chat" },
         ]
       : [
-          { icon: BookOpen, label: "Write a reflection", sub: "Capture this week's insights", route: "/home" },
+          { icon: BookOpen, label: "Write a reflection", sub: "Capture this week's insights", route: "/journal" },
           { icon: Sparkles, label: "Wisdom Selfie", sub: "Express your inner journey", route: "/legends-selfie" },
         ];
 
