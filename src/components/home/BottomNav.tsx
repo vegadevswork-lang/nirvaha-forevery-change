@@ -17,7 +17,7 @@ interface BottomNavProps {
 const routeMap: Record<string, string> = {
   Home: "/home",
   Chat: "/chat",
-  Wellness: "/home",
+  Wellness: "/wellness",
   Profile: "/home",
 };
 
