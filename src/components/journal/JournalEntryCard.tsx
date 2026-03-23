@@ -60,11 +60,11 @@ const JournalEntryCard = ({ entry, index, onDelete, onEdit, onToggleSave }: Jour
     >
       {/* Background action buttons (revealed on swipe) */}
       <motion.div
-        style={{ opacity: showActions ? 1 : actionsOpacity }}
-        className="absolute inset-0 flex items-center justify-end gap-2 pr-3 rounded-2xl"
         style={{
+          opacity: showActions ? 1 : actionsOpacity,
           background: "linear-gradient(90deg, transparent 30%, hsla(var(--muted) / 0.9) 60%)",
         }}
+        className="absolute inset-0 flex items-center justify-end gap-2 pr-3 rounded-2xl"
       >
         <motion.button
           whileTap={{ scale: 0.85 }}
