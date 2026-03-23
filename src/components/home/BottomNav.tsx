@@ -14,14 +14,12 @@ interface BottomNavProps {
 }
 
 const BottomNav = ({ active, onSelect }: BottomNavProps) => (
-  <div className="fixed bottom-0 left-0 right-0 z-50">
+  <div className="fixed bottom-4 left-4 right-4 z-50">
     <div
-      className="flex items-center justify-around py-3 px-4 border-t"
+      className="flex items-center justify-around py-2.5 px-2 rounded-2xl"
       style={{
-        background: "hsla(var(--glass-bg))",
-        borderColor: "hsla(var(--glass-border))",
-        backdropFilter: "blur(24px) saturate(1.2)",
-        WebkitBackdropFilter: "blur(24px) saturate(1.2)",
+        background: "hsl(var(--foreground))",
+        boxShadow: "0 8px 32px hsla(var(--foreground) / 0.3), 0 2px 8px hsla(var(--foreground) / 0.15)",
       }}
     >
       {navItems.map((item) => {
@@ -30,21 +28,31 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => (
           <button
             key={item.label}
             onClick={() => onSelect(item.label)}
-            className="flex flex-col items-center gap-0.5 transition-all duration-300"
+            className="relative flex flex-col items-center gap-0.5 transition-all duration-300 px-3 py-1"
           >
+            {isActive && (
+              <motion.div
+                layoutId="nav-active-bg"
+                className="absolute inset-0 rounded-xl"
+                style={{ background: "hsl(var(--primary))" }}
+                transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
+              />
+            )}
             <motion.div
-              animate={isActive ? { scale: 1.1 } : { scale: 1 }}
-              className={`p-1.5 rounded-xl transition-all duration-300 ${
-                isActive ? "text-primary" : "text-muted-foreground"
-              }`}
-              style={isActive ? { boxShadow: "0 0 16px hsla(var(--healing-green) / 0.2)" } : undefined}
+              animate={isActive ? { scale: 1.05 } : { scale: 1 }}
+              className="relative z-10 p-1"
             >
-              <item.icon size={20} />
+              <item.icon
+                size={19}
+                className={isActive ? "text-primary-foreground" : "text-muted-foreground"}
+                style={!isActive ? { color: "hsla(var(--cream) / 0.5)" } : undefined}
+              />
             </motion.div>
             <span
-              className={`text-[10px] font-body ${
-                isActive ? "text-primary font-medium" : "text-muted-foreground"
-              }`}
+              className="text-[9px] font-body font-medium relative z-10"
+              style={{
+                color: isActive ? "hsl(var(--primary-foreground))" : "hsla(var(--cream) / 0.5)",
+              }}
             >
               {item.label}
             </span>

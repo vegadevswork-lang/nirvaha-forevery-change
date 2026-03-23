@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Bell, User } from "lucide-react";
 import SparkleEffect from "@/components/onboarding/SparkleEffect";
 import EmotionChips from "@/components/home/EmotionChips";
 import AiHeroCard from "@/components/home/AiHeroCard";
 import SmartActions from "@/components/home/SmartActions";
+import WellnessStats from "@/components/home/WellnessStats";
 import WisdomSelfieCard from "@/components/home/WisdomSelfieCard";
 import JournalCard from "@/components/home/JournalCard";
 import BottomNav from "@/components/home/BottomNav";
@@ -41,32 +43,68 @@ const Home = () => {
         className="ambient-orb animate-pulse-soft"
         style={{ width: 220, height: 220, bottom: "25%", left: "-8%", background: "hsl(var(--gold))", animationDelay: "2s" }}
       />
-      <div
-        className="ambient-orb animate-pulse-soft"
-        style={{ width: 160, height: 160, top: "45%", right: "10%", background: "hsl(var(--sage))", animationDelay: "3.5s", opacity: 0.2 }}
-      />
 
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto pb-24 px-5 pt-14 relative z-10">
-        {/* Greeting */}
+      <div className="flex-1 overflow-y-auto pb-28 px-5 pt-12 relative z-10">
+        {/* Profile Header */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-7"
+          transition={{ duration: 0.5 }}
+          className="flex items-center justify-between mb-6"
         >
-          <h1 className="font-display text-[26px] sm:text-3xl text-foreground font-semibold leading-tight">
-            {greeting()}
-          </h1>
-          <p className="font-body text-sm text-muted-foreground mt-1.5">
-            How are you feeling right now?
-          </p>
+          <div className="flex items-center gap-3">
+            <div
+              className="w-11 h-11 rounded-2xl flex items-center justify-center"
+              style={{
+                background: "linear-gradient(135deg, hsl(var(--healing-green)), hsl(var(--healing-green-light)))",
+                boxShadow: "0 4px 12px hsla(var(--healing-green) / 0.2)",
+              }}
+            >
+              <User size={20} className="text-primary-foreground" />
+            </div>
+            <div>
+              <h1 className="font-display text-xl text-foreground font-semibold leading-tight">
+                {greeting()}
+              </h1>
+              <p className="font-body text-xs text-muted-foreground mt-0.5">
+                Your wellness journey
+              </p>
+            </div>
+          </div>
+          <motion.button
+            whileTap={{ scale: 0.92 }}
+            className="w-10 h-10 rounded-2xl border flex items-center justify-center"
+            style={{
+              background: "hsla(var(--glass-bg))",
+              borderColor: "hsla(var(--glass-border))",
+              backdropFilter: "blur(12px)",
+            }}
+          >
+            <Bell size={18} className="text-muted-foreground" />
+          </motion.button>
         </motion.div>
 
+        {/* Mood question */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="font-body text-sm text-muted-foreground mb-3"
+        >
+          How are you feeling right now?
+        </motion.p>
+
         <EmotionChips selected={selectedEmotion} onSelect={handleEmotionTap} />
+
         <AiHeroCard />
+
+        <WellnessStats />
+
         <SmartActions />
+
         <WisdomSelfieCard />
+
         <JournalCard />
       </div>
 
