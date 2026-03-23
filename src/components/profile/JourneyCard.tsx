@@ -2,11 +2,11 @@ import { motion } from "framer-motion";
 import { Flame } from "lucide-react";
 
 const JourneyCard = () => {
-  const moods: Array<{ mood: string; date: string }> = JSON.parse(
+  const moods: Array<{ mood: string; timestamp: string }> = JSON.parse(
     localStorage.getItem("nirvaha_moods") || "[]"
   );
 
-  const uniqueDays = new Set(moods.map((m) => m.date.split("T")[0])).size;
+  const uniqueDays = new Set(moods.map((m) => (m.timestamp || "").split("T")[0]).filter(Boolean)).size;
   const streak = uniqueDays;
 
   return (
