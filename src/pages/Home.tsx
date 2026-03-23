@@ -71,13 +71,13 @@ const Home = () => {
 
         <AiHeroCard />
 
-        <WellnessStats />
-
-        <SmartActions />
-
         <WisdomSelfieCard />
 
         <JournalCard />
+
+        <WellnessStats />
+
+        <SmartActions />
       </div>
 
       <BottomNav active={activeNav} onSelect={setActiveNav} />
