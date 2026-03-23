@@ -47,7 +47,7 @@ const Welcome = () => {
     }
   };
 
-  const Illustration = illustrations[current];
+  
   const isLast = current === slides.length - 1;
 
   const variants = {
