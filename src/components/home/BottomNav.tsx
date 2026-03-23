@@ -25,121 +25,144 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
   const navigate = useNavigate();
   const activeIndex = navItems.findIndex((n) => n.label === active);
   const itemCount = navItems.length;
-  const itemWidth = 100 / itemCount; // percentage width per item
+  const itemWidth = 100 / itemCount;
 
   return (
-    <div className="fixed bottom-5 left-4 right-4 z-50">
-      <div
-        className="relative flex items-center justify-around rounded-full px-3"
-        style={{
-          height: 68,
-          background: "hsl(var(--foreground))",
-          boxShadow: "0 8px 32px hsla(var(--foreground) / 0.25)",
-        }}
-      >
-        {/* Sliding pill indicator */}
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: 52,
-            height: 52,
-            background: "hsl(var(--primary))",
-            boxShadow: "0 4px 20px hsla(var(--healing-green) / 0.5)",
-            top: -18,
-          }}
-          animate={{
-            left: `calc(${activeIndex * itemWidth}% + ${itemWidth / 2}% - 26px)`,
-          }}
-          transition={{ type: "spring", stiffness: 320, damping: 28 }}
-        />
-
-        {/* Curved bump behind active icon — SVG overlay */}
-        <motion.svg
-          className="absolute top-0 left-0 w-full pointer-events-none"
-          viewBox="0 0 400 68"
+    <div className="fixed bottom-4 left-4 right-4 z-50">
+      <div className="relative" style={{ height: 64 }}>
+        {/* Nav bar background with animated notch */}
+        <svg
+          className="absolute inset-0 w-full"
+          viewBox="0 0 400 64"
           preserveAspectRatio="none"
-          style={{ height: 68, overflow: "visible" }}
+          style={{
+            height: 64,
+            overflow: "visible",
+            filter: "drop-shadow(0 -2px 12px hsla(var(--foreground) / 0.12))",
+          }}
         >
           <motion.path
-            animate={{
-              d: generateCurvePath(activeIndex, itemCount),
-            }}
-            transition={{ type: "spring", stiffness: 320, damping: 28 }}
+            animate={{ d: generateNavPath(activeIndex, itemCount) }}
+            transition={{ type: "spring", stiffness: 300, damping: 26 }}
             fill="hsl(var(--foreground))"
           />
-        </motion.svg>
+        </svg>
 
-        {navItems.map((item, i) => {
-          const isActive = active === item.label;
-          return (
-            <button
-              key={item.label}
-              onClick={() => {
-                onSelect(item.label);
-                const route = routeMap[item.label];
-                if (route) navigate(route);
-              }}
-              className="relative flex flex-col items-center justify-center z-10"
-              style={{ width: `${itemWidth}%` }}
-            >
+        {/* Floating active circle */}
+        <motion.div
+          className="absolute z-20"
+          animate={{
+            left: `calc(${activeIndex * itemWidth}% + ${itemWidth / 2}% - 24px)`,
+          }}
+          transition={{ type: "spring", stiffness: 300, damping: 26 }}
+          style={{ top: -12 }}
+        >
+          {/* Glow pulse ring */}
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            style={{ background: "hsl(var(--primary))" }}
+            animate={{
+              boxShadow: [
+                "0 0 0px 0px hsla(var(--healing-green) / 0.3)",
+                "0 0 12px 4px hsla(var(--healing-green) / 0.25)",
+                "0 0 0px 0px hsla(var(--healing-green) / 0.3)",
+              ],
+            }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center relative"
+            style={{ background: "hsl(var(--primary))" }}
+          >
+            {navItems[activeIndex] && (
               <motion.div
-                animate={{
-                  y: isActive ? -22 : 0,
-                  scale: isActive ? 1.15 : 1,
-                }}
-                transition={{ type: "spring", stiffness: 350, damping: 24 }}
-                className="flex items-center justify-center"
+                key={active}
+                initial={{ scale: 0.7, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
               >
-                <item.icon
-                  size={22}
-                  strokeWidth={isActive ? 2.4 : 1.8}
-                  style={{
-                    color: isActive
-                      ? "hsl(var(--cream))"
-                      : "hsla(var(--cream) / 0.4)",
-                  }}
-                />
+                {(() => {
+                  const Icon = navItems[activeIndex].icon;
+                  return (
+                    <Icon
+                      size={20}
+                      strokeWidth={2.2}
+                      style={{ color: "hsl(var(--cream))" }}
+                    />
+                  );
+                })()}
               </motion.div>
+            )}
+          </div>
+        </motion.div>
 
-              <motion.span
-                animate={{
-                  opacity: isActive ? 1 : 0,
-                  y: isActive ? -14 : 0,
-                  scale: isActive ? 1 : 0.8,
+        {/* Nav items */}
+        <div className="absolute inset-0 flex items-center justify-around px-2 z-10">
+          {navItems.map((item, i) => {
+            const isActive = active === item.label;
+            return (
+              <button
+                key={item.label}
+                onClick={() => {
+                  onSelect(item.label);
+                  const route = routeMap[item.label];
+                  if (route) navigate(route);
                 }}
-                transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                className="text-[9px] font-body font-semibold tracking-wide absolute"
-                style={{
-                  bottom: 6,
-                  color: "hsl(var(--cream))",
-                }}
+                className="flex flex-col items-center justify-center relative"
+                style={{ width: `${itemWidth}%`, height: 64 }}
               >
-                {item.label}
-              </motion.span>
-            </button>
-          );
-        })}
+                {/* Only show icon when NOT active (active icon is in the floating circle) */}
+                <motion.div
+                  animate={{ opacity: isActive ? 0 : 1, scale: isActive ? 0.5 : 1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <item.icon
+                    size={20}
+                    strokeWidth={1.8}
+                    style={{ color: "hsla(var(--cream) / 0.4)" }}
+                  />
+                </motion.div>
+
+                {/* Label appears below for active */}
+                <motion.span
+                  animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 4 }}
+                  transition={{ duration: 0.2 }}
+                  className="text-[9px] font-body font-semibold tracking-wide absolute"
+                  style={{ bottom: 8, color: "hsl(var(--cream))" }}
+                >
+                  {item.label}
+                </motion.span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 };
 
-function generateCurvePath(activeIdx: number, total: number): string {
+function generateNavPath(activeIdx: number, total: number): string {
   const w = 400;
+  const h = 64;
+  const r = 32; // corner radius
   const sectionW = w / total;
   const cx = sectionW * activeIdx + sectionW / 2;
-  const curveW = 38;
-  const curveH = 22;
+  const notchW = 34;
+  const notchH = 16;
 
-  // A smooth upward bump centered on the active item
   return `
-    M 0 0
-    L ${cx - curveW} 0
-    C ${cx - curveW * 0.5} 0, ${cx - curveW * 0.35} ${-curveH}, ${cx} ${-curveH}
-    C ${cx + curveW * 0.35} ${-curveH}, ${cx + curveW * 0.5} 0, ${cx + curveW} 0
-    L ${w} 0
-    L ${w} 68
-    L 0 68
+    M ${r} 0
+    L ${cx - notchW} 0
+    C ${cx - notchW * 0.55} 0, ${cx - notchW * 0.35} ${-notchH}, ${cx} ${-notchH}
+    C ${cx + notchW * 0.35} ${-notchH}, ${cx + notchW * 0.55} 0, ${cx + notchW} 0
+    L ${w - r} 0
+    Q ${w} 0, ${w} ${r}
+    L ${w} ${h - r}
+    Q ${w} ${h}, ${w - r} ${h}
+    L ${r} ${h}
+    Q 0 ${h}, 0 ${h - r}
+    L 0 ${r}
+    Q 0 0, ${r} 0
     Z
   `;
 }
