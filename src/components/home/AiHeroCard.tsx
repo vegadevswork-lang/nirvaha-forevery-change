@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import { MessageCircle, Sparkles, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const AiHeroCard = () => (
+const AiHeroCard = () => {
+  const navigate = useNavigate();
+
+  return (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -64,6 +68,7 @@ const AiHeroCard = () => (
       {/* CTA Button */}
       <motion.button
         whileTap={{ scale: 0.97 }}
+        onClick={() => navigate("/chat")}
         className="flex items-center justify-center gap-2.5 py-3.5 rounded-2xl font-body font-medium text-sm transition-all"
         style={{
           background: "hsl(var(--cream))",
@@ -77,6 +82,7 @@ const AiHeroCard = () => (
       </motion.button>
     </div>
   </motion.div>
-);
+  );
+};
 
 export default AiHeroCard;
