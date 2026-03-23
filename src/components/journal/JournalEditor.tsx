@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, X } from "lucide-react";
 
@@ -19,19 +19,22 @@ interface JournalEntry {
   mood: string;
   moodEmoji: string;
   timestamp: string;
+  saved?: boolean;
 }
 
 interface JournalEditorProps {
   onSave: (entry: JournalEntry) => void;
   onClose: () => void;
+  editEntry?: JournalEntry | null;
 }
 
-const JournalEditor = ({ onSave, onClose }: JournalEditorProps) => {
-  const [text, setText] = useState("");
-  const [selectedMood, setSelectedMood] = useState<string | null>(null);
+const JournalEditor = ({ onSave, onClose, editEntry }: JournalEditorProps) => {
+  const [text, setText] = useState(editEntry?.text || "");
+  const [selectedMood, setSelectedMood] = useState<string | null>(editEntry?.mood || null);
   const maxLength = 1000;
 
   const selectedMoodData = moodOptions.find((m) => m.label === selectedMood);
+  const isEditing = !!editEntry;
 
   const handleSave = () => {
     const trimmed = text.trim();
@@ -39,11 +42,12 @@ const JournalEditor = ({ onSave, onClose }: JournalEditorProps) => {
     if (trimmed.length > maxLength) return;
 
     const entry: JournalEntry = {
-      id: crypto.randomUUID(),
+      id: editEntry?.id || crypto.randomUUID(),
       text: trimmed,
       mood: selectedMood,
       moodEmoji: selectedMoodData?.emoji || "📝",
-      timestamp: new Date().toISOString(),
+      timestamp: editEntry?.timestamp || new Date().toISOString(),
+      saved: editEntry?.saved || false,
     };
     onSave(entry);
   };
@@ -63,7 +67,9 @@ const JournalEditor = ({ onSave, onClose }: JournalEditorProps) => {
         <motion.button whileTap={{ scale: 0.9 }} onClick={onClose}>
           <ArrowLeft size={20} className="text-foreground" />
         </motion.button>
-        <h2 className="font-display text-lg font-semibold text-foreground">New reflection</h2>
+        <h2 className="font-display text-lg font-semibold text-foreground">
+          {isEditing ? "Edit reflection" : "New reflection"}
+        </h2>
         <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={onClose}
@@ -147,7 +153,7 @@ const JournalEditor = ({ onSave, onClose }: JournalEditorProps) => {
             boxShadow: text.trim() && selectedMood ? "0 4px 20px hsla(var(--healing-green) / 0.3)" : "none",
           }}
         >
-          Save reflection
+          {isEditing ? "Update reflection" : "Save reflection"}
         </motion.button>
       </div>
     </motion.div>
