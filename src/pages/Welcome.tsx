@@ -1,10 +1,17 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import slide1Img from "@/assets/onboarding-slide1.png";
 import slide2Img from "@/assets/onboarding-slide2.png";
 import slide3Img from "@/assets/onboarding-slide3.png";
+
+/* ─── Preload all images immediately ─── */
+const imageUrls = [slide1Img, slide2Img, slide3Img];
+imageUrls.forEach((src) => {
+  const img = new Image();
+  img.src = src;
+});
 
 /* ─── Slide data ─── */
 const slides = [
@@ -25,6 +32,51 @@ const slides = [
   },
 ];
 
+/* ─── Floating particles overlay ─── */
+const PARTICLE_COUNT = 18;
+const particles = Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
+  id: i,
+  x: Math.random() * 100,
+  y: Math.random() * 100,
+  size: 2 + Math.random() * 4,
+  duration: 4 + Math.random() * 6,
+  delay: Math.random() * 4,
+  isGold: i % 3 === 0,
+}));
+
+const ParticleOverlay = () => (
+  <div className="absolute inset-0 pointer-events-none overflow-hidden z-[5]">
+    {particles.map((p) => (
+      <motion.div
+        key={p.id}
+        className="absolute rounded-full"
+        style={{
+          width: p.size,
+          height: p.size,
+          left: `${p.x}%`,
+          top: `${p.y}%`,
+          background: p.isGold
+            ? "hsl(var(--gold))"
+            : "hsl(var(--healing-green-light))",
+          boxShadow: `0 0 ${p.size * 3}px ${p.isGold ? "hsl(var(--gold) / 0.5)" : "hsl(var(--healing-green-light) / 0.4)"}`,
+        }}
+        animate={{
+          y: [0, -30 - Math.random() * 20, 0],
+          x: [0, (p.id % 2 === 0 ? 12 : -12), 0],
+          opacity: [0, 0.7, 0],
+          scale: [0.5, 1, 0.5],
+        }}
+        transition={{
+          duration: p.duration,
+          repeat: Infinity,
+          delay: p.delay,
+          ease: "easeInOut",
+        }}
+      />
+    ))}
+  </div>
+);
+
 /* ─── Swipe threshold ─── */
 const SWIPE_THRESHOLD = 50;
 
@@ -32,6 +84,23 @@ const Welcome = () => {
   const navigate = useNavigate();
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [imagesReady, setImagesReady] = useState(false);
+
+  /* Wait for all images to decode */
+  useEffect(() => {
+    Promise.all(
+      imageUrls.map(
+        (src) =>
+          new Promise<void>((resolve) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => resolve();
+            img.onerror = () => resolve();
+            if (img.complete) resolve();
+          })
+      )
+    ).then(() => setImagesReady(true));
+  }, []);
 
   const goTo = useCallback((index: number, dir: number) => {
     if (index < 0 || index >= slides.length) return;
@@ -47,7 +116,6 @@ const Welcome = () => {
     }
   };
 
-  
   const isLast = current === slides.length - 1;
 
   const variants = {
@@ -68,6 +136,9 @@ const Welcome = () => {
         style={{ width: 200, height: 200, bottom: "12%", left: "-5%", background: "hsl(var(--gold))", animationDelay: "2s" }}
       />
 
+      {/* Particle overlay */}
+      <ParticleOverlay />
+
       {/* Skip */}
       {!isLast && (
         <motion.button
@@ -79,6 +150,13 @@ const Welcome = () => {
           Skip
         </motion.button>
       )}
+
+      {/* Preload hidden images for instant swap */}
+      <div className="hidden">
+        {imageUrls.map((src) => (
+          <img key={src} src={src} alt="" />
+        ))}
+      </div>
 
       {/* Main content — swipeable */}
       <motion.div
@@ -99,14 +177,22 @@ const Welcome = () => {
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col items-center text-center w-full"
           >
-            {/* Illustration */}
-            <div className="mb-10">
+            {/* Illustration with glow backdrop */}
+            <div className="relative mb-10">
+              {/* Glow behind image */}
+              <motion.div
+                className="absolute inset-0 rounded-full blur-3xl opacity-30"
+                style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.5), hsl(var(--healing-green) / 0.3), transparent)" }}
+                animate={{ scale: [0.9, 1.1, 0.9], opacity: [0.2, 0.35, 0.2] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              />
               <motion.img
                 src={slides[current].image}
                 alt=""
-                className="w-56 h-56 object-contain mx-auto"
+                className="relative w-56 h-56 object-contain mx-auto"
                 animate={{ scale: [1, 1.03, 1] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                loading="eager"
               />
             </div>
 
