@@ -1,7 +1,7 @@
-import IntroVideo from "./IntroVideo";
+import Welcome from "./Welcome";
 
 const Index = () => {
-  return <IntroVideo />;
+  return <Welcome />;
 };
 
 export default Index;
