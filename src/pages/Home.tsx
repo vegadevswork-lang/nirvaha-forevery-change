@@ -53,24 +53,13 @@ const Home = () => {
           transition={{ duration: 0.5 }}
           className="flex items-center justify-between mb-6"
         >
-          <div className="flex items-center gap-3">
-            <div
-              className="w-11 h-11 rounded-2xl flex items-center justify-center"
-              style={{
-                background: "linear-gradient(135deg, hsl(var(--healing-green)), hsl(var(--healing-green-light)))",
-                boxShadow: "0 4px 12px hsla(var(--healing-green) / 0.2)",
-              }}
-            >
-              <User size={20} className="text-primary-foreground" />
-            </div>
-            <div>
-              <h1 className="font-display text-xl text-foreground font-semibold leading-tight">
-                {greeting()}
-              </h1>
-              <p className="font-body text-xs text-muted-foreground mt-0.5">
-                Your wellness journey
-              </p>
-            </div>
+          <div>
+            <h1 className="font-display text-xl text-foreground font-semibold leading-tight">
+              Welcome back
+            </h1>
+            <p className="font-body text-xs text-muted-foreground mt-0.5">
+              How are you feeling today?
+            </p>
           </div>
           <motion.button
             whileTap={{ scale: 0.92 }}

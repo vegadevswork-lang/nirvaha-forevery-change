@@ -1,11 +1,16 @@
 import { motion } from "framer-motion";
+import moodHappy from "@/assets/mood-happy.png";
+import moodCalm from "@/assets/mood-calm.png";
+import moodRelax from "@/assets/mood-relax.png";
+import moodFocus from "@/assets/mood-focus.png";
+import moodAnxious from "@/assets/mood-anxious.png";
 
 const emotions = [
-  { label: "Calm", emoji: "🍃" },
-  { label: "Overwhelmed", emoji: "🌊" },
-  { label: "Lost", emoji: "🌫️" },
-  { label: "Anxious", emoji: "💭" },
-  { label: "Exploring", emoji: "✨" },
+  { label: "Happy", image: moodHappy },
+  { label: "Calm", image: moodCalm },
+  { label: "Relax", image: moodRelax },
+  { label: "Focus", image: moodFocus },
+  { label: "Anxious", image: moodAnxious },
 ];
 
 interface EmotionChipsProps {
@@ -18,27 +23,54 @@ const EmotionChips = ({ selected, onSelect }: EmotionChipsProps) => (
     initial={{ opacity: 0, y: 12 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay: 0.15 }}
-    className="flex flex-wrap gap-2 mb-6"
+    className="flex items-center justify-between mb-6 px-1"
   >
-    {emotions.map((e) => {
+    {emotions.map((e, i) => {
       const isSelected = selected === e.label;
       return (
         <motion.button
           key={e.label}
-          whileTap={{ scale: 0.93 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 + i * 0.06 }}
+          whileTap={{ scale: 0.9 }}
           onClick={(ev) => onSelect(e.label, ev)}
-          className="relative overflow-hidden rounded-2xl px-3.5 py-2 text-sm font-body flex items-center gap-1.5 flex-shrink-0 transition-all duration-300 border"
-          style={{
-            background: isSelected ? "hsla(var(--healing-green) / 0.12)" : "hsla(var(--glass-bg))",
-            borderColor: isSelected ? "hsl(var(--primary))" : "hsla(var(--glass-border))",
-            backdropFilter: "blur(12px)",
-            boxShadow: isSelected ? "0 0 16px hsla(var(--healing-green) / 0.12)" : undefined,
-          }}
+          className="flex flex-col items-center gap-1.5"
         >
-          <span className="text-sm">{e.emoji}</span>
-          <span className={`transition-colors duration-300 text-xs ${
-            isSelected ? "text-foreground font-medium" : "text-muted-foreground"
-          }`}>
+          <motion.div
+            animate={isSelected ? { scale: 1.1 } : { scale: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="relative w-14 h-14 rounded-full overflow-hidden border-2 transition-all duration-300"
+            style={{
+              borderColor: isSelected ? "hsl(var(--primary))" : "hsl(var(--border))",
+              boxShadow: isSelected
+                ? "0 0 16px hsla(var(--healing-green) / 0.3), 0 0 0 3px hsla(var(--healing-green) / 0.12)"
+                : "0 2px 8px hsla(var(--glass-shadow))",
+            }}
+          >
+            <img
+              src={e.image}
+              alt={e.label}
+              className="w-full h-full object-cover"
+              loading="eager"
+            />
+            {isSelected && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background: "linear-gradient(180deg, transparent 60%, hsla(var(--healing-green) / 0.15) 100%)",
+                }}
+              />
+            )}
+          </motion.div>
+          <span
+            className="text-[11px] font-body font-medium transition-colors duration-300"
+            style={{
+              color: isSelected ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))",
+            }}
+          >
             {e.label}
           </span>
         </motion.button>
