@@ -82,6 +82,7 @@ const AiHeroCard = () => {
       </motion.button>
     </div>
   </motion.div>
-);
+  );
+};
 
 export default AiHeroCard;
