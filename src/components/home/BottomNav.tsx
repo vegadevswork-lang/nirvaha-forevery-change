@@ -29,7 +29,7 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50">
-      <div className="relative" style={{ height: 64 }}>
+      <div className="relative backdrop-blur-xl" style={{ height: 64, filter: "drop-shadow(0 -2px 16px hsla(var(--foreground) / 0.15))" }}>
         {/* Nav bar background with animated notch */}
         <svg
           className="absolute inset-0 w-full"
@@ -38,13 +38,12 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
           style={{
             height: 64,
             overflow: "visible",
-            filter: "drop-shadow(0 -2px 12px hsla(var(--foreground) / 0.12))",
           }}
         >
           <motion.path
             animate={{ d: generateNavPath(activeIndex, itemCount) }}
             transition={{ type: "spring", stiffness: 300, damping: 26 }}
-            fill="hsl(var(--foreground))"
+            fill="hsla(var(--foreground) / 0.82)"
           />
         </svg>
 
