@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import { MessageCircle, Sparkles, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const AiHeroCard = () => (
+const AiHeroCard = () => {
+  const navigate = useNavigate();
+
+  return (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
