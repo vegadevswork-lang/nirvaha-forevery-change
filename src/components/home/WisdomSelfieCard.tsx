@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Camera } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const WisdomSelfieCard = () => {
@@ -11,35 +11,45 @@ const WisdomSelfieCard = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.5 }}
       onClick={() => navigate("/legends-selfie")}
-      className="glass-card p-5 mb-5 cursor-pointer group hover:border-accent/50 transition-all duration-300 relative overflow-hidden"
+      className="relative rounded-3xl overflow-hidden mb-5 cursor-pointer group"
+      style={{
+        background: "linear-gradient(145deg, hsl(var(--gold)), hsl(var(--accent)))",
+        boxShadow: "0 8px 32px hsla(var(--gold) / 0.2)",
+      }}
     >
+      {/* Decorative circle */}
       <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-        style={{
-          background: "linear-gradient(135deg, hsla(var(--gold) / 0.06), hsla(var(--healing-green) / 0.04))",
-        }}
+        className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-20"
+        style={{ background: "hsl(var(--cream))" }}
       />
 
-      <div className="flex items-center gap-4 relative z-10">
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
+      <div className="relative z-10 p-5 flex items-center gap-4">
+        <div
+          className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: "linear-gradient(135deg, hsla(var(--gold) / 0.2), hsla(var(--healing-green) / 0.15))",
-            boxShadow: "0 4px 16px hsla(var(--gold) / 0.08)",
+            background: "hsla(var(--cream) / 0.25)",
+            backdropFilter: "blur(8px)",
           }}
         >
-          <span className="text-2xl">📸</span>
-        </motion.div>
+          <Camera size={20} style={{ color: "hsl(var(--foreground))" }} />
+        </div>
         <div className="flex-1">
           <h3 className="font-display text-base text-foreground font-semibold">
-            Nirvaha Selfie with Legends
+            Legends Selfie
           </h3>
-          <p className="font-body text-xs text-muted-foreground mt-0.5 leading-relaxed">
-            Create a moment with timeless wisdom figures
+          <p className="font-body text-xs mt-0.5" style={{ color: "hsla(var(--foreground) / 0.7)" }}>
+            Create a moment with wisdom figures
           </p>
         </div>
-        <ArrowRight size={16} className="text-muted-foreground group-hover:text-accent transition-colors duration-300 flex-shrink-0" />
+        <motion.div
+          whileTap={{ scale: 0.9 }}
+          className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+          style={{
+            background: "hsl(var(--foreground))",
+          }}
+        >
+          <ArrowRight size={16} style={{ color: "hsl(var(--cream))" }} />
+        </motion.div>
       </div>
     </motion.div>
   );
