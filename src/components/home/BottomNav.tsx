@@ -38,13 +38,12 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
           style={{
             height: 64,
             overflow: "visible",
-            filter: "drop-shadow(0 -2px 12px hsla(var(--foreground) / 0.12))",
           }}
         >
           <motion.path
             animate={{ d: generateNavPath(activeIndex, itemCount) }}
             transition={{ type: "spring", stiffness: 300, damping: 26 }}
-            fill="hsl(var(--foreground))"
+            fill="hsla(var(--foreground) / 0.82)"
           />
         </svg>
 
