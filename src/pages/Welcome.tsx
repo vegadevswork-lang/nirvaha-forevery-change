@@ -101,7 +101,13 @@ const Welcome = () => {
           >
             {/* Illustration */}
             <div className="mb-10">
-              <Illustration />
+              <motion.img
+                src={slides[current].image}
+                alt=""
+                className="w-56 h-56 object-contain mx-auto"
+                animate={{ scale: [1, 1.03, 1] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              />
             </div>
 
             {/* Headline */}
