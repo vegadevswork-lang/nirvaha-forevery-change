@@ -24,121 +24,122 @@ const routeMap: Record<string, string> = {
 const BottomNav = ({ active, onSelect }: BottomNavProps) => {
   const navigate = useNavigate();
   const activeIndex = navItems.findIndex((n) => n.label === active);
+  const itemCount = navItems.length;
+  const itemWidth = 100 / itemCount; // percentage width per item
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50">
-      <div className="relative">
-        {/* SVG blob background with animated notch */}
-        <svg
-          viewBox="0 0 390 72"
-          className="w-full h-auto"
+    <div className="fixed bottom-5 left-4 right-4 z-50">
+      <div
+        className="relative flex items-center justify-around rounded-full px-3"
+        style={{
+          height: 68,
+          background: "hsl(var(--foreground))",
+          boxShadow: "0 8px 32px hsla(var(--foreground) / 0.25)",
+        }}
+      >
+        {/* Sliding pill indicator */}
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: 52,
+            height: 52,
+            background: "hsl(var(--primary))",
+            boxShadow: "0 4px 20px hsla(var(--healing-green) / 0.5)",
+            top: -18,
+          }}
+          animate={{
+            left: `calc(${activeIndex * itemWidth}% + ${itemWidth / 2}% - 26px)`,
+          }}
+          transition={{ type: "spring", stiffness: 320, damping: 28 }}
+        />
+
+        {/* Curved bump behind active icon — SVG overlay */}
+        <motion.svg
+          className="absolute top-0 left-0 w-full pointer-events-none"
+          viewBox="0 0 400 68"
           preserveAspectRatio="none"
-          style={{ filter: "drop-shadow(0 -4px 20px hsla(var(--foreground) / 0.15))" }}
+          style={{ height: 68, overflow: "visible" }}
         >
-          <defs>
-            <clipPath id="nav-clip">
-              <rect x="0" y="0" width="390" height="72" rx="28" />
-            </clipPath>
-          </defs>
           <motion.path
             animate={{
-              d: generateBlobPath(activeIndex, navItems.length),
+              d: generateCurvePath(activeIndex, itemCount),
             }}
-            transition={{ type: "spring", stiffness: 200, damping: 28 }}
+            transition={{ type: "spring", stiffness: 320, damping: 28 }}
             fill="hsl(var(--foreground))"
-            clipPath="url(#nav-clip)"
           />
-        </svg>
+        </motion.svg>
 
-        {/* Nav items overlay */}
-        <div className="absolute inset-0 flex items-center justify-around px-4">
-          {navItems.map((item, i) => {
-            const isActive = active === item.label;
-            return (
-              <button
-                key={item.label}
-                onClick={() => {
-                  onSelect(item.label);
-                  const route = routeMap[item.label];
-                  if (route) navigate(route);
+        {navItems.map((item, i) => {
+          const isActive = active === item.label;
+          return (
+            <button
+              key={item.label}
+              onClick={() => {
+                onSelect(item.label);
+                const route = routeMap[item.label];
+                if (route) navigate(route);
+              }}
+              className="relative flex flex-col items-center justify-center z-10"
+              style={{ width: `${itemWidth}%` }}
+            >
+              <motion.div
+                animate={{
+                  y: isActive ? -22 : 0,
+                  scale: isActive ? 1.15 : 1,
                 }}
-                className="relative flex flex-col items-center justify-center w-16 z-10"
+                transition={{ type: "spring", stiffness: 350, damping: 24 }}
+                className="flex items-center justify-center"
               >
-                <motion.div
-                  animate={
-                    isActive
-                      ? { y: -14, scale: 1.15 }
-                      : { y: 0, scale: 1 }
-                  }
-                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  className="flex flex-col items-center"
-                >
-                  {/* Active circle bg */}
-                  {isActive && (
-                    <motion.div
-                      layoutId="nav-bulge"
-                      className="absolute -top-1 w-12 h-12 rounded-full"
-                      style={{
-                        background: "hsl(var(--primary))",
-                        boxShadow: "0 4px 20px hsla(var(--healing-green) / 0.4)",
-                      }}
-                      transition={{ type: "spring", stiffness: 250, damping: 25 }}
-                    />
-                  )}
-                  <div className="relative z-10 p-2.5">
-                    <item.icon
-                      size={20}
-                      style={{
-                        color: isActive
-                          ? "hsl(var(--primary-foreground))"
-                          : "hsla(var(--cream) / 0.45)",
-                      }}
-                      strokeWidth={isActive ? 2.2 : 1.8}
-                    />
-                  </div>
-                </motion.div>
-                <motion.span
-                  animate={{ opacity: isActive ? 1 : 0.5 }}
-                  className="text-[9px] font-body font-medium mt-0.5"
+                <item.icon
+                  size={22}
+                  strokeWidth={isActive ? 2.4 : 1.8}
                   style={{
                     color: isActive
                       ? "hsl(var(--cream))"
-                      : "hsla(var(--cream) / 0.45)",
+                      : "hsla(var(--cream) / 0.4)",
                   }}
-                >
-                  {item.label}
-                </motion.span>
-              </button>
-            );
-          })}
-        </div>
+                />
+              </motion.div>
+
+              <motion.span
+                animate={{
+                  opacity: isActive ? 1 : 0,
+                  y: isActive ? -14 : 0,
+                  scale: isActive ? 1 : 0.8,
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                className="text-[9px] font-body font-semibold tracking-wide absolute"
+                style={{
+                  bottom: 6,
+                  color: "hsl(var(--cream))",
+                }}
+              >
+                {item.label}
+              </motion.span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
 };
 
-function generateBlobPath(activeIdx: number, total: number): string {
-  const w = 390;
-  const h = 72;
-  const r = 28;
+function generateCurvePath(activeIdx: number, total: number): string {
+  const w = 400;
   const sectionW = w / total;
   const cx = sectionW * activeIdx + sectionW / 2;
-  const bulgeW = 32;
-  const bulgeH = 14;
+  const curveW = 38;
+  const curveH = 22;
 
+  // A smooth upward bump centered on the active item
   return `
-    M ${r} 0
-    L ${cx - bulgeW} 0
-    C ${cx - bulgeW * 0.6} 0 ${cx - bulgeW * 0.4} ${-bulgeH} ${cx} ${-bulgeH}
-    C ${cx + bulgeW * 0.4} ${-bulgeH} ${cx + bulgeW * 0.6} 0 ${cx + bulgeW} 0
-    L ${w - r} 0
-    Q ${w} 0 ${w} ${r}
-    L ${w} ${h - r}
-    Q ${w} ${h} ${w - r} ${h}
-    L ${r} ${h}
-    Q 0 ${h} 0 ${h - r}
-    L 0 ${r}
-    Q 0 0 ${r} 0
+    M 0 0
+    L ${cx - curveW} 0
+    C ${cx - curveW * 0.5} 0, ${cx - curveW * 0.35} ${-curveH}, ${cx} ${-curveH}
+    C ${cx + curveW * 0.35} ${-curveH}, ${cx + curveW * 0.5} 0, ${cx + curveW} 0
+    L ${w} 0
+    L ${w} 68
+    L 0 68
     Z
   `;
 }
