@@ -8,6 +8,7 @@ import Auth from "./pages/Auth.tsx";
 import Onboarding from "./pages/Onboarding.tsx";
 import Home from "./pages/Home.tsx";
 import Chat from "./pages/Chat.tsx";
+import Wellness from "./pages/Wellness.tsx";
 import LegendsSelfie from "./pages/LegendsSelfie.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
