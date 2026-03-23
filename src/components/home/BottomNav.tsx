@@ -18,7 +18,7 @@ const routeMap: Record<string, string> = {
   Home: "/home",
   Chat: "/chat",
   Wellness: "/wellness",
-  Profile: "/home",
+  Profile: "/profile",
 };
 
 const BottomNav = ({ active, onSelect }: BottomNavProps) => {
