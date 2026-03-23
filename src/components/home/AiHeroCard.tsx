@@ -68,6 +68,7 @@ const AiHeroCard = () => {
       {/* CTA Button */}
       <motion.button
         whileTap={{ scale: 0.97 }}
+        onClick={() => navigate("/chat")}
         className="flex items-center justify-center gap-2.5 py-3.5 rounded-2xl font-body font-medium text-sm transition-all"
         style={{
           background: "hsl(var(--cream))",
