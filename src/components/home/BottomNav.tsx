@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Home as HomeIcon, MessageCircle, Flame, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const navItems = [
   { label: "Home", icon: HomeIcon },
