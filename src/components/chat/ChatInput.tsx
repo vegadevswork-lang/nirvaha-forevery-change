@@ -1,0 +1,86 @@
+import { useState, useRef } from "react";
+import { motion } from "framer-motion";
+import { Send, Mic } from "lucide-react";
+
+interface ChatInputProps {
+  onSend: (text: string) => void;
+  disabled?: boolean;
+}
+
+const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
+  const [text, setText] = useState("");
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleSend = () => {
+    const trimmed = text.trim();
+    if (!trimmed || disabled) return;
+    onSend(trimmed);
+    setText("");
+    if (inputRef.current) {
+      inputRef.current.style.height = "auto";
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const handleInput = () => {
+    if (inputRef.current) {
+      inputRef.current.style.height = "auto";
+      inputRef.current.style.height = Math.min(inputRef.current.scrollHeight, 100) + "px";
+    }
+  };
+
+  const hasText = text.trim().length > 0;
+
+  return (
+    <div
+      className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-6 pt-3"
+      style={{
+        background: "linear-gradient(to top, hsl(var(--background)), hsla(var(--background) / 0.95), transparent)",
+      }}
+    >
+      <div
+        className="flex items-end gap-2 rounded-2xl border px-3 py-2"
+        style={{
+          background: "hsla(40 30% 99% / 0.8)",
+          borderColor: "hsl(var(--border))",
+          backdropFilter: "blur(20px)",
+          boxShadow: "0 -2px 20px hsla(var(--glass-shadow))",
+        }}
+      >
+        <textarea
+          ref={inputRef}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={handleKeyDown}
+          onInput={handleInput}
+          placeholder="Share what's on your mind..."
+          rows={1}
+          className="flex-1 bg-transparent resize-none outline-none font-body text-sm text-foreground placeholder:text-muted-foreground py-1.5"
+          style={{ maxHeight: 100 }}
+          disabled={disabled}
+        />
+
+        <motion.button
+          whileTap={{ scale: 0.88 }}
+          onClick={handleSend}
+          disabled={disabled}
+          className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200"
+          style={{
+            background: hasText ? "hsl(var(--primary))" : "transparent",
+            color: hasText ? "hsl(var(--primary-foreground))" : "hsl(var(--muted-foreground))",
+          }}
+        >
+          {hasText ? <Send size={16} /> : <Mic size={18} />}
+        </motion.button>
+      </div>
+    </div>
+  );
+};
+
+export default ChatInput;
