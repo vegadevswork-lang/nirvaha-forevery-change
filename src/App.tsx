@@ -11,6 +11,7 @@ import Chat from "./pages/Chat.tsx";
 import Wellness from "./pages/Wellness.tsx";
 import LegendsSelfie from "./pages/LegendsSelfie.tsx";
 import Profile from "./pages/Profile.tsx";
+import Journal from "./pages/Journal.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
