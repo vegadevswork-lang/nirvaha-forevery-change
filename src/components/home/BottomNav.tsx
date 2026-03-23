@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Home as HomeIcon, MessageCircle, Flame, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const navItems = [
   { label: "Home", icon: HomeIcon },
@@ -13,7 +14,15 @@ interface BottomNavProps {
   onSelect: (label: string) => void;
 }
 
+const routeMap: Record<string, string> = {
+  Home: "/home",
+  Chat: "/chat",
+  Wellness: "/home",
+  Profile: "/home",
+};
+
 const BottomNav = ({ active, onSelect }: BottomNavProps) => {
+  const navigate = useNavigate();
   const activeIndex = navItems.findIndex((n) => n.label === active);
 
   return (
@@ -48,7 +57,11 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
             return (
               <button
                 key={item.label}
-                onClick={() => onSelect(item.label)}
+                onClick={() => {
+                  onSelect(item.label);
+                  const route = routeMap[item.label];
+                  if (route) navigate(route);
+                }}
                 className="relative flex flex-col items-center justify-center w-16 z-10"
               >
                 <motion.div
