@@ -18,7 +18,7 @@ const EmotionChips = ({ selected, onSelect }: EmotionChipsProps) => (
     initial={{ opacity: 0, y: 12 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay: 0.15 }}
-    className="flex gap-2 overflow-x-auto pb-1 mb-6 scrollbar-hide"
+    className="flex flex-wrap gap-2 mb-6"
   >
     {emotions.map((e) => {
       const isSelected = selected === e.label;
