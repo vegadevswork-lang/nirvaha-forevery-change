@@ -57,7 +57,11 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
             return (
               <button
                 key={item.label}
-                onClick={() => onSelect(item.label)}
+                onClick={() => {
+                  onSelect(item.label);
+                  const route = routeMap[item.label];
+                  if (route) navigate(route);
+                }}
                 className="relative flex flex-col items-center justify-center w-16 z-10"
               >
                 <motion.div
