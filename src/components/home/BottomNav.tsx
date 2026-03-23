@@ -14,7 +14,15 @@ interface BottomNavProps {
   onSelect: (label: string) => void;
 }
 
+const routeMap: Record<string, string> = {
+  Home: "/home",
+  Chat: "/chat",
+  Wellness: "/home",
+  Profile: "/home",
+};
+
 const BottomNav = ({ active, onSelect }: BottomNavProps) => {
+  const navigate = useNavigate();
   const activeIndex = navItems.findIndex((n) => n.label === active);
 
   return (
