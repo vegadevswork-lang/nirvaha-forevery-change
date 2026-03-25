@@ -24,6 +24,7 @@ const settingsGroups = [
 
 const SettingsSection = () => {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <motion.div
@@ -61,7 +62,26 @@ const SettingsSection = () => {
         </div>
       ))}
 
-      {/* Quick actions */}
+      {/* Dark mode toggle */}
+      <div>
+        <p className="font-body text-[10px] uppercase tracking-widest text-muted-foreground mb-2 px-1">
+          Appearance
+        </p>
+        <div className="glass-card overflow-hidden">
+          <div className="w-full flex items-center gap-3 px-4 py-3.5">
+            <div
+              className="w-8 h-8 rounded-xl flex items-center justify-center"
+              style={{ background: "hsla(var(--sage-light))" }}
+            >
+              {theme === "dark" ? <Moon size={14} className="text-foreground" /> : <Sun size={14} className="text-foreground" />}
+            </div>
+            <span className="font-body text-sm text-foreground flex-1">Dark mode</span>
+            <Switch checked={theme === "dark"} onCheckedChange={toggleTheme} />
+          </div>
+        </div>
+      </div>
+
+
       <div className="flex gap-3">
         <motion.button
           whileTap={{ scale: 0.97 }}
