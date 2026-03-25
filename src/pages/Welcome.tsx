@@ -2,9 +2,9 @@ import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import slide1Img from "@/assets/onboarding-slide1.png";
-import slide2Img from "@/assets/onboarding-slide2.png";
-import slide3Img from "@/assets/onboarding-slide3.png";
+import slide1Img from "@/assets/onboarding-slide1.webp";
+import slide2Img from "@/assets/onboarding-slide2.webp";
+import slide3Img from "@/assets/onboarding-slide3.webp";
 
 const imageUrls = [slide1Img, slide2Img, slide3Img];
 
