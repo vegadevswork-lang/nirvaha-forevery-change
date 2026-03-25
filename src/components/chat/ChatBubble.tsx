@@ -48,7 +48,7 @@ const ChatBubble = ({ message, index }: ChatBubbleProps) => {
           backdropFilter: isUser ? "none" : "blur(20px)",
           boxShadow: isUser
             ? "0 4px 16px hsla(var(--healing-green) / 0.25)"
-            : "0 2px 12px hsla(var(--glass-shadow)), inset 0 1px 0 hsla(40 30% 100% / 0.3)",
+            : "0 2px 12px hsla(var(--glass-shadow)), inset 0 1px 0 hsla(var(--glass-border))",
           borderBottomRightRadius: isUser ? "6px" : "18px",
           borderBottomLeftRadius: isUser ? "18px" : "6px",
         }}
