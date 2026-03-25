@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
-import { User, Bell, Globe, Shield, HelpCircle, ChevronRight, LogOut } from "lucide-react";
+import { User, Bell, Globe, Shield, HelpCircle, ChevronRight, LogOut, Moon, Sun } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Switch } from "@/components/ui/switch";
+import { useTheme } from "@/hooks/use-theme";
 
 const settingsGroups = [
   {
