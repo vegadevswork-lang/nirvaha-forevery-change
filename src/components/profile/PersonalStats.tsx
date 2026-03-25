@@ -1,10 +1,9 @@
 import { motion } from "framer-motion";
 import { Heart, BookOpen, Activity } from "lucide-react";
+import { useMoodLog } from "@/hooks/use-mood-log";
 
 const PersonalStats = () => {
-  const moods: Array<{ mood: string }> = JSON.parse(
-    localStorage.getItem("nirvaha_moods") || "[]"
-  );
+  const { moodLog: moods } = useMoodLog();
   const checkIns = moods.length;
 
   const stats = [

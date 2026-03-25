@@ -9,18 +9,21 @@ import WellnessStats from "@/components/home/WellnessStats";
 import WisdomSelfieCard from "@/components/home/WisdomSelfieCard";
 import JournalCard from "@/components/home/JournalCard";
 import BottomNav from "@/components/home/BottomNav";
+import { useMoodLog } from "@/hooks/use-mood-log";
 
 const Home = () => {
   const [activeNav, setActiveNav] = useState("Home");
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
   const [sparkleOrigin, setSparkleOrigin] = useState<{ x: number; y: number } | null>(null);
   const [sparkleTrigger, setSparkleTrigger] = useState(0);
+  const { logMood } = useMoodLog();
 
   const handleEmotionTap = (label: string, e: React.MouseEvent) => {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     setSparkleOrigin({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
     setSparkleTrigger((t) => t + 1);
     setSelectedEmotion(label);
+    logMood(label);
   };
 
   return (

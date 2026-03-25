@@ -5,25 +5,11 @@ import MoodChart from "@/components/wellness/MoodChart";
 import WeeklyInsight from "@/components/wellness/WeeklyInsight";
 import WellnessActions from "@/components/wellness/WellnessActions";
 import StreakSection from "@/components/wellness/StreakSection";
-
-interface MoodEntry {
-  mood: string;
-  timestamp: string;
-}
+import { useMoodLog } from "@/hooks/use-mood-log";
 
 const Wellness = () => {
   const [activeNav, setActiveNav] = useState("Wellness");
-
-  // Read mood log from localStorage (written by chat mood tracker)
-  const moodLog: MoodEntry[] = useMemo(() => {
-    try {
-      const raw = localStorage.getItem("nirvaha_moods");
-      if (!raw) return [];
-      return JSON.parse(raw);
-    } catch {
-      return [];
-    }
-  }, []);
+  const { moodLog } = useMoodLog();
 
   // Calculate avg mood for action recommendations
   const moodScores: Record<string, number> = {

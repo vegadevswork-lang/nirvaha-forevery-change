@@ -7,6 +7,7 @@ import TypingIndicator from "@/components/chat/TypingIndicator";
 import QuickReplies from "@/components/chat/QuickReplies";
 import MoodTracker from "@/components/chat/MoodTracker";
 import SparkleEffect from "@/components/onboarding/SparkleEffect";
+import { useMoodLog } from "@/hooks/use-mood-log";
 
 // Nirvaha persona responses
 const nirvahaResponses: Record<string, string[]> = {
@@ -85,6 +86,7 @@ const initialMessages: ChatMessage[] = [
 ];
 
 const Chat = () => {
+  const { logMood } = useMoodLog();
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [isTyping, setIsTyping] = useState(false);
   const [suggestions, setSuggestions] = useState(["I'm feeling stressed", "Tell me more", "Practice Breathing"]);
@@ -140,11 +142,7 @@ const Chat = () => {
 
   const handleMoodSelect = (mood: string) => {
     setShowMoodTracker(false);
-    // Store mood
-    const moodLog = JSON.parse(localStorage.getItem("nirvaha_moods") || "[]");
-    moodLog.push({ mood, timestamp: new Date().toISOString() });
-    localStorage.setItem("nirvaha_moods", JSON.stringify(moodLog));
-
+    logMood(mood);
     handleSend(`I'm feeling ${mood.toLowerCase()} right now`);
   };
 

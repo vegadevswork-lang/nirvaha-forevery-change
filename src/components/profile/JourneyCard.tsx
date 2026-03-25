@@ -1,10 +1,9 @@
 import { motion } from "framer-motion";
 import { Flame } from "lucide-react";
+import { useMoodLog } from "@/hooks/use-mood-log";
 
 const JourneyCard = () => {
-  const moods: Array<{ mood: string; timestamp: string }> = JSON.parse(
-    localStorage.getItem("nirvaha_moods") || "[]"
-  );
+  const { moodLog: moods } = useMoodLog();
 
   const uniqueDays = new Set(moods.map((m) => (m.timestamp || "").split("T")[0]).filter(Boolean)).size;
   const streak = uniqueDays;
