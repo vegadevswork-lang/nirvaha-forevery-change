@@ -57,10 +57,7 @@ const JournalEditor = ({ onSave, onClose, editEntry }: JournalEditorProps) => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 30 }}
-      className="fixed inset-0 z-[60] flex flex-col"
-      style={{
-        background: "linear-gradient(180deg, hsl(var(--cream)) 0%, hsl(var(--cream-warm)) 100%)",
-      }}
+      className="fixed inset-0 z-[60] flex flex-col bg-background">
     >
       {/* Header */}
       <div className="flex items-center justify-between px-5 pt-12 pb-4">
