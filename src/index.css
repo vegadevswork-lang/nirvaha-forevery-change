@@ -177,13 +177,13 @@
 
   .btn-social {
     @apply rounded-xl px-6 py-3 font-body font-medium text-sm transition-all duration-300 w-full border flex items-center justify-center gap-2;
-    background: hsla(40 30% 99% / 0.8);
+    background: hsla(var(--glass-bg));
     border-color: hsl(var(--border));
     color: hsl(var(--foreground));
   }
   .btn-social:hover {
     border-color: hsl(var(--muted-foreground));
-    background: hsla(40 30% 98% / 0.95);
+    background: hsl(var(--card));
     transform: translateY(-1px);
     box-shadow: 0 4px 12px hsla(var(--glass-shadow));
   }
@@ -197,7 +197,7 @@
     color: hsl(var(--muted-foreground));
   }
   .tab-item.active {
-    background: hsla(40 30% 100% / 0.9);
+    background: hsl(var(--card));
     color: hsl(var(--foreground));
     box-shadow: 0 2px 8px hsla(var(--glass-shadow));
   }
