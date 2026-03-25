@@ -188,6 +188,7 @@ const Welcome = () => {
                 animate={{ scale: [1, 1.03, 1] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 loading="eager"
+                fetchPriority={current === 0 ? "high" : undefined}
               />
             </div>
 
