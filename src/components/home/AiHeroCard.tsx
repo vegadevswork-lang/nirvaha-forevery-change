@@ -41,13 +41,13 @@ const AiHeroCard = () => {
       {/* Top row with orb */}
       <div className="flex items-start justify-between mb-5">
         <div className="flex-1">
-          <p className="font-body text-xs uppercase tracking-widest mb-2" style={{ color: "hsla(var(--cream) / 0.7)" }}>
+          <p className="font-body text-xs uppercase tracking-widest mb-2" style={{ color: "hsla(var(--primary-foreground) / 0.7)" }}>
             Your AI Companion
           </p>
-          <h2 className="font-display text-[22px] font-semibold leading-tight" style={{ color: "hsl(var(--cream))" }}>
+          <h2 className="font-display text-[22px] font-semibold leading-tight" style={{ color: "hsl(var(--primary-foreground))" }}>
             I'm here with you.
           </h2>
-          <p className="font-body text-sm mt-1" style={{ color: "hsla(var(--cream) / 0.75)" }}>
+          <p className="font-body text-sm mt-1" style={{ color: "hsla(var(--primary-foreground) / 0.75)" }}>
             What's on your mind?
           </p>
         </div>
@@ -55,8 +55,8 @@ const AiHeroCard = () => {
           animate={{ scale: [1, 1.08, 1] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
-          style={{
-            background: "hsla(var(--cream) / 0.15)",
+           style={{
+            background: "hsla(var(--primary-foreground) / 0.15)",
             backdropFilter: "blur(8px)",
             boxShadow: "0 0 24px hsla(var(--gold) / 0.2)",
           }}
@@ -71,7 +71,7 @@ const AiHeroCard = () => {
         onClick={() => navigate("/chat")}
         className="flex items-center justify-center gap-2.5 py-3.5 rounded-2xl font-body font-medium text-sm transition-all"
         style={{
-          background: "hsl(var(--cream))",
+          background: "hsl(var(--card))",
           color: "hsl(var(--primary))",
           boxShadow: "0 4px 16px hsla(var(--foreground) / 0.1)",
         }}
