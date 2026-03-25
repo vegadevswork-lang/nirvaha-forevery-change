@@ -10,10 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-interface MoodEntry {
-  mood: string;
-  timestamp: string;
-}
+import type { MoodEntry } from "@/hooks/use-mood-log";
 
 const moodScores: Record<string, number> = {
   happy: 5,

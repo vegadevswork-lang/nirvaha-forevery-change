@@ -1,10 +1,7 @@
 import { motion } from "framer-motion";
 import { Flame, CheckCircle, ArrowUpRight } from "lucide-react";
 
-interface MoodEntry {
-  mood: string;
-  timestamp: string;
-}
+import type { MoodEntry } from "@/hooks/use-mood-log";
 
 const moodScores: Record<string, number> = {
   happy: 5, grateful: 5, calm: 4, relax: 4, focus: 3.5,
