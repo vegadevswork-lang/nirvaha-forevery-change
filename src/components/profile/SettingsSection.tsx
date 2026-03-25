@@ -6,16 +6,16 @@ const settingsGroups = [
   {
     title: "Account",
     items: [
-      { label: "Edit profile", icon: User },
-      { label: "Notifications", icon: Bell },
-      { label: "Language", icon: Globe },
+      { label: "Edit profile", icon: User, path: "/edit-profile" },
+      { label: "Notifications", icon: Bell, path: "/notifications" },
+      { label: "Language", icon: Globe, path: "/language" },
     ],
   },
   {
     title: "Privacy & Support",
     items: [
-      { label: "Privacy & data", icon: Shield },
-      { label: "Help & support", icon: HelpCircle },
+      { label: "Privacy & data", icon: Shield, path: "/privacy-data" },
+      { label: "Help & support", icon: HelpCircle, path: "/help-support" },
     ],
   },
 ];
@@ -40,6 +40,7 @@ const SettingsSection = () => {
               <motion.button
                 key={item.label}
                 whileTap={{ scale: 0.98 }}
+                onClick={() => navigate(item.path)}
                 className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
               >
                 <div
