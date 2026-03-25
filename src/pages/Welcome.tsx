@@ -6,12 +6,7 @@ import slide1Img from "@/assets/onboarding-slide1.png";
 import slide2Img from "@/assets/onboarding-slide2.png";
 import slide3Img from "@/assets/onboarding-slide3.png";
 
-/* ─── Preload all images immediately ─── */
 const imageUrls = [slide1Img, slide2Img, slide3Img];
-imageUrls.forEach((src) => {
-  const img = new Image();
-  img.src = src;
-});
 
 /* ─── Slide data ─── */
 const slides = [
