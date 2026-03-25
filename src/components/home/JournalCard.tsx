@@ -20,14 +20,14 @@ const JournalCard = () => {
       {/* Decorative circle */}
       <div
         className="absolute -bottom-6 -left-6 w-28 h-28 rounded-full opacity-15"
-        style={{ background: "hsl(var(--cream))" }}
+        style={{ background: "hsl(var(--primary-foreground))" }}
       />
 
       <div className="relative z-10 p-5 flex items-center gap-4">
         <div
           className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: "hsla(var(--cream) / 0.25)",
+            background: "hsla(var(--primary-foreground) / 0.25)",
             backdropFilter: "blur(8px)",
           }}
         >
@@ -48,7 +48,7 @@ const JournalCard = () => {
             background: "hsl(var(--foreground))",
           }}
         >
-          <ArrowRight size={16} style={{ color: "hsl(var(--cream))" }} />
+          <ArrowRight size={16} style={{ color: "hsl(var(--primary-foreground))" }} />
         </motion.div>
       </div>
     </motion.div>
