@@ -120,7 +120,7 @@ const Welcome = () => {
   };
 
   return (
-    <div className="relative min-h-[100dvh] flex flex-col bg-background overflow-hidden">
+    <main className="relative min-h-[100dvh] flex flex-col bg-background overflow-hidden">
       {/* Ambient orbs */}
       <div
         className="ambient-orb animate-pulse-soft"
@@ -256,6 +256,7 @@ const Welcome = () => {
             <motion.button
               whileTap={{ scale: 0.93 }}
               onClick={() => goTo(current + 1, 1)}
+              aria-label="Next slide"
               className="w-14 h-14 rounded-full flex items-center justify-center"
               style={{
                 background: "hsl(var(--primary))",
@@ -267,7 +268,7 @@ const Welcome = () => {
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 };
 
