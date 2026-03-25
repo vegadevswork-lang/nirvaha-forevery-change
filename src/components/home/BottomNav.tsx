@@ -86,7 +86,7 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
                     <Icon
                       size={20}
                       strokeWidth={2.2}
-                      style={{ color: "hsl(var(--cream))" }}
+                      style={{ color: "hsl(var(--primary-foreground))" }}
                     />
                   );
                 })()}
@@ -118,7 +118,7 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
                   <item.icon
                     size={20}
                     strokeWidth={1.8}
-                    style={{ color: "hsla(var(--cream) / 0.4)" }}
+                    style={{ color: "hsla(var(--primary-foreground) / 0.4)" }}
                   />
                 </motion.div>
 
@@ -127,7 +127,7 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
                   animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 4 }}
                   transition={{ duration: 0.2 }}
                   className="text-[9px] font-body font-semibold tracking-wide absolute"
-                  style={{ bottom: 8, color: "hsl(var(--cream))" }}
+                  style={{ bottom: 8, color: "hsl(var(--primary-foreground))" }}
                 >
                   {item.label}
                 </motion.span>
