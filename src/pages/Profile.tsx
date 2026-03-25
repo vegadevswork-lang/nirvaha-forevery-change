@@ -11,10 +11,7 @@ const Profile = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col pb-24"
-      style={{
-        background: "linear-gradient(180deg, hsl(var(--cream)) 0%, hsl(var(--cream-warm)) 40%, hsl(var(--sage-light)) 100%)",
-      }}
+      className="min-h-screen flex flex-col pb-24 bg-background"
     >
       <motion.div
         initial={{ opacity: 0 }}
