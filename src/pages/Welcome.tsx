@@ -140,7 +140,7 @@ const Welcome = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           onClick={() => navigate("/auth")}
-          className="absolute top-12 right-6 z-20 font-body text-sm text-foreground/70 hover:text-foreground transition-colors bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full"
+          className="absolute top-12 right-6 z-20 font-body text-sm text-foreground hover:text-foreground transition-colors bg-background/90 backdrop-blur-sm px-3 py-1 rounded-full"
         >
           Skip
         </motion.button>
