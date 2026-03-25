@@ -47,7 +47,7 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
       <div
         className="flex items-end gap-2 rounded-2xl border px-3 py-2"
         style={{
-          background: "hsla(40 30% 99% / 0.8)",
+          background: "hsla(var(--glass-bg))",
           borderColor: "hsl(var(--border))",
           backdropFilter: "blur(20px)",
           boxShadow: "0 -2px 20px hsla(var(--glass-shadow))",

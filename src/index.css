@@ -64,33 +64,47 @@
   }
 
   .dark {
-    --background: 150 15% 8%;
-    --foreground: 40 20% 92%;
-    --card: 150 15% 10%;
-    --card-foreground: 40 20% 92%;
-    --popover: 150 15% 10%;
-    --popover-foreground: 40 20% 92%;
-    --primary: 140 30% 65%;
-    --primary-foreground: 150 15% 8%;
-    --secondary: 150 12% 18%;
-    --secondary-foreground: 40 20% 92%;
-    --muted: 150 12% 18%;
-    --muted-foreground: 140 10% 55%;
-    --accent: 42 40% 55%;
-    --accent-foreground: 40 20% 92%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 40 20% 92%;
-    --border: 150 12% 20%;
-    --input: 150 12% 20%;
-    --ring: 140 30% 65%;
-    --sidebar-background: 150 15% 8%;
-    --sidebar-foreground: 40 20% 92%;
-    --sidebar-primary: 140 30% 65%;
-    --sidebar-primary-foreground: 150 15% 8%;
-    --sidebar-accent: 150 12% 15%;
-    --sidebar-accent-foreground: 40 20% 92%;
-    --sidebar-border: 150 12% 18%;
-    --sidebar-ring: 140 30% 65%;
+    --background: 160 18% 7%;
+    --foreground: 45 20% 90%;
+    --card: 160 15% 10%;
+    --card-foreground: 45 20% 90%;
+    --popover: 160 15% 10%;
+    --popover-foreground: 45 20% 90%;
+    --primary: 145 40% 55%;
+    --primary-foreground: 160 18% 7%;
+    --secondary: 160 12% 16%;
+    --secondary-foreground: 45 20% 90%;
+    --muted: 160 10% 15%;
+    --muted-foreground: 150 12% 58%;
+    --accent: 42 45% 58%;
+    --accent-foreground: 45 20% 90%;
+    --destructive: 0 55% 50%;
+    --destructive-foreground: 45 20% 90%;
+    --border: 160 10% 18%;
+    --input: 160 10% 18%;
+    --ring: 145 40% 55%;
+
+    /* Dark Nirvaha tokens */
+    --sage: 140 15% 40%;
+    --sage-light: 140 12% 18%;
+    --gold: 42 45% 58%;
+    --gold-light: 42 35% 35%;
+    --cream: 160 18% 7%;
+    --cream-warm: 160 15% 9%;
+    --healing-green: 145 40% 55%;
+    --healing-green-light: 150 30% 40%;
+    --glass-bg: 160 15% 12% / 0.75;
+    --glass-border: 160 12% 20% / 0.6;
+    --glass-shadow: 160 20% 5% / 0.3;
+
+    --sidebar-background: 160 18% 7%;
+    --sidebar-foreground: 45 20% 90%;
+    --sidebar-primary: 145 40% 55%;
+    --sidebar-primary-foreground: 160 18% 7%;
+    --sidebar-accent: 160 12% 14%;
+    --sidebar-accent-foreground: 45 20% 90%;
+    --sidebar-border: 160 10% 18%;
+    --sidebar-ring: 145 40% 55%;
   }
 }
 
@@ -118,12 +132,12 @@
     box-shadow: 
       0 8px 32px hsla(var(--glass-shadow)),
       0 1px 2px hsla(var(--glass-shadow)),
-      inset 0 1px 0 hsla(40 30% 100% / 0.4);
+      inset 0 1px 0 hsla(var(--glass-border));
   }
 
   .glass-input {
     @apply rounded-xl border px-4 py-3 text-sm font-body transition-all duration-300 outline-none w-full;
-    background: hsla(40 30% 99% / 0.7);
+    background: hsla(var(--glass-bg));
     border-color: hsl(var(--border));
   }
   .glass-input:focus {
@@ -163,13 +177,13 @@
 
   .btn-social {
     @apply rounded-xl px-6 py-3 font-body font-medium text-sm transition-all duration-300 w-full border flex items-center justify-center gap-2;
-    background: hsla(40 30% 99% / 0.8);
+    background: hsla(var(--glass-bg));
     border-color: hsl(var(--border));
     color: hsl(var(--foreground));
   }
   .btn-social:hover {
     border-color: hsl(var(--muted-foreground));
-    background: hsla(40 30% 98% / 0.95);
+    background: hsl(var(--card));
     transform: translateY(-1px);
     box-shadow: 0 4px 12px hsla(var(--glass-shadow));
   }
@@ -183,7 +197,7 @@
     color: hsl(var(--muted-foreground));
   }
   .tab-item.active {
-    background: hsla(40 30% 100% / 0.9);
+    background: hsl(var(--card));
     color: hsl(var(--foreground));
     box-shadow: 0 2px 8px hsla(var(--glass-shadow));
   }
