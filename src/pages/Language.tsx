@@ -34,12 +34,7 @@ const Language = () => {
   };
 
   return (
-    <div
-      className="min-h-screen flex flex-col"
-      style={{
-        background: "linear-gradient(180deg, hsl(var(--cream)) 0%, hsl(var(--cream-warm)) 40%, hsl(var(--sage-light)) 100%)",
-      }}
-    >
+    <div className="min-h-screen flex flex-col bg-background">
       <div className="flex items-center gap-3 px-4 pt-6 pb-4">
         <motion.button whileTap={{ scale: 0.9 }} onClick={() => navigate("/profile")}>
           <ArrowLeft size={20} className="text-foreground" />

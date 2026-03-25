@@ -137,7 +137,7 @@
 
   .glass-input {
     @apply rounded-xl border px-4 py-3 text-sm font-body transition-all duration-300 outline-none w-full;
-    background: hsla(40 30% 99% / 0.7);
+    background: hsla(var(--glass-bg));
     border-color: hsl(var(--border));
   }
   .glass-input:focus {
