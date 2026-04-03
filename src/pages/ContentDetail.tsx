@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Play, Pause, Bookmark, BookmarkCheck, Star, Clock, Download, Subtitles,
-  FileText, ChevronDown, ChevronUp, Gauge, Share2, Heart, Film,
+  FileText, ChevronDown, ChevronUp, Gauge, Share2, Heart, Film, ListPlus,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import BottomNav from "@/components/home/BottomNav";
