@@ -29,6 +29,7 @@ const SessionFeedback = lazy(() => import("./pages/SessionFeedback.tsx"));
 const Collection = lazy(() => import("./pages/Collection.tsx"));
 const ContentDetail = lazy(() => import("./pages/ContentDetail.tsx"));
 const MyList = lazy(() => import("./pages/MyList.tsx"));
+const Community = lazy(() => import("./pages/Community.tsx"));
 
 const queryClient = new QueryClient();
 
