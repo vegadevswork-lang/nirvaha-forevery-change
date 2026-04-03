@@ -48,16 +48,6 @@ const ContentDetail = () => {
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [downloading, setDownloading] = useState<string | null>(null);
 
-  // Player state
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [muted, setMuted] = useState(false);
-  const [playerExpanded, setPlayerExpanded] = useState(false);
-  const [showPlayer, setShowPlayer] = useState(false);
-  const progressRef = useRef<HTMLDivElement>(null);
-
   const allContent = getAllContent();
   const item = allContent.find((c) => c.id === id);
 
