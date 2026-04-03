@@ -308,11 +308,10 @@ const PostDetailView = ({
               {totalReplies} {totalReplies === 1 ? "Response" : "Responses"}
             </h3>
             <div
-              className="rounded-2xl border divide-y"
+              className="rounded-2xl border divide-y divide-border/30"
               style={{
                 background: "hsl(var(--card))",
                 borderColor: "hsl(var(--border) / 0.5)",
-                divideColor: "hsl(var(--border) / 0.3)",
               }}
             >
               {post.responses.map((r) => (
