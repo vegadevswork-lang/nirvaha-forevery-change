@@ -26,6 +26,7 @@ const MentorProfile = lazy(() => import("./pages/MentorProfile.tsx"));
 const BookSession = lazy(() => import("./pages/BookSession.tsx"));
 const BecomeCompanion = lazy(() => import("./pages/BecomeCompanion.tsx"));
 const SessionFeedback = lazy(() => import("./pages/SessionFeedback.tsx"));
+const Collection = lazy(() => import("./pages/Collection.tsx"));
 
 const queryClient = new QueryClient();
 
