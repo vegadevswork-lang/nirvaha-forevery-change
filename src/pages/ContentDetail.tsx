@@ -58,7 +58,25 @@ const ContentDetail = () => {
   const [showPlayer, setShowPlayer] = useState(false);
   const progressRef = useRef<HTMLDivElement>(null);
 
-  const item = getAllContent().find((c) => c.id === id);
+  const allContent = getAllContent();
+  const item = allContent.find((c) => c.id === id);
+
+  // Player state
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [muted, setMuted] = useState(false);
+  const [playerExpanded, setPlayerExpanded] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(false);
+  const progressRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.playbackRate = playbackSpeed;
+    }
+  }, [playbackSpeed]);
+
   if (!item) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
