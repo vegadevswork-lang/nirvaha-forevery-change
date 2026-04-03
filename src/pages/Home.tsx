@@ -8,6 +8,7 @@ import SmartActions from "@/components/home/SmartActions";
 import WellnessStats from "@/components/home/WellnessStats";
 import WisdomSelfieCard from "@/components/home/WisdomSelfieCard";
 import JournalCard from "@/components/home/JournalCard";
+import CompanionCard from "@/components/home/CompanionCard";
 import BottomNav from "@/components/home/BottomNav";
 import { useMoodLog } from "@/hooks/use-mood-log";
 
