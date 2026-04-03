@@ -57,6 +57,7 @@ const App = () => (
             <Route path="/companion/feedback/:id" element={<SessionFeedback />} />
             <Route path="/companion/book/:id" element={<BookSession />} />
             <Route path="/become-companion" element={<BecomeCompanion />} />
+            <Route path="/collection" element={<Collection />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

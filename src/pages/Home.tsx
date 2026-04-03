@@ -87,6 +87,8 @@ const Home = () => {
 
         <CompanionCard />
 
+        <CollectionCard />
+
         <WellnessStats />
 
         <SmartActions />
