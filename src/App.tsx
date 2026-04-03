@@ -29,6 +29,7 @@ const SessionFeedback = lazy(() => import("./pages/SessionFeedback.tsx"));
 const Collection = lazy(() => import("./pages/Collection.tsx"));
 const ContentDetail = lazy(() => import("./pages/ContentDetail.tsx"));
 const MyList = lazy(() => import("./pages/MyList.tsx"));
+const Community = lazy(() => import("./pages/Community.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -62,6 +63,7 @@ const App = () => (
             <Route path="/collection" element={<Collection />} />
             <Route path="/collection/:id" element={<ContentDetail />} />
             <Route path="/my-list" element={<MyList />} />
+            <Route path="/community" element={<Community />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
