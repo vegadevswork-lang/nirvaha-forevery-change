@@ -1,14 +1,15 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Play, Pause, Bookmark, BookmarkCheck, Star, Clock, Download, Subtitles,
-  FileText, ChevronDown, ChevronUp, Gauge, Share2, Heart, SkipBack, SkipForward,
-  Volume2, VolumeX, Maximize2, Minimize2
+  FileText, ChevronDown, ChevronUp, Gauge, Share2, Heart, Film,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import BottomNav from "@/components/home/BottomNav";
 import { getAllContent, getRelatedContent, type ContentItem } from "@/data/collectionData";
 import { useSavedContent } from "@/hooks/use-saved-content";
+import { useGlobalPlayer } from "@/hooks/use-global-player";
+import VideoPlayer from "@/components/player/VideoPlayer";
 
 const typeColor: Record<string, string> = {
   series: "hsl(var(--healing-green))",
@@ -20,7 +21,6 @@ const typeColor: Record<string, string> = {
   soundscape: "hsl(180 50% 55%)",
 };
 
-// Free sample audio URLs for demo playback
 const sampleAudio: Record<string, string> = {
   meditation: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
   soundscape: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
@@ -31,41 +31,21 @@ const sampleAudio: Record<string, string> = {
   playlist: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
 };
 
-const formatTime = (s: number) => {
-  if (!isFinite(s)) return "0:00";
-  const m = Math.floor(s / 60);
-  const sec = Math.floor(s % 60);
-  return `${m}:${sec.toString().padStart(2, "0")}`;
-};
+const isVideoType = (type: string) => type === "film" || type === "series";
 
 const ContentDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { isSaved, toggleSave } = useSavedContent();
+  const globalPlayer = useGlobalPlayer();
   const [liked, setLiked] = useState(false);
   const [showAllEpisodes, setShowAllEpisodes] = useState(false);
   const [activeTab, setActiveTab] = useState<"episodes" | "reviews" | "related">("episodes");
-  const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [downloading, setDownloading] = useState<string | null>(null);
+  const [showVideoPlayer, setShowVideoPlayer] = useState(false);
 
   const allContent = getAllContent();
   const item = allContent.find((c) => c.id === id);
-
-  // Player state
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [muted, setMuted] = useState(false);
-  const [playerExpanded, setPlayerExpanded] = useState(false);
-  const [showPlayer, setShowPlayer] = useState(false);
-  const progressRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.playbackRate = playbackSpeed;
-    }
-  }, [playbackSpeed]);
 
   if (!item) {
     return (
@@ -83,28 +63,23 @@ const ContentDetail = () => {
   const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
   const audioSrc = sampleAudio[item.type] || sampleAudio.meditation;
 
+  const isCurrentTrack = globalPlayer.track?.id === item.id;
+
   const handlePlay = () => {
-    setShowPlayer(true);
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play().catch(() => {});
-      }
-      setIsPlaying(!isPlaying);
+    if (isVideoType(item.type)) {
+      setShowVideoPlayer(true);
+      return;
     }
-  };
-
-  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!progressRef.current || !audioRef.current) return;
-    const rect = progressRef.current.getBoundingClientRect();
-    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    audioRef.current.currentTime = pct * duration;
-  };
-
-  const handleSkip = (delta: number) => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = Math.max(0, Math.min(duration, audioRef.current.currentTime + delta));
+    if (isCurrentTrack) {
+      globalPlayer.toggle();
+    } else {
+      globalPlayer.play({
+        id: item.id,
+        title: item.title,
+        type: item.type,
+        image: item.image,
+        audioSrc,
+      });
     }
   };
 
@@ -113,21 +88,22 @@ const ContentDetail = () => {
     setTimeout(() => setDownloading(null), 2000);
   };
 
+  const playingThis = isCurrentTrack && globalPlayer.isPlaying;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Hidden audio element */}
-      <audio
-        ref={audioRef}
-        src={audioSrc}
-        preload="metadata"
-        muted={muted}
-        onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
-        onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
-        onEnded={() => setIsPlaying(false)}
-      />
+      {/* Video Player Overlay */}
+      <AnimatePresence>
+        {showVideoPlayer && (
+          <VideoPlayer
+            title={item.title}
+            posterImage={item.image}
+            onClose={() => setShowVideoPlayer(false)}
+          />
+        )}
+      </AnimatePresence>
 
-      <div className="flex-1 overflow-y-auto pb-28 relative z-10" style={{ paddingBottom: showPlayer ? 180 : 112 }}>
+      <div className="flex-1 overflow-y-auto relative z-10" style={{ paddingBottom: globalPlayer.track ? 180 : 112 }}>
         {/* Hero */}
         <div className="relative" style={{ height: 280 }}>
           <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
@@ -175,7 +151,9 @@ const ContentDetail = () => {
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center"
             style={{ background: "hsla(0 0% 100% / 0.9)", boxShadow: "0 8px 32px hsla(0 0% 0% / 0.3)" }}
           >
-            {isPlaying ? (
+            {isVideoType(item.type) ? (
+              <Film size={24} style={{ color: "hsl(0 0% 10%)" }} />
+            ) : playingThis ? (
               <Pause size={24} fill="hsl(0 0% 10%)" style={{ color: "hsl(0 0% 10%)" }} />
             ) : (
               <Play size={24} fill="hsl(0 0% 10%)" style={{ color: "hsl(0 0% 10%)" }} />
@@ -192,6 +170,11 @@ const ContentDetail = () => {
             >
               {item.type}
             </span>
+            {isVideoType(item.type) && (
+              <span className="flex items-center gap-1 text-[10px] font-body" style={{ color: "hsl(var(--primary))" }}>
+                <Film size={10} /> Video
+              </span>
+            )}
             {item.duration && (
               <span className="flex items-center gap-1 text-[10px] font-body text-muted-foreground">
                 <Clock size={10} /> {item.duration}
@@ -244,8 +227,22 @@ const ContentDetail = () => {
               className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl font-body font-medium text-sm"
               style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}
             >
-              {isPlaying ? <Pause size={16} /> : <Play size={16} fill="currentColor" />}
-              {isPlaying ? "Pause" : "Play Now"}
+              {isVideoType(item.type) ? (
+                <>
+                  <Film size={16} />
+                  Watch Now
+                </>
+              ) : playingThis ? (
+                <>
+                  <Pause size={16} />
+                  Pause
+                </>
+              ) : (
+                <>
+                  <Play size={16} fill="currentColor" />
+                  Play Now
+                </>
+              )}
             </motion.button>
             <motion.button
               whileTap={{ scale: 0.97 }}
@@ -265,26 +262,28 @@ const ContentDetail = () => {
             </motion.button>
           </div>
 
-          {/* Playback Speed */}
-          <div className="flex items-center gap-3 mb-5 px-1">
-            <Gauge size={14} className="text-muted-foreground" />
-            <span className="text-[10px] font-body text-muted-foreground">Speed</span>
-            <div className="flex gap-1.5">
-              {speeds.map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setPlaybackSpeed(s)}
-                  className="px-2 py-1 rounded-lg text-[10px] font-body font-medium transition-colors"
-                  style={{
-                    background: playbackSpeed === s ? "hsl(var(--primary))" : "hsl(var(--muted))",
-                    color: playbackSpeed === s ? "hsl(var(--primary-foreground))" : "hsl(var(--muted-foreground))",
-                  }}
-                >
-                  {s}x
-                </button>
-              ))}
+          {/* Playback Speed (audio only) */}
+          {!isVideoType(item.type) && (
+            <div className="flex items-center gap-3 mb-5 px-1">
+              <Gauge size={14} className="text-muted-foreground" />
+              <span className="text-[10px] font-body text-muted-foreground">Speed</span>
+              <div className="flex gap-1.5">
+                {speeds.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => globalPlayer.setPlaybackSpeed(s)}
+                    className="px-2 py-1 rounded-lg text-[10px] font-body font-medium transition-colors"
+                    style={{
+                      background: globalPlayer.playbackSpeed === s ? "hsl(var(--primary))" : "hsl(var(--muted))",
+                      color: globalPlayer.playbackSpeed === s ? "hsl(var(--primary-foreground))" : "hsl(var(--muted-foreground))",
+                    }}
+                  >
+                    {s}x
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Tabs */}
           <div className="flex gap-1 mb-4 p-1 rounded-2xl" style={{ background: "hsl(var(--muted))" }}>
@@ -327,7 +326,11 @@ const ContentDetail = () => {
                           className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
                           style={{ background: "hsla(var(--primary) / 0.15)" }}
                         >
-                          <Play size={12} className="text-primary" fill="currentColor" />
+                          {isVideoType(item.type) ? (
+                            <Film size={12} className="text-primary" />
+                          ) : (
+                            <Play size={12} className="text-primary" fill="currentColor" />
+                          )}
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-body text-xs font-medium text-foreground truncate">
@@ -434,101 +437,6 @@ const ContentDetail = () => {
           </AnimatePresence>
         </div>
       </div>
-
-      {/* Floating Player */}
-      <AnimatePresence>
-        {showPlayer && (
-          <motion.div
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
-            className="fixed left-0 right-0 z-40"
-            style={{ bottom: 80 }}
-          >
-            <div
-              className="mx-4 rounded-2xl p-3 overflow-hidden"
-              style={{
-                background: "hsla(var(--card) / 0.95)",
-                backdropFilter: "blur(20px)",
-                border: "1px solid hsla(var(--glass-border))",
-                boxShadow: "0 -4px 30px hsla(0 0% 0% / 0.3)",
-              }}
-            >
-              {/* Mini info row */}
-              <div className="flex items-center gap-3 mb-2">
-                <img src={item.image} alt={item.title} className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="font-body text-xs font-semibold text-foreground truncate">{item.title}</p>
-                  <p className="font-body text-[9px] text-muted-foreground">{item.type} · {playbackSpeed}x</p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <motion.button whileTap={{ scale: 0.9 }} onClick={() => setMuted(!muted)} className="w-7 h-7 flex items-center justify-center">
-                    {muted ? <VolumeX size={14} className="text-muted-foreground" /> : <Volume2 size={14} className="text-foreground" />}
-                  </motion.button>
-                  <motion.button whileTap={{ scale: 0.9 }} onClick={() => setPlayerExpanded(!playerExpanded)} className="w-7 h-7 flex items-center justify-center">
-                    {playerExpanded ? <Minimize2 size={14} className="text-foreground" /> : <Maximize2 size={14} className="text-foreground" />}
-                  </motion.button>
-                </div>
-              </div>
-
-              {/* Progress bar */}
-              <div
-                ref={progressRef}
-                onClick={handleSeek}
-                className="w-full h-1.5 rounded-full cursor-pointer mb-2"
-                style={{ background: "hsl(var(--muted))" }}
-              >
-                <div
-                  className="h-full rounded-full transition-all"
-                  style={{
-                    width: duration > 0 ? `${(currentTime / duration) * 100}%` : "0%",
-                    background: "hsl(var(--primary))",
-                  }}
-                />
-              </div>
-
-              {/* Time */}
-              <div className="flex justify-between text-[9px] font-body text-muted-foreground mb-1">
-                <span>{formatTime(currentTime)}</span>
-                <span>{formatTime(duration)}</span>
-              </div>
-
-              {/* Expanded controls */}
-              <AnimatePresence>
-                {playerExpanded && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="flex items-center justify-center gap-6 pt-2">
-                      <motion.button whileTap={{ scale: 0.9 }} onClick={() => handleSkip(-15)} className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: "hsl(var(--muted))" }}>
-                        <SkipBack size={16} className="text-foreground" />
-                      </motion.button>
-                      <motion.button
-                        whileTap={{ scale: 0.9 }}
-                        onClick={handlePlay}
-                        className="w-12 h-12 rounded-full flex items-center justify-center"
-                        style={{ background: "hsl(var(--primary))" }}
-                      >
-                        {isPlaying ? (
-                          <Pause size={20} style={{ color: "hsl(var(--primary-foreground))" }} />
-                        ) : (
-                          <Play size={20} fill="currentColor" style={{ color: "hsl(var(--primary-foreground))" }} />
-                        )}
-                      </motion.button>
-                      <motion.button whileTap={{ scale: 0.9 }} onClick={() => handleSkip(15)} className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: "hsl(var(--muted))" }}>
-                        <SkipForward size={16} className="text-foreground" />
-                      </motion.button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <BottomNav active="Home" onSelect={() => {}} />
     </div>
