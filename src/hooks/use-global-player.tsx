@@ -33,13 +33,18 @@ interface PlayerContextType {
   playQueue: (tracks: PlayerTrack[], startIndex?: number) => void;
 }
 
-const PlayerContext = createContext<PlayerContextType | null>(null);
-
-export const useGlobalPlayer = () => {
-  const ctx = useContext(PlayerContext);
-  if (!ctx) throw new Error("useGlobalPlayer must be used within GlobalPlayerProvider");
-  return ctx;
+const noopPlayer: PlayerContextType = {
+  track: null, isPlaying: false, currentTime: 0, duration: 0, muted: false,
+  playbackSpeed: 1, queue: [], queueIndex: -1,
+  play: () => {}, toggle: () => {}, pause: () => {}, seek: () => {}, skip: () => {},
+  setMuted: () => {}, setPlaybackSpeed: () => {}, stop: () => {},
+  addToQueue: () => {}, removeFromQueue: () => {}, clearQueue: () => {},
+  playNext: () => {}, playPrev: () => {}, playQueue: () => {},
 };
+
+const PlayerContext = createContext<PlayerContextType>(noopPlayer);
+
+export const useGlobalPlayer = () => useContext(PlayerContext);
 
 export const GlobalPlayerProvider = ({ children }: { children: ReactNode }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
