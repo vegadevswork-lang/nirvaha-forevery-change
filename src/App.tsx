@@ -23,9 +23,9 @@ const PrivacyData = lazy(() => import("./pages/PrivacyData.tsx"));
 const HelpSupport = lazy(() => import("./pages/HelpSupport.tsx"));
 const CompanionHub = lazy(() => import("./pages/CompanionHub.tsx"));
 const MentorProfile = lazy(() => import("./pages/MentorProfile.tsx"));
-const SpiritualGuideProfile = lazy(() => import("./pages/SpiritualGuideProfile.tsx"));
 const BookSession = lazy(() => import("./pages/BookSession.tsx"));
 const BecomeCompanion = lazy(() => import("./pages/BecomeCompanion.tsx"));
+const SessionFeedback = lazy(() => import("./pages/SessionFeedback.tsx"));
 
 const queryClient = new QueryClient();
 
