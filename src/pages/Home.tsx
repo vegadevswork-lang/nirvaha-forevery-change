@@ -82,15 +82,15 @@ const Home = () => {
 
         <AiHeroCard />
 
-        <WisdomSelfieCard />
-
-        <JournalCard />
-
         <CompanionCard />
 
         <CollectionCard />
 
         <CommunityCard />
+
+        <WisdomSelfieCard />
+
+        <JournalCard />
 
         <WellnessStats />
 
