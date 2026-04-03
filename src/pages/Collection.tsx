@@ -1,9 +1,16 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Search, Play, Star, Clock, Bookmark, X } from "lucide-react";
+import { ArrowLeft, Search, Play, Star, Clock, Bookmark, X, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/home/BottomNav";
-import { heroContent, contentRows, categories, type ContentItem } from "@/data/collectionData";
+import {
+  heroSlides,
+  continueWatching,
+  aiRecommendations,
+  contentRows,
+  categories,
+  type ContentItem,
+} from "@/data/collectionData";
 
 const typeColor: Record<string, string> = {
   series: "hsl(var(--healing-green))",
@@ -21,8 +28,20 @@ const Collection = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedItem, setSelectedItem] = useState<ContentItem | null>(null);
+  const [heroIndex, setHeroIndex] = useState(0);
   const scrollRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  // Auto-slide hero
+  const nextSlide = useCallback(() => {
+    setHeroIndex((i) => (i + 1) % heroSlides.length);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 5000);
+    return () => clearInterval(timer);
+  }, [nextSlide]);
+
+  const hero = heroSlides[heroIndex];
 
   const filteredRows = contentRows
     .map((row) => ({
@@ -71,16 +90,11 @@ const Collection = () => {
                 <ArrowLeft size={18} className="text-foreground" />
               </motion.button>
               {!searchOpen && (
-                <motion.h1
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="font-display text-lg text-foreground font-semibold"
-                >
+                <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-display text-lg text-foreground font-semibold">
                   Collection
                 </motion.h1>
               )}
             </div>
-
             <AnimatePresence mode="wait">
               {searchOpen ? (
                 <motion.div
@@ -118,61 +132,80 @@ const Collection = () => {
           </div>
         </div>
 
-        {/* Hero Banner */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className="relative mx-5 rounded-3xl overflow-hidden mb-5"
-          style={{ height: 220 }}
-        >
-          <img
-            src={heroContent.image}
-            alt={heroContent.title}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(to top, hsla(0 0% 0% / 0.85) 0%, hsla(0 0% 0% / 0.2) 50%, transparent)" }}
-          />
-          <div className="absolute bottom-0 left-0 right-0 p-5">
-            <div className="flex items-center gap-2 mb-1">
-              <span
-                className="px-2 py-0.5 rounded-full text-[9px] font-body font-semibold uppercase tracking-wider"
-                style={{ background: "hsl(var(--gold))", color: "hsl(0 0% 5%)" }}
-              >
-                Featured
-              </span>
-              <span className="text-[10px] font-body" style={{ color: "hsla(0 0% 100% / 0.7)" }}>
-                {heroContent.type} · {heroContent.duration}
-              </span>
-            </div>
-            <h2 className="font-display text-xl font-semibold leading-tight mb-1" style={{ color: "hsl(0 0% 95%)" }}>
-              {heroContent.title}
-            </h2>
-            <p className="font-body text-[10px] leading-relaxed mb-3 line-clamp-2" style={{ color: "hsla(0 0% 100% / 0.6)" }}>
-              {heroContent.subtitle}
-            </p>
-            <div className="flex gap-2">
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-body font-medium text-xs"
-                style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}
-              >
-                <Play size={14} fill="currentColor" />
-                Play
-              </motion.button>
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-body font-medium text-xs"
-                style={{ background: "hsla(0 0% 100% / 0.15)", color: "hsl(0 0% 95%)", backdropFilter: "blur(8px)" }}
-              >
-                <Bookmark size={14} />
-                My List
-              </motion.button>
-            </div>
-          </div>
-        </motion.div>
+        {/* Hero Carousel */}
+        <div className="relative mx-5 rounded-3xl overflow-hidden mb-2" style={{ height: 220 }}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={hero.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6 }}
+              className="absolute inset-0"
+            >
+              <img src={hero.image} alt={hero.title} className="absolute inset-0 w-full h-full object-cover" />
+              <div
+                className="absolute inset-0"
+                style={{ background: "linear-gradient(to top, hsla(0 0% 0% / 0.85) 0%, hsla(0 0% 0% / 0.2) 50%, transparent)" }}
+              />
+              <div className="absolute bottom-0 left-0 right-0 p-5">
+                <div className="flex items-center gap-2 mb-1">
+                  <span
+                    className="px-2 py-0.5 rounded-full text-[9px] font-body font-semibold uppercase tracking-wider"
+                    style={{ background: "hsl(var(--gold))", color: "hsl(0 0% 5%)" }}
+                  >
+                    Featured
+                  </span>
+                  <span className="text-[10px] font-body" style={{ color: "hsla(0 0% 100% / 0.7)" }}>
+                    {hero.type} · {hero.duration}
+                  </span>
+                </div>
+                <h2 className="font-display text-xl font-semibold leading-tight mb-1" style={{ color: "hsl(0 0% 95%)" }}>
+                  {hero.title}
+                </h2>
+                <p className="font-body text-[10px] leading-relaxed mb-3 line-clamp-2" style={{ color: "hsla(0 0% 100% / 0.6)" }}>
+                  {hero.subtitle}
+                </p>
+                <div className="flex gap-2">
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => navigate(`/collection/${hero.id}`)}
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-body font-medium text-xs"
+                    style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}
+                  >
+                    <Play size={14} fill="currentColor" />
+                    Play
+                  </motion.button>
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-body font-medium text-xs"
+                    style={{ background: "hsla(0 0% 100% / 0.15)", color: "hsl(0 0% 95%)", backdropFilter: "blur(8px)" }}
+                  >
+                    <Bookmark size={14} />
+                    My List
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Slide indicators */}
+        <div className="flex justify-center gap-1.5 mb-5">
+          {heroSlides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setHeroIndex(i)}
+              className="rounded-full transition-all duration-300"
+              style={{
+                width: heroIndex === i ? 20 : 6,
+                height: 6,
+                background: heroIndex === i ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))",
+                opacity: heroIndex === i ? 1 : 0.4,
+              }}
+            />
+          ))}
+        </div>
 
         {/* Category pills */}
         <div className="flex gap-2 px-5 mb-5 overflow-x-auto no-scrollbar">
@@ -191,6 +224,109 @@ const Collection = () => {
               {cat}
             </motion.button>
           ))}
+        </div>
+
+        {/* Continue Watching */}
+        {continueWatching.length > 0 && (
+          <div className="mb-6">
+            <div className="flex items-center justify-between px-5 mb-3">
+              <h3 className="font-display text-sm font-semibold text-foreground">Continue Watching</h3>
+            </div>
+            <div className="flex gap-3 px-5 overflow-x-auto no-scrollbar">
+              {continueWatching.map((item, i) => (
+                <motion.button
+                  key={item.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.05 * i }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => navigate(`/collection/${item.id}`)}
+                  className="flex-shrink-0 rounded-2xl overflow-hidden text-left relative"
+                  style={{ width: 160 }}
+                >
+                  <div className="relative" style={{ height: 100 }}>
+                    <img src={item.image} alt={item.title} className="w-full h-full object-cover rounded-2xl" loading="lazy" />
+                    <div className="absolute inset-0 rounded-2xl" style={{ background: "linear-gradient(to top, hsla(0 0% 0% / 0.7) 0%, transparent 50%)" }} />
+                    <div className="absolute bottom-0 left-0 right-0 p-2">
+                      <p className="font-display text-[10px] font-semibold leading-tight line-clamp-1" style={{ color: "hsl(0 0% 95%)" }}>
+                        {item.title}
+                      </p>
+                      <p className="text-[8px] font-body mt-0.5" style={{ color: "hsla(0 0% 100% / 0.6)" }}>
+                        {item.duration}
+                      </p>
+                    </div>
+                    {/* Play icon */}
+                    <div className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "hsla(0 0% 100% / 0.9)" }}>
+                      <Play size={10} fill="hsl(0 0% 10%)" style={{ color: "hsl(0 0% 10%)" }} />
+                    </div>
+                  </div>
+                  {/* Progress bar */}
+                  {item.progress != null && (
+                    <div className="mt-1.5 h-1 rounded-full overflow-hidden" style={{ background: "hsl(var(--muted))" }}>
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: `${item.progress}%`, background: "hsl(var(--primary))" }}
+                      />
+                    </div>
+                  )}
+                </motion.button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* AI Recommendations */}
+        <div className="mb-6">
+          <div className="flex items-center gap-2 px-5 mb-3">
+            <Sparkles size={14} style={{ color: "hsl(var(--gold))" }} />
+            <h3 className="font-display text-sm font-semibold text-foreground">Nirvaha AI Picks for You</h3>
+          </div>
+          <div className="flex gap-3 px-5 overflow-x-auto no-scrollbar">
+            {aiRecommendations.map((item, i) => (
+              <motion.button
+                key={item.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.05 * i }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => navigate(`/collection/${item.id}`)}
+                className="flex-shrink-0 rounded-2xl overflow-hidden text-left"
+                style={{ width: 150 }}
+              >
+                <div className="relative" style={{ height: 200 }}>
+                  <img src={item.image} alt={item.title} className="w-full h-full object-cover rounded-2xl" loading="lazy" />
+                  <div className="absolute inset-0 rounded-2xl" style={{ background: "linear-gradient(to top, hsla(0 0% 0% / 0.8) 0%, transparent 50%)" }} />
+                  {/* AI reason tag */}
+                  <div className="absolute top-2 left-2 right-2">
+                    <span
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[8px] font-body"
+                      style={{ background: "hsla(var(--gold) / 0.2)", color: "hsl(var(--gold))", backdropFilter: "blur(4px)" }}
+                    >
+                      <Sparkles size={8} />
+                      AI Pick
+                    </span>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 p-2.5">
+                    <p className="font-display text-[11px] font-semibold leading-tight line-clamp-2 mb-0.5" style={{ color: "hsl(0 0% 95%)" }}>
+                      {item.title}
+                    </p>
+                    {item.subtitle && (
+                      <p className="text-[8px] font-body line-clamp-1" style={{ color: "hsla(0 0% 100% / 0.5)" }}>
+                        {item.subtitle}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-2 mt-1">
+                      {item.rating && (
+                        <span className="flex items-center gap-0.5 text-[9px] font-body" style={{ color: "hsl(var(--gold))" }}>
+                          <Star size={8} fill="currentColor" /> {item.rating}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </motion.button>
+            ))}
+          </div>
         </div>
 
         {/* Content Rows */}
@@ -213,7 +349,7 @@ const Collection = () => {
               className="flex gap-3 px-5 overflow-x-auto no-scrollbar"
             >
               {row.items.map((item, i) => (
-                <ContentCard key={item.id} item={item} index={i} onSelect={setSelectedItem} />
+                <ContentCard key={item.id} item={item} index={i} onSelect={() => navigate(`/collection/${item.id}`)} />
               ))}
             </div>
           </motion.div>
@@ -227,13 +363,6 @@ const Collection = () => {
         )}
       </div>
 
-      {/* Detail Sheet */}
-      <AnimatePresence>
-        {selectedItem && (
-          <ContentDetailSheet item={selectedItem} onClose={() => setSelectedItem(null)} />
-        )}
-      </AnimatePresence>
-
       <BottomNav active={activeNav} onSelect={setActiveNav} />
     </div>
   );
@@ -246,58 +375,38 @@ const ContentCard = ({
 }: {
   item: ContentItem;
   index: number;
-  onSelect: (item: ContentItem) => void;
+  onSelect: () => void;
 }) => (
   <motion.button
     initial={{ opacity: 0, scale: 0.95 }}
     animate={{ opacity: 1, scale: 1 }}
     transition={{ delay: 0.05 * index }}
     whileTap={{ scale: 0.97 }}
-    onClick={() => onSelect(item)}
+    onClick={onSelect}
     className="flex-shrink-0 rounded-2xl overflow-hidden text-left relative group"
     style={{ width: 140 }}
   >
     <div className="relative" style={{ height: 190 }}>
-      <img
-        src={item.image}
-        alt={item.title}
-        className="w-full h-full object-cover rounded-2xl"
-        loading="lazy"
-      />
-      {/* Gradient overlay */}
-      <div
-        className="absolute inset-0 rounded-2xl"
-        style={{ background: "linear-gradient(to top, hsla(0 0% 0% / 0.7) 0%, transparent 50%)" }}
-      />
-      {/* Badges */}
+      <img src={item.image} alt={item.title} className="w-full h-full object-cover rounded-2xl" loading="lazy" />
+      <div className="absolute inset-0 rounded-2xl" style={{ background: "linear-gradient(to top, hsla(0 0% 0% / 0.7) 0%, transparent 50%)" }} />
       <div className="absolute top-2 left-2 flex gap-1">
         {item.isNew && (
-          <span className="px-1.5 py-0.5 rounded-md text-[8px] font-body font-bold uppercase" style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}>
-            New
-          </span>
+          <span className="px-1.5 py-0.5 rounded-md text-[8px] font-body font-bold uppercase" style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}>New</span>
         )}
         {item.isTrending && (
-          <span className="px-1.5 py-0.5 rounded-md text-[8px] font-body font-bold uppercase" style={{ background: "hsl(var(--gold))", color: "hsl(0 0% 5%)" }}>
-            Hot
-          </span>
+          <span className="px-1.5 py-0.5 rounded-md text-[8px] font-body font-bold uppercase" style={{ background: "hsl(var(--gold))", color: "hsl(0 0% 5%)" }}>Hot</span>
         )}
       </div>
-      {/* Type badge */}
       <div className="absolute top-2 right-2">
-        <span
-          className="px-1.5 py-0.5 rounded-md text-[8px] font-body font-semibold uppercase"
-          style={{ background: typeColor[item.type] || "hsl(var(--muted))", color: "hsl(0 0% 100%)" }}
-        >
+        <span className="px-1.5 py-0.5 rounded-md text-[8px] font-body font-semibold uppercase" style={{ background: typeColor[item.type] || "hsl(var(--muted))", color: "hsl(0 0% 100%)" }}>
           {item.type === "soundscape" ? "Sound" : item.type}
         </span>
       </div>
-      {/* Play overlay */}
       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" style={{ background: "hsla(0 0% 0% / 0.3)" }}>
         <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "hsla(0 0% 100% / 0.9)" }}>
           <Play size={16} fill="hsl(0 0% 10%)" style={{ color: "hsl(0 0% 10%)" }} />
         </div>
       </div>
-      {/* Bottom info */}
       <div className="absolute bottom-0 left-0 right-0 p-2.5">
         <p className="font-display text-[11px] font-semibold leading-tight line-clamp-2" style={{ color: "hsl(0 0% 95%)" }}>
           {item.title}
@@ -305,121 +414,18 @@ const ContentCard = ({
         <div className="flex items-center gap-2 mt-1">
           {item.rating && (
             <span className="flex items-center gap-0.5 text-[9px] font-body" style={{ color: "hsl(var(--gold))" }}>
-              <Star size={8} fill="currentColor" />
-              {item.rating}
+              <Star size={8} fill="currentColor" /> {item.rating}
             </span>
           )}
           {item.duration && (
             <span className="flex items-center gap-0.5 text-[9px] font-body" style={{ color: "hsla(0 0% 100% / 0.6)" }}>
-              <Clock size={8} />
-              {item.duration}
+              <Clock size={8} /> {item.duration}
             </span>
           )}
         </div>
       </div>
     </div>
   </motion.button>
-);
-
-const ContentDetailSheet = ({
-  item,
-  onClose,
-}: {
-  item: ContentItem;
-  onClose: () => void;
-}) => (
-  <>
-    {/* Backdrop */}
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-      className="fixed inset-0 z-50"
-      style={{ background: "hsla(0 0% 0% / 0.6)", backdropFilter: "blur(4px)" }}
-    />
-    {/* Sheet */}
-    <motion.div
-      initial={{ y: "100%" }}
-      animate={{ y: 0 }}
-      exit={{ y: "100%" }}
-      transition={{ type: "spring", damping: 28, stiffness: 300 }}
-      className="fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl overflow-hidden"
-      style={{ background: "hsl(var(--card))", maxHeight: "85vh" }}
-    >
-      {/* Hero image */}
-      <div className="relative" style={{ height: 220 }}>
-        <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, hsl(var(--card)) 0%, transparent 60%)" }} />
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center"
-          style={{ background: "hsla(0 0% 0% / 0.5)", backdropFilter: "blur(8px)" }}
-        >
-          <X size={16} style={{ color: "hsl(0 0% 100%)" }} />
-        </button>
-      </div>
-
-      <div className="px-5 pb-8 -mt-8 relative z-10">
-        {/* Type & duration */}
-        <div className="flex items-center gap-2 mb-2">
-          <span
-            className="px-2 py-0.5 rounded-full text-[9px] font-body font-semibold uppercase"
-            style={{ background: typeColor[item.type], color: "hsl(0 0% 100%)" }}
-          >
-            {item.type}
-          </span>
-          {item.duration && (
-            <span className="flex items-center gap-1 text-[10px] font-body text-muted-foreground">
-              <Clock size={10} /> {item.duration}
-            </span>
-          )}
-          {item.rating && (
-            <span className="flex items-center gap-1 text-[10px] font-body" style={{ color: "hsl(var(--gold))" }}>
-              <Star size={10} fill="currentColor" /> {item.rating}
-            </span>
-          )}
-        </div>
-
-        <h2 className="font-display text-xl font-semibold text-foreground leading-tight mb-2">
-          {item.title}
-        </h2>
-
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {item.tags.map((tag) => (
-            <span
-              key={tag}
-              className="px-2.5 py-1 rounded-lg text-[10px] font-body text-muted-foreground"
-              style={{ background: "hsl(var(--muted))" }}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        {/* Action buttons */}
-        <div className="flex gap-3">
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl font-body font-medium text-sm"
-            style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}
-          >
-            <Play size={16} fill="currentColor" />
-            Play Now
-          </motion.button>
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            className="flex items-center justify-center gap-1.5 px-5 py-3 rounded-2xl font-body font-medium text-xs"
-            style={{ background: "hsl(var(--muted))", color: "hsl(var(--foreground))" }}
-          >
-            <Bookmark size={14} />
-            Save
-          </motion.button>
-        </div>
-      </div>
-    </motion.div>
-  </>
 );
 
 export default Collection;
