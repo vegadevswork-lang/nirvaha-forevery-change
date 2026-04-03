@@ -1,6 +1,7 @@
 export interface OnboardingOption {
   label: string;
   icon: string;
+  illustration?: string;
   description: string;
   microcopy: string;
 }
@@ -23,30 +24,35 @@ export const questions: OnboardingQuestion[] = [
       {
         label: "Finding calm",
         icon: "🍃",
+        illustration: "leaf",
         description: "Learn to let go of mental busy-ness and gently drift into a restful stillness.",
         microcopy: "Peace is a beautiful place to begin.",
       },
       {
         label: "Feeling less stressed",
         icon: "🌊",
+        illustration: "waves",
         description: "Discover tools to manage overwhelm and build emotional resilience day by day.",
         microcopy: "You're not alone in this.",
       },
       {
         label: "Understanding myself",
         icon: "🪞",
+        illustration: "mirror",
         description: "Explore your inner world through guided reflection and self-discovery.",
         microcopy: "Curiosity is the first step inward.",
       },
       {
         label: "Finding purpose",
         icon: "🧭",
+        illustration: "compass",
         description: "Gain clarity on what matters most and align your life with your deeper values.",
         microcopy: "Purpose reveals itself gently.",
       },
       {
         label: "Managing anxiety",
         icon: "🫧",
+        illustration: "bubbles",
         description: "Build practical skills to calm anxious thoughts and feel more grounded.",
         microcopy: "Let's explore this together.",
       },
