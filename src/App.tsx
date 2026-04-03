@@ -26,6 +26,7 @@ const MentorProfile = lazy(() => import("./pages/MentorProfile.tsx"));
 const BookSession = lazy(() => import("./pages/BookSession.tsx"));
 const BecomeCompanion = lazy(() => import("./pages/BecomeCompanion.tsx"));
 const SessionFeedback = lazy(() => import("./pages/SessionFeedback.tsx"));
+const Collection = lazy(() => import("./pages/Collection.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,7 @@ const App = () => (
             <Route path="/companion/feedback/:id" element={<SessionFeedback />} />
             <Route path="/companion/book/:id" element={<BookSession />} />
             <Route path="/become-companion" element={<BecomeCompanion />} />
+            <Route path="/collection" element={<Collection />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
