@@ -1,97 +1,195 @@
+export interface OnboardingOption {
+  label: string;
+  icon: string;
+  description: string;
+  microcopy: string;
+}
+
 export interface OnboardingQuestion {
   question: string;
-  options: string[];
+  subtitle?: string;
+  options: OnboardingOption[];
   progressLabel: string;
-  microcopy: string[];
+  layout: "grid" | "list" | "pills";
 }
 
 export const questions: OnboardingQuestion[] = [
   {
-    question: "Right now… what feels closest to your heart?",
-    options: [
-      "I feel a bit lost",
-      "I'm overwhelmed",
-      "I'm okay, but something feels missing",
-      "I just want peace",
-      "I'm curious about myself",
-    ],
+    question: "What brings you to Nirvaha?",
+    subtitle: "Choose what resonates most",
+    layout: "grid",
     progressLabel: "Understanding you…",
-    microcopy: [
-      "That makes sense…",
-      "You're not alone in this.",
-      "Many feel this way — it's okay.",
-      "Peace is a beautiful place to begin.",
-      "Curiosity is the first step inward.",
+    options: [
+      {
+        label: "Finding calm",
+        icon: "🍃",
+        description: "Learn to let go of mental busy-ness and gently drift into a restful stillness.",
+        microcopy: "Peace is a beautiful place to begin.",
+      },
+      {
+        label: "Feeling less stressed",
+        icon: "🌊",
+        description: "Discover tools to manage overwhelm and build emotional resilience day by day.",
+        microcopy: "You're not alone in this.",
+      },
+      {
+        label: "Understanding myself",
+        icon: "🪞",
+        description: "Explore your inner world through guided reflection and self-discovery.",
+        microcopy: "Curiosity is the first step inward.",
+      },
+      {
+        label: "Finding purpose",
+        icon: "🧭",
+        description: "Gain clarity on what matters most and align your life with your deeper values.",
+        microcopy: "Purpose reveals itself gently.",
+      },
+      {
+        label: "Managing anxiety",
+        icon: "🫧",
+        description: "Build practical skills to calm anxious thoughts and feel more grounded.",
+        microcopy: "Let's explore this together.",
+      },
+      {
+        label: "Just checking it out",
+        icon: "✨",
+        description: "No pressure — explore everything Nirvaha offers at your own pace.",
+        microcopy: "Beautiful — we'll show you everything.",
+      },
     ],
   },
   {
-    question: "When things feel heavy… what do you usually do?",
-    options: [
-      "I overthink everything",
-      "I distract myself",
-      "I keep it inside",
-      "I talk to someone",
-      "I don't know what I feel",
-    ],
+    question: "When things feel heavy…",
+    subtitle: "What do you usually do?",
+    layout: "list",
     progressLabel: "Understanding you…",
-    microcopy: [
-      "Your mind is searching for answers.",
-      "That's a common way to cope.",
-      "Holding it in takes strength too.",
-      "Connection is healing.",
-      "Let's explore this further.",
+    options: [
+      {
+        label: "I overthink everything",
+        icon: "🌀",
+        description: "Your mind is always searching for answers.",
+        microcopy: "Your mind is searching for answers.",
+      },
+      {
+        label: "I distract myself",
+        icon: "📱",
+        description: "Scrolling, busying, anything to avoid the feeling.",
+        microcopy: "That's a common way to cope.",
+      },
+      {
+        label: "I keep it inside",
+        icon: "🤐",
+        description: "You carry more than people know.",
+        microcopy: "Holding it in takes strength too.",
+      },
+      {
+        label: "I talk to someone",
+        icon: "💬",
+        description: "Connection helps you process and heal.",
+        microcopy: "Connection is healing.",
+      },
+      {
+        label: "I don't really know",
+        icon: "🌫️",
+        description: "Sometimes feelings are hard to name.",
+        microcopy: "Let's explore this further.",
+      },
     ],
   },
   {
-    question: "What are you truly seeking right now?",
-    options: [
-      "Clarity",
-      "Emotional balance",
-      "Inner peace",
-      "Purpose",
-      "Control over my thoughts",
-    ],
+    question: "What are you truly seeking?",
+    subtitle: "Choose one that calls to you",
+    layout: "grid",
     progressLabel: "Going deeper…",
-    microcopy: [
-      "Clarity begins with asking.",
-      "Balance is a practice, not a destination.",
-      "You deserve stillness.",
-      "Purpose reveals itself gently.",
-      "This is a good place to begin.",
+    options: [
+      {
+        label: "Clarity",
+        icon: "💎",
+        description: "See your life and choices with fresh perspective.",
+        microcopy: "Clarity begins with asking.",
+      },
+      {
+        label: "Emotional balance",
+        icon: "⚖️",
+        description: "Navigate highs and lows with more steadiness.",
+        microcopy: "Balance is a practice, not a destination.",
+      },
+      {
+        label: "Inner peace",
+        icon: "🕊️",
+        description: "Cultivate stillness even amidst life's noise.",
+        microcopy: "You deserve stillness.",
+      },
+      {
+        label: "Control over my thoughts",
+        icon: "🧠",
+        description: "Quiet the mental noise and find focus.",
+        microcopy: "This is a good place to begin.",
+      },
     ],
   },
   {
-    question: "How would you like to explore your inner world?",
-    options: [
-      "Conversations (AI guide)",
-      "Journaling & reflection",
-      "Meditation & calm practices",
-      "Stories & insights",
-      "Open to everything",
-    ],
+    question: "How would you like to explore?",
+    subtitle: "You can always change this later",
+    layout: "grid",
     progressLabel: "Shaping your journey…",
-    microcopy: [
-      "We'll guide you with care.",
-      "Writing reveals what words can't say.",
-      "Stillness is where healing lives.",
-      "Stories connect us to ourselves.",
-      "Beautiful — we'll show you everything.",
+    options: [
+      {
+        label: "AI conversations",
+        icon: "🤖",
+        description: "A gentle AI guide who learns what matters to you.",
+        microcopy: "We'll guide you with care.",
+      },
+      {
+        label: "Journaling",
+        icon: "📝",
+        description: "Writing reveals what words can't say out loud.",
+        microcopy: "Writing reveals what words can't say.",
+      },
+      {
+        label: "Meditation",
+        icon: "🧘",
+        description: "Stillness practices to calm and center you.",
+        microcopy: "Stillness is where healing lives.",
+      },
+      {
+        label: "Open to everything",
+        icon: "🌈",
+        description: "We'll curate a mix of everything for you.",
+        microcopy: "Beautiful — we'll show you everything.",
+      },
     ],
   },
   {
-    question: "How much time can you give yourself each day?",
+    question: "How much time for yourself?",
+    subtitle: "Even a few minutes matter deeply",
+    layout: "pills",
+    progressLabel: "Almost there…",
     options: [
-      "2–5 minutes",
-      "10 minutes",
-      "15–20 minutes",
-      "Go with the flow",
-    ],
-    progressLabel: "Shaping your journey…",
-    microcopy: [
-      "Even a few minutes matter deeply.",
-      "A perfect amount of presence.",
-      "You're making real space for yourself.",
-      "We love that — no pressure, just flow.",
+      {
+        label: "2–5 min",
+        icon: "⏱️",
+        description: "Quick mindful moments throughout your day.",
+        microcopy: "Even a few minutes matter deeply.",
+      },
+      {
+        label: "10 min",
+        icon: "🕐",
+        description: "A perfect amount of daily presence.",
+        microcopy: "A perfect amount of presence.",
+      },
+      {
+        label: "15–20 min",
+        icon: "🕑",
+        description: "Real, dedicated space for inner work.",
+        microcopy: "You're making real space for yourself.",
+      },
+      {
+        label: "Go with the flow",
+        icon: "🌿",
+        description: "No pressure, just follow what feels right.",
+        microcopy: "We love that — no pressure, just flow.",
+      },
     ],
   },
 ];
