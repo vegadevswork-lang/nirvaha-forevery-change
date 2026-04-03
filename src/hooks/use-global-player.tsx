@@ -15,6 +15,8 @@ interface PlayerContextType {
   duration: number;
   muted: boolean;
   playbackSpeed: number;
+  queue: PlayerTrack[];
+  queueIndex: number;
   play: (track: PlayerTrack) => void;
   toggle: () => void;
   pause: () => void;
@@ -23,6 +25,12 @@ interface PlayerContextType {
   setMuted: (m: boolean) => void;
   setPlaybackSpeed: (s: number) => void;
   stop: () => void;
+  addToQueue: (track: PlayerTrack) => void;
+  removeFromQueue: (index: number) => void;
+  clearQueue: () => void;
+  playNext: () => void;
+  playPrev: () => void;
+  playQueue: (tracks: PlayerTrack[], startIndex?: number) => void;
 }
 
 const PlayerContext = createContext<PlayerContextType | null>(null);
@@ -41,20 +49,44 @@ export const GlobalPlayerProvider = ({ children }: { children: ReactNode }) => {
   const [duration, setDuration] = useState(0);
   const [muted, setMutedState] = useState(false);
   const [playbackSpeed, setPlaybackSpeedState] = useState(1);
+  const [queue, setQueue] = useState<PlayerTrack[]>([]);
+  const [queueIndex, setQueueIndex] = useState(-1);
 
-  // Create audio element once
   useEffect(() => {
     const audio = new Audio();
     audio.preload = "metadata";
-    audio.addEventListener("timeupdate", () => setCurrentTime(audio.currentTime));
-    audio.addEventListener("loadedmetadata", () => setDuration(audio.duration));
-    audio.addEventListener("ended", () => setIsPlaying(false));
+    const onTime = () => setCurrentTime(audio.currentTime);
+    const onMeta = () => setDuration(audio.duration);
+    const onEnd = () => {
+      setIsPlaying(false);
+      // Auto-play next in queue
+      setQueue((q) => {
+        setQueueIndex((idx) => {
+          if (idx < q.length - 1) {
+            const next = q[idx + 1];
+            setTimeout(() => {
+              audio.src = next.audioSrc;
+              audio.load();
+              audio.play().catch(() => {});
+              setTrack(next);
+              setIsPlaying(true);
+            }, 0);
+            return idx + 1;
+          }
+          return idx;
+        });
+        return q;
+      });
+    };
+    audio.addEventListener("timeupdate", onTime);
+    audio.addEventListener("loadedmetadata", onMeta);
+    audio.addEventListener("ended", onEnd);
     audioRef.current = audio;
     return () => {
       audio.pause();
-      audio.removeEventListener("timeupdate", () => {});
-      audio.removeEventListener("loadedmetadata", () => {});
-      audio.removeEventListener("ended", () => {});
+      audio.removeEventListener("timeupdate", onTime);
+      audio.removeEventListener("loadedmetadata", onMeta);
+      audio.removeEventListener("ended", onEnd);
     };
   }, []);
 
@@ -76,28 +108,24 @@ export const GlobalPlayerProvider = ({ children }: { children: ReactNode }) => {
     setTrack(newTrack);
     audio.play().catch(() => {});
     setIsPlaying(true);
+    // If playing from queue, update index
+    setQueue((q) => {
+      const idx = q.findIndex((t) => t.id === newTrack.id);
+      if (idx >= 0) setQueueIndex(idx);
+      return q;
+    });
   }, [track]);
 
   const toggle = useCallback(() => {
     const audio = audioRef.current;
     if (!audio || !track) return;
-    if (isPlaying) {
-      audio.pause();
-      setIsPlaying(false);
-    } else {
-      audio.play().catch(() => {});
-      setIsPlaying(true);
-    }
+    if (isPlaying) { audio.pause(); setIsPlaying(false); }
+    else { audio.play().catch(() => {}); setIsPlaying(true); }
   }, [isPlaying, track]);
 
-  const pause = useCallback(() => {
-    audioRef.current?.pause();
-    setIsPlaying(false);
-  }, []);
+  const pause = useCallback(() => { audioRef.current?.pause(); setIsPlaying(false); }, []);
 
-  const seek = useCallback((time: number) => {
-    if (audioRef.current) audioRef.current.currentTime = time;
-  }, []);
+  const seek = useCallback((time: number) => { if (audioRef.current) audioRef.current.currentTime = time; }, []);
 
   const skip = useCallback((delta: number) => {
     if (audioRef.current) {
@@ -107,33 +135,85 @@ export const GlobalPlayerProvider = ({ children }: { children: ReactNode }) => {
 
   const stop = useCallback(() => {
     const audio = audioRef.current;
-    if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
+    if (audio) { audio.pause(); audio.currentTime = 0; }
+    setTrack(null); setIsPlaying(false); setCurrentTime(0); setDuration(0);
+    setQueue([]); setQueueIndex(-1);
+  }, []);
+
+  const addToQueue = useCallback((newTrack: PlayerTrack) => {
+    setQueue((q) => {
+      if (q.some((t) => t.id === newTrack.id)) return q;
+      return [...q, newTrack];
+    });
+  }, []);
+
+  const removeFromQueue = useCallback((index: number) => {
+    setQueue((q) => q.filter((_, i) => i !== index));
+    setQueueIndex((idx) => (index < idx ? idx - 1 : idx));
+  }, []);
+
+  const clearQueue = useCallback(() => { setQueue([]); setQueueIndex(-1); }, []);
+
+  const playNext = useCallback(() => {
+    setQueue((q) => {
+      setQueueIndex((idx) => {
+        if (idx < q.length - 1) {
+          const next = q[idx + 1];
+          const audio = audioRef.current;
+          if (audio) {
+            audio.src = next.audioSrc; audio.load();
+            audio.play().catch(() => {});
+          }
+          setTrack(next); setIsPlaying(true);
+          return idx + 1;
+        }
+        return idx;
+      });
+      return q;
+    });
+  }, []);
+
+  const playPrev = useCallback(() => {
+    setQueue((q) => {
+      setQueueIndex((idx) => {
+        if (idx > 0) {
+          const prev = q[idx - 1];
+          const audio = audioRef.current;
+          if (audio) {
+            audio.src = prev.audioSrc; audio.load();
+            audio.play().catch(() => {});
+          }
+          setTrack(prev); setIsPlaying(true);
+          return idx - 1;
+        }
+        return idx;
+      });
+      return q;
+    });
+  }, []);
+
+  const playQueue = useCallback((tracks: PlayerTrack[], startIndex = 0) => {
+    setQueue(tracks);
+    setQueueIndex(startIndex);
+    const t = tracks[startIndex];
+    if (t) {
+      const audio = audioRef.current;
+      if (audio) {
+        audio.src = t.audioSrc; audio.load();
+        audio.play().catch(() => {});
+      }
+      setTrack(t); setIsPlaying(true);
     }
-    setTrack(null);
-    setIsPlaying(false);
-    setCurrentTime(0);
-    setDuration(0);
   }, []);
 
   return (
     <PlayerContext.Provider
       value={{
-        track,
-        isPlaying,
-        currentTime,
-        duration,
-        muted,
-        playbackSpeed,
-        play,
-        toggle,
-        pause,
-        seek,
-        skip,
-        setMuted: setMutedState,
-        setPlaybackSpeed: setPlaybackSpeedState,
-        stop,
+        track, isPlaying, currentTime, duration, muted, playbackSpeed,
+        queue, queueIndex,
+        play, toggle, pause, seek, skip,
+        setMuted: setMutedState, setPlaybackSpeed: setPlaybackSpeedState,
+        stop, addToQueue, removeFromQueue, clearQueue, playNext, playPrev, playQueue,
       }}
     >
       {children}

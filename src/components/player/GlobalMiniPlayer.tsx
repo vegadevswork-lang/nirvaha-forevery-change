@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Play, Pause, SkipBack, SkipForward, X,
   Volume2, VolumeX, ChevronUp, ChevronDown,
+  ListMusic, Trash2,
 } from "lucide-react";
 import { useGlobalPlayer } from "@/hooks/use-global-player";
 import { useNavigate } from "react-router-dom";
@@ -17,13 +18,19 @@ const formatTime = (s: number) => {
 const GlobalMiniPlayer = () => {
   const {
     track, isPlaying, currentTime, duration, muted, playbackSpeed,
+    queue, queueIndex,
     toggle, skip, seek, setMuted, stop,
+    playNext, playPrev, removeFromQueue, play,
   } = useGlobalPlayer();
   const [expanded, setExpanded] = useState(false);
+  const [showQueue, setShowQueue] = useState(false);
   const progressRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   if (!track) return null;
+
+  const hasNext = queue.length > 0 && queueIndex < queue.length - 1;
+  const hasPrev = queue.length > 0 && queueIndex > 0;
 
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!progressRef.current) return;
@@ -57,13 +64,21 @@ const GlobalMiniPlayer = () => {
             </button>
             <div className="flex-1 min-w-0">
               <p className="font-body text-xs font-semibold text-foreground truncate">{track.title}</p>
-              <p className="font-body text-[9px] text-muted-foreground">{track.type} · {playbackSpeed}x</p>
+              <p className="font-body text-[9px] text-muted-foreground">
+                {track.type} · {playbackSpeed}x
+                {queue.length > 1 && ` · ${queueIndex + 1}/${queue.length}`}
+              </p>
             </div>
             <div className="flex items-center gap-0.5">
+              {queue.length > 1 && (
+                <motion.button whileTap={{ scale: 0.9 }} onClick={() => { setShowQueue(!showQueue); setExpanded(true); }} className="w-7 h-7 flex items-center justify-center">
+                  <ListMusic size={14} className={showQueue ? "text-primary" : "text-muted-foreground"} />
+                </motion.button>
+              )}
               <motion.button whileTap={{ scale: 0.9 }} onClick={toggle} className="w-8 h-8 flex items-center justify-center">
                 {isPlaying ? <Pause size={16} className="text-foreground" /> : <Play size={16} fill="currentColor" className="text-foreground" />}
               </motion.button>
-              <motion.button whileTap={{ scale: 0.9 }} onClick={() => setExpanded(!expanded)} className="w-7 h-7 flex items-center justify-center">
+              <motion.button whileTap={{ scale: 0.9 }} onClick={() => { setExpanded(!expanded); if (expanded) setShowQueue(false); }} className="w-7 h-7 flex items-center justify-center">
                 {expanded ? <ChevronDown size={14} className="text-muted-foreground" /> : <ChevronUp size={14} className="text-muted-foreground" />}
               </motion.button>
               <motion.button whileTap={{ scale: 0.9 }} onClick={stop} className="w-7 h-7 flex items-center justify-center">
@@ -106,7 +121,12 @@ const GlobalMiniPlayer = () => {
                   <motion.button whileTap={{ scale: 0.9 }} onClick={() => setMuted(!muted)} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "hsl(var(--muted))" }}>
                     {muted ? <VolumeX size={14} className="text-muted-foreground" /> : <Volume2 size={14} className="text-foreground" />}
                   </motion.button>
-                  <motion.button whileTap={{ scale: 0.9 }} onClick={() => skip(-15)} className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: "hsl(var(--muted))" }}>
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => hasPrev ? playPrev() : skip(-15)}
+                    className="w-9 h-9 rounded-full flex items-center justify-center"
+                    style={{ background: "hsl(var(--muted))" }}
+                  >
                     <SkipBack size={16} className="text-foreground" />
                   </motion.button>
                   <motion.button
@@ -121,10 +141,56 @@ const GlobalMiniPlayer = () => {
                       <Play size={20} fill="currentColor" style={{ color: "hsl(var(--primary-foreground))" }} />
                     )}
                   </motion.button>
-                  <motion.button whileTap={{ scale: 0.9 }} onClick={() => skip(15)} className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: "hsl(var(--muted))" }}>
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => hasNext ? playNext() : skip(15)}
+                    className="w-9 h-9 rounded-full flex items-center justify-center"
+                    style={{ background: "hsl(var(--muted))" }}
+                  >
                     <SkipForward size={16} className="text-foreground" />
                   </motion.button>
                 </div>
+
+                {/* Queue list */}
+                <AnimatePresence>
+                  {showQueue && queue.length > 0 && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pt-2 mt-2" style={{ borderTop: "1px solid hsl(var(--border) / 0.3)" }}>
+                        <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wider mb-2">
+                          Queue ({queue.length} tracks)
+                        </p>
+                        <div className="max-h-40 overflow-y-auto space-y-1">
+                          {queue.map((t, i) => (
+                            <div
+                              key={`${t.id}-${i}`}
+                              className={`flex items-center gap-2.5 p-2 rounded-xl transition-colors ${i === queueIndex ? "bg-primary/10" : ""}`}
+                            >
+                              <button onClick={() => play(t)} className="flex items-center gap-2.5 flex-1 min-w-0">
+                                <img src={t.image} alt={t.title} className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
+                                <div className="min-w-0 flex-1">
+                                  <p className={`font-body text-[11px] truncate ${i === queueIndex ? "font-semibold text-primary" : "text-foreground"}`}>
+                                    {i === queueIndex && "▶ "}{t.title}
+                                  </p>
+                                  <p className="font-body text-[9px] text-muted-foreground">{t.type}</p>
+                                </div>
+                              </button>
+                              {i !== queueIndex && (
+                                <motion.button whileTap={{ scale: 0.9 }} onClick={() => removeFromQueue(i)} className="p-1.5">
+                                  <Trash2 size={12} className="text-muted-foreground" />
+                                </motion.button>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             )}
           </AnimatePresence>
