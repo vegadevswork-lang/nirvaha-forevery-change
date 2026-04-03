@@ -1,3 +1,5 @@
+// Update communityData to support threaded replies and edit/delete
+
 export interface CommunityPost {
   id: string;
   emotion: string;
@@ -7,6 +9,8 @@ export interface CommunityPost {
   energyState: string;
   timestamp: Date;
   responses: CommunityResponse[];
+  isOwn?: boolean;
+  edited?: boolean;
 }
 
 export interface CommunityResponse {
@@ -17,6 +21,10 @@ export interface CommunityResponse {
   verifiedName?: string;
   verifiedRole?: string;
   timestamp: Date;
+  isOwn?: boolean;
+  edited?: boolean;
+  parentId?: string; // for threaded replies
+  replies?: CommunityResponse[];
 }
 
 export const emotions = [
@@ -49,6 +57,17 @@ export const reflectionOptions = [
   { label: "Neutral", emoji: "🌿" },
 ];
 
+export const communityTopics = [
+  { label: "Emotional Health", emoji: "💚" },
+  { label: "Anxiety", emoji: "⚡" },
+  { label: "Self-Discovery", emoji: "🔮" },
+  { label: "Relationships", emoji: "🤝" },
+  { label: "Mindfulness", emoji: "🧘" },
+  { label: "Healing", emoji: "🌿" },
+  { label: "Sleep", emoji: "🌙" },
+  { label: "Gratitude", emoji: "✨" },
+];
+
 const energyStates = ["Reflective", "Seeking clarity", "Grounding", "Processing", "Opening up", "Healing"];
 
 function randomEnergy() {
@@ -73,6 +92,16 @@ export const samplePosts: CommunityPost[] = [
         verifiedName: "Dr. Meera",
         verifiedRole: "Wellness Guide",
         timestamp: new Date(Date.now() - 1000 * 60 * 30),
+        replies: [
+          {
+            id: "r1-1",
+            content: "Thank you Dr. Meera, that really means a lot. I'll try to just sit with it.",
+            auraColor: "200 20% 60%",
+            isVerified: false,
+            timestamp: new Date(Date.now() - 1000 * 60 * 25),
+            parentId: "r1",
+          },
+        ],
       },
       {
         id: "r2",
