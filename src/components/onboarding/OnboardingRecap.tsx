@@ -62,21 +62,11 @@ const OnboardingRecap = ({ answers }: Props) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 1.0 }}
         onClick={() => navigate("/home")}
-        className="btn-primary max-w-xs text-base tracking-wide mb-4"
+        className="btn-primary max-w-xs text-base tracking-wide"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
         Enter Nirvaha
-      </motion.button>
-
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 1.2 }}
-        onClick={() => navigate("/home")}
-        className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors"
-      >
-        Explore the app
       </motion.button>
     </motion.div>
   );

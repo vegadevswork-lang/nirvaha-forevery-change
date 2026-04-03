@@ -3,6 +3,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import SparkleEffect from "./SparkleEffect";
 import type { OnboardingOption } from "./onboardingData";
 
+// Illustration imports
+import leafImg from "@/assets/onboarding-leaf.png";
+import wavesImg from "@/assets/onboarding-waves.png";
+import compassImg from "@/assets/onboarding-compass.png";
+import bubblesImg from "@/assets/onboarding-bubbles.png";
+
+const illustrationMap: Record<string, string> = {
+  leaf: leafImg,
+  waves: wavesImg,
+  compass: compassImg,
+  bubbles: bubblesImg,
+};
+
 interface Props {
   question: string;
   subtitle?: string;
@@ -49,52 +62,30 @@ const OnboardingQuestion = ({ question, subtitle, options, layout, onSelect }: P
         </motion.p>
       )}
 
-      {/* Grid layout */}
       {layout === "grid" && (
         <div className="grid grid-cols-2 gap-3 w-full max-w-sm">
           {options.map((opt, i) => (
-            <GridCard
-              key={opt.label}
-              opt={opt}
-              index={i}
-              selected={selected}
-              onSelect={handleSelect}
-            />
+            <GridCard key={opt.label} opt={opt} index={i} selected={selected} onSelect={handleSelect} />
           ))}
         </div>
       )}
 
-      {/* List layout */}
       {layout === "list" && (
         <div className="flex flex-col gap-3 w-full max-w-sm">
           {options.map((opt, i) => (
-            <ListCard
-              key={opt.label}
-              opt={opt}
-              index={i}
-              selected={selected}
-              onSelect={handleSelect}
-            />
+            <ListCard key={opt.label} opt={opt} index={i} selected={selected} onSelect={handleSelect} />
           ))}
         </div>
       )}
 
-      {/* Pills layout */}
       {layout === "pills" && (
         <div className="flex flex-wrap gap-3 justify-center w-full max-w-sm">
           {options.map((opt, i) => (
-            <PillCard
-              key={opt.label}
-              opt={opt}
-              index={i}
-              selected={selected}
-              onSelect={handleSelect}
-            />
+            <PillCard key={opt.label} opt={opt} index={i} selected={selected} onSelect={handleSelect} />
           ))}
         </div>
       )}
 
-      {/* Expanded description for selected */}
       <AnimatePresence>
         {selected !== null && (
           <motion.div
@@ -117,13 +108,14 @@ const OnboardingQuestion = ({ question, subtitle, options, layout, onSelect }: P
   );
 };
 
-/* Grid Card */
+/* Grid Card with optional illustration */
 function GridCard({ opt, index, selected, onSelect }: {
   opt: OnboardingOption; index: number; selected: number | null;
   onSelect: (i: number, e: React.MouseEvent) => void;
 }) {
   const isSelected = selected === index;
   const isOther = selected !== null && !isSelected;
+  const illustration = opt.illustration ? illustrationMap[opt.illustration] : null;
 
   return (
     <motion.button
@@ -142,13 +134,26 @@ function GridCard({ opt, index, selected, onSelect }: {
         }
       `}
     >
-      <motion.span
-        className="text-3xl"
-        animate={isSelected ? { scale: [1, 1.3, 1.1], rotate: [0, 10, -5, 0] } : {}}
-        transition={{ duration: 0.5 }}
-      >
-        {opt.icon}
-      </motion.span>
+      {illustration ? (
+        <motion.img
+          src={illustration}
+          alt={opt.label}
+          className="w-12 h-12 object-contain"
+          loading="lazy"
+          width={512}
+          height={512}
+          animate={isSelected ? { scale: [1, 1.2, 1.1], rotate: [0, 5, -3, 0] } : {}}
+          transition={{ duration: 0.5 }}
+        />
+      ) : (
+        <motion.span
+          className="text-3xl"
+          animate={isSelected ? { scale: [1, 1.3, 1.1], rotate: [0, 10, -5, 0] } : {}}
+          transition={{ duration: 0.5 }}
+        >
+          {opt.icon}
+        </motion.span>
+      )}
       <span className="font-body text-sm font-medium text-foreground leading-tight">
         {opt.label}
       </span>

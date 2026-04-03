@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
 import nirvahaLogo from "@/assets/nirvaha-logo.png";
 import Particles from "@/components/Particles";
 import OnboardingIntro from "@/components/onboarding/OnboardingIntro";
@@ -15,7 +15,6 @@ const Onboarding = () => {
   const [phase, setPhase] = useState<Phase>("intro");
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
-  const navigate = useNavigate();
   const current = questions[step];
 
   const handleBegin = () => setPhase("questions");
@@ -29,6 +28,21 @@ const Onboarding = () => {
       setStep((s) => s + 1);
     }
   };
+
+  const handleBack = () => {
+    if (phase === "recap") {
+      setPhase("questions");
+      setStep(questions.length - 1);
+      setAnswers((prev) => prev.slice(0, -1));
+    } else if (phase === "questions" && step > 0) {
+      setStep((s) => s - 1);
+      setAnswers((prev) => prev.slice(0, -1));
+    } else if (phase === "questions" && step === 0) {
+      setPhase("intro");
+    }
+  };
+
+  const showBack = phase === "questions" || phase === "recap";
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center px-4 py-8 overflow-hidden bg-background">
@@ -57,9 +71,25 @@ const Onboarding = () => {
         style={{ width: 220, height: 220, bottom: "10%", right: "3%", background: "hsl(var(--gold))", animationDelay: "2s" }}
       />
 
+      {/* Back button */}
+      <AnimatePresence>
+        {showBack && (
+          <motion.button
+            initial={{ opacity: 0, x: -12 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -12 }}
+            transition={{ duration: 0.3 }}
+            onClick={handleBack}
+            className="absolute top-6 left-4 z-20 glass-card p-2.5 rounded-full hover:scale-105 transition-transform"
+            aria-label="Go back"
+          >
+            <ChevronLeft size={20} className="text-foreground" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
       <div className="relative z-10 w-full max-w-lg flex flex-col items-center">
         <AnimatePresence mode="wait">
-          {/* INTRO PHASE */}
           {phase === "intro" && (
             <motion.div
               key="intro"
@@ -73,7 +103,6 @@ const Onboarding = () => {
             </motion.div>
           )}
 
-          {/* QUESTIONS PHASE */}
           {phase === "questions" && current && (
             <motion.div
               key={`q-${step}`}
@@ -83,7 +112,6 @@ const Onboarding = () => {
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="w-full flex flex-col items-center"
             >
-              {/* Logo small */}
               <motion.img
                 src={nirvahaLogo}
                 alt="Nirvaha"
@@ -93,7 +121,6 @@ const Onboarding = () => {
                 transition={{ duration: 0.4 }}
               />
 
-              {/* Progress label */}
               <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -102,10 +129,8 @@ const Onboarding = () => {
                 {current.progressLabel}
               </motion.span>
 
-              {/* Stepper */}
               <OnboardingStepper currentStep={step} totalSteps={questions.length} />
 
-              {/* Question */}
               <OnboardingQuestion
                 question={current.question}
                 subtitle={current.subtitle}
@@ -116,7 +141,6 @@ const Onboarding = () => {
             </motion.div>
           )}
 
-          {/* RECAP PHASE */}
           {phase === "recap" && (
             <motion.div
               key="recap"

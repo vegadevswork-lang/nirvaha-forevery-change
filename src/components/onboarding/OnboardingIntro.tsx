@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import nirvahaLogo from "@/assets/nirvaha-logo.png";
+import introIllustration from "@/assets/onboarding-intro.png";
 
 interface Props {
   onBegin: () => void;
@@ -14,33 +15,52 @@ const OnboardingIntro = ({ onBegin }: Props) => {
       transition={{ duration: 0.6 }}
       className="flex flex-col items-center justify-center text-center px-6 w-full max-w-sm mx-auto"
     >
-      {/* Logo with breathing animation */}
+      {/* Logo */}
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="mb-8"
+        className="mb-4"
       >
         <motion.img
           src={nirvahaLogo}
           alt="Nirvaha"
-          className="h-16 mx-auto"
+          className="h-14 mx-auto"
           animate={{ scale: [1, 1.04, 1] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         />
       </motion.div>
 
-      {/* Decorative orb */}
+      {/* Illustration */}
       <motion.div
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 0.5 }}
-        transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
-        className="w-40 h-40 rounded-full mb-8 mx-auto"
-        style={{
-          background: "radial-gradient(circle, hsl(var(--gold)) 0%, hsl(var(--healing-green)) 50%, transparent 100%)",
-          filter: "blur(30px)",
-        }}
-      />
+        initial={{ scale: 0.7, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+        className="relative mb-6"
+      >
+        <motion.img
+          src={introIllustration}
+          alt="Meditation"
+          className="w-48 h-48 mx-auto object-contain"
+          width={512}
+          height={512}
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        />
+        {/* Glow behind illustration */}
+        <div
+          className="absolute inset-0 -z-10 rounded-full mx-auto"
+          style={{
+            width: "70%",
+            height: "70%",
+            top: "15%",
+            left: "15%",
+            background: "radial-gradient(circle, hsl(var(--gold)) 0%, hsl(var(--healing-green)) 50%, transparent 100%)",
+            filter: "blur(40px)",
+            opacity: 0.35,
+          }}
+        />
+      </motion.div>
 
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
@@ -55,7 +75,7 @@ const OnboardingIntro = ({ onBegin }: Props) => {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.6 }}
-        className="font-display text-lg text-muted-foreground mb-2"
+        className="font-display text-lg text-muted-foreground mb-1"
       >
         Before you start, we have
       </motion.p>
