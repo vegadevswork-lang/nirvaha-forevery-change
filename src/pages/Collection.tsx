@@ -178,6 +178,7 @@ const Collection = () => {
                   </motion.button>
                   <motion.button
                     whileTap={{ scale: 0.95 }}
+                    onClick={() => navigate("/my-list")}
                     className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-body font-medium text-xs"
                     style={{ background: "hsla(0 0% 100% / 0.15)", color: "hsl(0 0% 95%)", backdropFilter: "blur(8px)" }}
                   >
