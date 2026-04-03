@@ -123,11 +123,6 @@ const ContentDetail = () => {
     setTimeout(() => setDownloading(null), 2000);
   };
 
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.playbackRate = playbackSpeed;
-    }
-  }, [playbackSpeed]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
