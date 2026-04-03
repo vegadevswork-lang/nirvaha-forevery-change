@@ -46,7 +46,7 @@ const BookSession = () => {
     toast.success("Session booked!", {
       description: `Your ${session.duration} ${selectedFormat} session with ${mentor.name} is confirmed.`,
     });
-    navigate("/companion");
+    navigate(`/companion/feedback/${mentor.id}`);
   };
 
   return (
