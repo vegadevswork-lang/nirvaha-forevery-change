@@ -9,6 +9,28 @@ export interface ContentItem {
   rating?: number;
   isNew?: boolean;
   isTrending?: boolean;
+  episodes?: Episode[];
+  reviews?: Review[];
+  hasSubtitles?: boolean;
+  hasTranscript?: boolean;
+  progress?: number; // 0-100 percent watched
+}
+
+export interface Episode {
+  id: string;
+  title: string;
+  duration: string;
+  description: string;
+  isPlaying?: boolean;
+}
+
+export interface Review {
+  id: string;
+  user: string;
+  avatar: string;
+  rating: number;
+  comment: string;
+  date: string;
 }
 
 export interface ContentRow {
@@ -16,16 +38,187 @@ export interface ContentRow {
   items: ContentItem[];
 }
 
-export const heroContent: ContentItem = {
-  id: "hero-1",
-  title: "Inner Worlds, Outer Worlds",
-  subtitle: "A journey through the universal vibration connecting all things — consciousness, meditation, and the nature of reality.",
-  image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80",
-  type: "film",
-  duration: "2h 4m",
-  tags: ["Spiritual Science", "Consciousness"],
-  rating: 4.8,
-};
+export const heroSlides: ContentItem[] = [
+  {
+    id: "hero-1",
+    title: "Inner Worlds, Outer Worlds",
+    subtitle: "A journey through the universal vibration connecting all things — consciousness, meditation, and the nature of reality.",
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80",
+    type: "film",
+    duration: "2h 4m",
+    tags: ["Spiritual Science", "Consciousness"],
+    rating: 4.8,
+    hasSubtitles: true,
+    hasTranscript: true,
+    episodes: [],
+    reviews: [
+      { id: "r1", user: "Arjun M.", avatar: "https://i.pravatar.cc/40?img=11", rating: 5, comment: "Life-changing perspective on consciousness.", date: "2 days ago" },
+      { id: "r2", user: "Maya S.", avatar: "https://i.pravatar.cc/40?img=5", rating: 5, comment: "Beautiful cinematography and profound insights.", date: "1 week ago" },
+    ],
+  },
+  {
+    id: "hero-2",
+    title: "Headspace: Unwind Your Mind",
+    subtitle: "Interactive and immersive meditation experiences for every mood — relax, focus, or drift off to sleep.",
+    image: "https://images.unsplash.com/photo-1545389336-cf090694435e?w=800&q=80",
+    type: "series",
+    duration: "3 Seasons",
+    tags: ["Meditation", "Sleep", "Focus"],
+    rating: 4.9,
+    isNew: true,
+    hasSubtitles: true,
+    episodes: [
+      { id: "he1", title: "How to Let Go", duration: "12 min", description: "Release tension and find ease." },
+      { id: "he2", title: "Dealing With Anger", duration: "14 min", description: "Transform reactive energy into calm awareness." },
+      { id: "he3", title: "Falling Asleep", duration: "20 min", description: "Guided wind-down for restful sleep." },
+    ],
+    reviews: [
+      { id: "r3", user: "Priya K.", avatar: "https://i.pravatar.cc/40?img=9", rating: 5, comment: "Best meditation series out there!", date: "3 days ago" },
+    ],
+  },
+  {
+    id: "hero-3",
+    title: "The Wisdom of Trauma",
+    subtitle: "Dr. Gabor Maté explores the connection between illness, addiction, and unresolved trauma in modern society.",
+    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80",
+    type: "film",
+    duration: "1h 27m",
+    tags: ["Trauma", "Healing", "Documentary"],
+    rating: 4.9,
+    isTrending: true,
+    hasSubtitles: true,
+    hasTranscript: true,
+    reviews: [
+      { id: "r4", user: "David L.", avatar: "https://i.pravatar.cc/40?img=12", rating: 5, comment: "Essential viewing for understanding human suffering.", date: "5 days ago" },
+    ],
+  },
+  {
+    id: "hero-4",
+    title: "Sounds of the Earth",
+    subtitle: "An immersive soundscape journey through rainforests, oceans, and ancient mountains. Pure healing frequencies.",
+    image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=800&q=80",
+    type: "soundscape",
+    duration: "2h 30m",
+    tags: ["Sound Therapy", "Nature", "Healing"],
+    rating: 4.7,
+    hasSubtitles: false,
+    reviews: [
+      { id: "r5", user: "Luna W.", avatar: "https://i.pravatar.cc/40?img=20", rating: 4, comment: "Perfect for deep work and sleep.", date: "1 day ago" },
+    ],
+  },
+  {
+    id: "hero-5",
+    title: "Monk Life: 30 Days of Stillness",
+    subtitle: "Follow three strangers as they live in a monastery, discovering silence, discipline, and inner transformation.",
+    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
+    type: "series",
+    duration: "6 Episodes",
+    tags: ["Spirituality", "Lifestyle", "Documentary"],
+    rating: 4.8,
+    isNew: true,
+    hasSubtitles: true,
+    hasTranscript: true,
+    episodes: [
+      { id: "ml1", title: "Arrival", duration: "42 min", description: "Three strangers arrive at a remote monastery." },
+      { id: "ml2", title: "Silence", duration: "38 min", description: "The challenge of three days without speaking." },
+      { id: "ml3", title: "The Teacher", duration: "45 min", description: "Meeting the head monk and learning the path." },
+      { id: "ml4", title: "Breaking Point", duration: "40 min", description: "Confronting inner demons during meditation." },
+      { id: "ml5", title: "Surrender", duration: "44 min", description: "The moment everything shifts." },
+      { id: "ml6", title: "Return", duration: "48 min", description: "Going back to the world, forever changed." },
+    ],
+    reviews: [
+      { id: "r6", user: "Kai R.", avatar: "https://i.pravatar.cc/40?img=15", rating: 5, comment: "Raw, real, and deeply moving.", date: "2 days ago" },
+      { id: "r7", user: "Sophie T.", avatar: "https://i.pravatar.cc/40?img=23", rating: 5, comment: "Made me want to visit a monastery myself!", date: "4 days ago" },
+    ],
+  },
+];
+
+export const continueWatching: ContentItem[] = [
+  {
+    id: "cw1",
+    title: "Headspace Guide to Meditation",
+    image: "https://images.unsplash.com/photo-1545389336-cf090694435e?w=400&q=80",
+    type: "series",
+    duration: "Ep 3 · 12 min",
+    tags: ["Meditation", "Beginner"],
+    rating: 4.7,
+    progress: 65,
+  },
+  {
+    id: "cw2",
+    title: "The Wisdom of Trauma",
+    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&q=80",
+    type: "film",
+    duration: "43 min left",
+    tags: ["Trauma", "Healing"],
+    rating: 4.9,
+    progress: 48,
+  },
+  {
+    id: "cw3",
+    title: "432 Hz Healing Frequencies",
+    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80",
+    type: "soundscape",
+    duration: "22 min left",
+    tags: ["Frequency", "Healing"],
+    rating: 4.8,
+    progress: 75,
+  },
+  {
+    id: "cw4",
+    title: "Eckhart Tolle: Present Moment",
+    image: "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400&q=80",
+    type: "talk",
+    duration: "28 min left",
+    tags: ["Presence", "Awareness"],
+    rating: 4.8,
+    progress: 60,
+  },
+];
+
+export const aiRecommendations: ContentItem[] = [
+  {
+    id: "ai1",
+    title: "Yoga Nidra for Deep Rest",
+    image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&q=80",
+    type: "meditation",
+    duration: "35 min",
+    tags: ["Yoga Nidra", "Sleep"],
+    rating: 4.9,
+    subtitle: "Based on your evening listening habits",
+  },
+  {
+    id: "ai2",
+    title: "Finding Purpose with Ikigai",
+    image: "https://images.unsplash.com/photo-1490730141103-6cac27aaab94?w=400&q=80",
+    type: "talk",
+    duration: "48 min",
+    tags: ["Purpose", "Japanese Wisdom"],
+    rating: 4.7,
+    subtitle: "Because you enjoyed Inner Engineering",
+  },
+  {
+    id: "ai3",
+    title: "Ocean Meditation at Dawn",
+    image: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=400&q=80",
+    type: "soundscape",
+    duration: "1h",
+    tags: ["Ocean", "Morning"],
+    rating: 4.8,
+    subtitle: "Matches your calm mood today",
+  },
+  {
+    id: "ai4",
+    title: "Thich Nhat Hanh: The Art of Living",
+    image: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=400&q=80",
+    type: "talk",
+    duration: "1h 15m",
+    tags: ["Mindfulness", "Buddhism"],
+    rating: 4.9,
+    isNew: true,
+    subtitle: "Trending with users like you",
+  },
+];
 
 export const contentRows: ContentRow[] = [
   {
@@ -40,6 +233,15 @@ export const contentRows: ContentRow[] = [
         tags: ["Meditation", "Beginner"],
         rating: 4.7,
         isTrending: true,
+        hasSubtitles: true,
+        episodes: [
+          { id: "t1e1", title: "How Meditation Works", duration: "10 min", description: "Understand the science behind meditation." },
+          { id: "t1e2", title: "Letting Go of Stress", duration: "12 min", description: "A simple technique to release daily tension." },
+          { id: "t1e3", title: "Dealing With Distractions", duration: "11 min", description: "Train your wandering mind." },
+        ],
+        reviews: [
+          { id: "tr1", user: "Anita D.", avatar: "https://i.pravatar.cc/40?img=1", rating: 5, comment: "Perfect for beginners!", date: "1 week ago" },
+        ],
       },
       {
         id: "t2",
@@ -50,6 +252,8 @@ export const contentRows: ContentRow[] = [
         tags: ["Mindfulness", "Documentary"],
         rating: 4.5,
         isTrending: true,
+        hasSubtitles: true,
+        hasTranscript: true,
       },
       {
         id: "t3",
@@ -69,6 +273,7 @@ export const contentRows: ContentRow[] = [
         tags: ["Spiritual Science", "Yoga"],
         rating: 4.8,
         isTrending: true,
+        hasSubtitles: true,
       },
       {
         id: "t5",
@@ -143,6 +348,8 @@ export const contentRows: ContentRow[] = [
         duration: "20 min",
         tags: ["Vulnerability", "Courage"],
         rating: 4.9,
+        hasSubtitles: true,
+        hasTranscript: true,
       },
       {
         id: "e2",
@@ -152,6 +359,7 @@ export const contentRows: ContentRow[] = [
         duration: "55 min",
         tags: ["Purpose", "Monk Wisdom"],
         rating: 4.7,
+        hasSubtitles: true,
       },
       {
         id: "e3",
@@ -171,6 +379,8 @@ export const contentRows: ContentRow[] = [
         tags: ["Neuroscience", "Transformation"],
         rating: 4.7,
         isNew: true,
+        hasSubtitles: true,
+        hasTranscript: true,
       },
     ],
   },
@@ -185,6 +395,10 @@ export const contentRows: ContentRow[] = [
         duration: "6 Episodes",
         tags: ["Wellness", "Exploration"],
         rating: 4.3,
+        episodes: [
+          { id: "s1e1", title: "The Healing Trip", duration: "30 min", description: "Exploring psychedelic therapy." },
+          { id: "s1e2", title: "Cold Comfort", duration: "28 min", description: "Wim Hof method and cold exposure." },
+        ],
       },
       {
         id: "s2",
@@ -195,6 +409,10 @@ export const contentRows: ContentRow[] = [
         tags: ["Longevity", "Health"],
         rating: 4.6,
         isNew: true,
+        episodes: [
+          { id: "s2e1", title: "Stress Proof", duration: "45 min", description: "Building resilience to stress." },
+          { id: "s2e2", title: "Shock", duration: "42 min", description: "Testing the body's limits." },
+        ],
       },
       {
         id: "s3",
@@ -214,6 +432,12 @@ export const contentRows: ContentRow[] = [
         tags: ["Longevity", "Lifestyle"],
         rating: 4.8,
         isTrending: true,
+        episodes: [
+          { id: "s4e1", title: "Okinawa", duration: "50 min", description: "The secret diet of the world's longest-living people." },
+          { id: "s4e2", title: "Sardinia", duration: "48 min", description: "Mountain villages where men live to 100." },
+          { id: "s4e3", title: "Loma Linda", duration: "46 min", description: "A community of faith and longevity." },
+          { id: "s4e4", title: "Ikaria", duration: "52 min", description: "The island where people forget to die." },
+        ],
       },
     ],
   },
@@ -321,3 +545,18 @@ export const categories = [
   "Podcasts",
   "Films",
 ];
+
+// Helper: get all content items flat
+export const getAllContent = (): ContentItem[] => {
+  const all: ContentItem[] = [...heroSlides, ...continueWatching, ...aiRecommendations];
+  contentRows.forEach((r) => all.push(...r.items));
+  return all;
+};
+
+// Helper: find related content
+export const getRelatedContent = (item: ContentItem): ContentItem[] => {
+  const all = getAllContent();
+  return all
+    .filter((c) => c.id !== item.id && (c.type === item.type || c.tags.some((t) => item.tags.includes(t))))
+    .slice(0, 6);
+};
