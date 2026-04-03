@@ -53,7 +53,7 @@ const App = () => (
             <Route path="/help-support" element={<HelpSupport />} />
             <Route path="/companion" element={<CompanionHub />} />
             <Route path="/companion/mentor/:id" element={<MentorProfile />} />
-            <Route path="/companion/guide/:id" element={<SpiritualGuideProfile />} />
+            <Route path="/companion/feedback/:id" element={<SessionFeedback />} />
             <Route path="/companion/book/:id" element={<BookSession />} />
             <Route path="/become-companion" element={<BecomeCompanion />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
