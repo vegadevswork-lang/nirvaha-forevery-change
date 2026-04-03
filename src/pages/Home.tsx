@@ -28,7 +28,12 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className="min-h-screen bg-background flex flex-col"
+    >
       <SparkleEffect origin={sparkleOrigin} trigger={sparkleTrigger} />
 
       {/* Ambient background orbs */}
@@ -87,7 +92,7 @@ const Home = () => {
       </div>
 
       <BottomNav active={activeNav} onSelect={setActiveNav} />
-    </div>
+    </motion.div>
   );
 };
 

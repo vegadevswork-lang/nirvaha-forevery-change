@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { questions } from "./onboardingData";
 
 interface Props {
@@ -11,14 +12,33 @@ const recapLabels = ["Your focus is", "When stressed, you", "You're seeking", "Y
 
 const OnboardingRecap = ({ answers }: Props) => {
   const navigate = useNavigate();
+  const [exiting, setExiting] = useState(false);
+
+  const handleEnter = () => {
+    setExiting(true);
+    setTimeout(() => navigate("/home"), 900);
+  };
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
-      className="flex flex-col items-center w-full max-w-sm mx-auto px-4"
+      animate={exiting ? { opacity: 0, scale: 0.95, y: -20 } : { opacity: 1 }}
+      transition={{ duration: exiting ? 0.8 : 0.6, ease: "easeInOut" }}
+      className="flex flex-col items-center w-full max-w-sm mx-auto px-4 relative"
     >
+      {/* Expanding glow on exit */}
+      {exiting && (
+        <motion.div
+          initial={{ scale: 0, opacity: 0.6 }}
+          animate={{ scale: 8, opacity: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full pointer-events-none z-50"
+          style={{
+            background: "radial-gradient(circle, hsl(var(--gold)) 0%, hsl(var(--healing-green)) 40%, transparent 70%)",
+          }}
+        />
+      )}
+
       <motion.h1
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -61,7 +81,8 @@ const OnboardingRecap = ({ answers }: Props) => {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 1.0 }}
-        onClick={() => navigate("/home")}
+        onClick={handleEnter}
+        disabled={exiting}
         className="btn-primary max-w-xs text-base tracking-wide"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
