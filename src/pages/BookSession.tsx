@@ -124,9 +124,9 @@ const BookSession = () => {
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setSelectedFormat(f)}
                     className={`w-full glass-card p-4 flex items-center gap-3 text-left transition-all ${
-                      isSelected ? "ring-2" : ""
+                      isSelected ? "ring-2 ring-primary" : ""
                     }`}
-                    style={isSelected ? { borderColor: "hsl(var(--primary))", ringColor: "hsl(var(--primary))" } : {}}
+                    style={isSelected ? { borderColor: "hsl(var(--primary))" } : {}}
                   >
                     <div
                       className="w-10 h-10 rounded-xl flex items-center justify-center"
