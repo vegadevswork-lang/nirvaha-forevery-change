@@ -21,6 +21,11 @@ const Notifications = lazy(() => import("./pages/Notifications.tsx"));
 const Language = lazy(() => import("./pages/Language.tsx"));
 const PrivacyData = lazy(() => import("./pages/PrivacyData.tsx"));
 const HelpSupport = lazy(() => import("./pages/HelpSupport.tsx"));
+const CompanionHub = lazy(() => import("./pages/CompanionHub.tsx"));
+const MentorProfile = lazy(() => import("./pages/MentorProfile.tsx"));
+const SpiritualGuideProfile = lazy(() => import("./pages/SpiritualGuideProfile.tsx"));
+const BookSession = lazy(() => import("./pages/BookSession.tsx"));
+const BecomeCompanion = lazy(() => import("./pages/BecomeCompanion.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -46,6 +51,11 @@ const App = () => (
             <Route path="/language" element={<Language />} />
             <Route path="/privacy-data" element={<PrivacyData />} />
             <Route path="/help-support" element={<HelpSupport />} />
+            <Route path="/companion" element={<CompanionHub />} />
+            <Route path="/companion/mentor/:id" element={<MentorProfile />} />
+            <Route path="/companion/guide/:id" element={<SpiritualGuideProfile />} />
+            <Route path="/companion/book/:id" element={<BookSession />} />
+            <Route path="/become-companion" element={<BecomeCompanion />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
