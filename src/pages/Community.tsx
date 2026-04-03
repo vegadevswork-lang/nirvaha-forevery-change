@@ -204,7 +204,7 @@ const CreateFlow = ({ onClose, onPost }: { onClose: () => void; onPost: (post: C
                     className={`glass-card p-4 flex flex-col items-center gap-2 transition-all ${
                       emotion === em.label ? "ring-2" : ""
                     }`}
-                    style={emotion === em.label ? { ringColor: `hsl(${em.color})`, borderColor: `hsl(${em.color})` } : {}}
+                    style={emotion === em.label ? { borderColor: `hsl(${em.color})`, boxShadow: `0 0 0 2px hsl(${em.color} / 0.3)` } : {}}
                   >
                     <div
                       className="w-12 h-12 rounded-full flex items-center justify-center text-xl"

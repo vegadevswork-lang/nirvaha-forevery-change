@@ -90,6 +90,8 @@ const Home = () => {
 
         <CollectionCard />
 
+        <CommunityCard />
+
         <WellnessStats />
 
         <SmartActions />

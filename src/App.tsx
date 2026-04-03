@@ -63,6 +63,7 @@ const App = () => (
             <Route path="/collection" element={<Collection />} />
             <Route path="/collection/:id" element={<ContentDetail />} />
             <Route path="/my-list" element={<MyList />} />
+            <Route path="/community" element={<Community />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
