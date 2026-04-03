@@ -92,7 +92,7 @@ const Home = () => {
       </div>
 
       <BottomNav active={activeNav} onSelect={setActiveNav} />
-    </div>
+    </motion.div>
   );
 };
 
