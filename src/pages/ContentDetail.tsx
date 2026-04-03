@@ -244,6 +244,24 @@ const ContentDetail = () => {
                 </>
               )}
             </motion.button>
+            {!isVideoType(item.type) && (
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                onClick={() => {
+                  globalPlayer.addToQueue({
+                    id: item.id,
+                    title: item.title,
+                    type: item.type,
+                    image: item.image,
+                    audioSrc,
+                  });
+                }}
+                className="w-12 flex items-center justify-center rounded-2xl"
+                style={{ background: "hsl(var(--muted))" }}
+              >
+                <ListPlus size={18} className="text-foreground" />
+              </motion.button>
+            )}
             <motion.button
               whileTap={{ scale: 0.97 }}
               onClick={() => setLiked(!liked)}
