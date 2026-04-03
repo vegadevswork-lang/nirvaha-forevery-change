@@ -67,25 +67,25 @@ const CompanionCard = () => {
         </p>
 
         {/* Two CTA buttons */}
-        <div className="flex gap-3">
+        <div className="flex gap-2.5">
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={() => navigate("/companion")}
-            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl font-body font-medium text-sm"
+            className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl font-body font-medium text-xs whitespace-nowrap"
             style={{
               background: "hsl(var(--card))",
               color: "hsl(var(--primary))",
               boxShadow: "0 4px 16px hsla(var(--foreground) / 0.1)",
             }}
           >
-            <Users size={16} />
+            <Users size={14} />
             Talk to a Companion
           </motion.button>
 
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={() => navigate("/become-companion")}
-            className="flex items-center justify-center gap-1.5 px-4 py-3 rounded-2xl font-body font-medium text-xs"
+            className="flex items-center justify-center gap-1.5 px-4 py-3 rounded-2xl font-body font-medium text-xs whitespace-nowrap"
             style={{
               background: "hsla(var(--primary-foreground) / 0.15)",
               color: "hsl(var(--primary-foreground))",
