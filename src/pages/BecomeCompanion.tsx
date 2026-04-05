@@ -14,6 +14,7 @@ const BecomeCompanion = () => {
   const [selectedSpecs, setSelectedSpecs] = useState<string[]>([]);
   const [expandedCat, setExpandedCat] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: "", email: "", experience: "", motivation: "" });
+  const [hasTypedName, setHasTypedName] = useState(false);
 
   const toggleDomain = (id: string) =>
     setSelectedDomains(prev => prev.includes(id) ? prev.filter(d => d !== id) : [...prev, id]);
