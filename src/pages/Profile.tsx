@@ -5,9 +5,14 @@ import ProfileHeader from "@/components/profile/ProfileHeader";
 import JourneyCard from "@/components/profile/JourneyCard";
 import PersonalStats from "@/components/profile/PersonalStats";
 import SettingsSection from "@/components/profile/SettingsSection";
+import { usePageLoading } from "@/hooks/use-page-loading";
+import ProfileSkeleton from "@/components/skeletons/ProfileSkeleton";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("Profile");
+  const isLoading = usePageLoading(500);
+
+  if (isLoading) return <ProfileSkeleton />;
 
   return (
     <div
