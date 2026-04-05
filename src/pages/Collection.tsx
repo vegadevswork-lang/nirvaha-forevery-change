@@ -341,13 +341,18 @@ const Collection = () => {
           >
             <div className="flex items-center justify-between px-5 mb-3">
               <h3 className="font-display text-sm font-semibold text-foreground">{row.title}</h3>
-              <button className="font-body text-[10px] font-medium" style={{ color: "hsl(var(--primary))" }}>
+              <button
+                onClick={() => setActiveCategory(row.title.includes("Meditation") ? "Meditation" : row.title.includes("Talk") ? "Talks" : row.title.includes("Sound") ? "Sound Therapy" : "All")}
+                className="font-body text-[10px] font-medium"
+                style={{ color: "hsl(var(--primary))" }}
+              >
                 See All
               </button>
             </div>
             <div
               ref={(el) => { scrollRefs.current[row.title] = el; }}
               className="flex gap-3 px-5 overflow-x-auto no-scrollbar"
+              style={{ WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory" }}
             >
               {row.items.map((item, i) => (
                 <ContentCard key={item.id} item={item} index={i} onSelect={() => navigate(`/collection/${item.id}`)} />
@@ -385,7 +390,7 @@ const ContentCard = ({
     whileTap={{ scale: 0.97 }}
     onClick={onSelect}
     className="flex-shrink-0 rounded-2xl overflow-hidden text-left relative group"
-    style={{ width: 140 }}
+    style={{ width: 140, scrollSnapAlign: "start" }}
   >
     <div className="relative" style={{ height: 190 }}>
       <img src={item.image} alt={item.title} className="w-full h-full object-cover rounded-2xl" loading="lazy" />
