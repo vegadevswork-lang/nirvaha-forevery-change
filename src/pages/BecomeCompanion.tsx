@@ -108,7 +108,7 @@ const BecomeCompanion = () => {
                 ))}
               </div>
 
-              <motion.button whileTap={{ scale: 0.97 }} onClick={() => setStep("role")} className="btn-primary flex items-center justify-center gap-2 w-full">
+              <motion.button whileTap={{ scale: 0.97 }} onClick={() => setStep("role")} className="btn-primary flex items-center justify-center gap-2 w-full mt-2">
                 I want to help others <ChevronRight size={16} />
               </motion.button>
               <p className="font-body text-[11px] text-muted-foreground text-center">Takes about 3 minutes. No credentials required.</p>

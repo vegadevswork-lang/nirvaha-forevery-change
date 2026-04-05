@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Calendar, Clock, Video, Phone, MessageCircle, ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { mentors } from "@/data/companionData";
 import { toast } from "sonner";
+import BookingConfirmation from "@/components/booking/BookingConfirmation";
 
 const timeSlots = [
   "9:00 AM", "10:00 AM", "11:00 AM",
@@ -23,6 +24,7 @@ const BookSession = () => {
   const [selectedFormat, setSelectedFormat] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   if (!mentor) {
     return (
@@ -43,14 +45,23 @@ const BookSession = () => {
   });
 
   const handleBook = () => {
-    toast.success("Session booked!", {
-      description: `Your ${session.duration} ${selectedFormat} session with ${mentor.name} is confirmed.`,
-    });
-    navigate(`/companion/feedback/${mentor.id}`);
+    setShowConfirmation(true);
   };
 
   return (
     <div className="min-h-screen bg-background">
+      <AnimatePresence>
+        {showConfirmation && (
+          <BookingConfirmation
+            mentorName={mentor.name}
+            sessionDuration={session.duration}
+            format={selectedFormat || ""}
+            date={selectedDate !== null ? dates[selectedDate].toLocaleDateString("en", { weekday: "long", month: "short", day: "numeric" }) : ""}
+            time={selectedTime || ""}
+            onClose={() => navigate(`/companion/feedback/${mentor.id}`)}
+          />
+        )}
+      </AnimatePresence>
       <div className="ambient-orb animate-pulse-soft"
         style={{ width: 180, height: 180, top: "5%", right: "-10%", background: "hsl(var(--healing-green))" }}
       />

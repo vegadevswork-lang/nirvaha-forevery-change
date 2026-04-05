@@ -64,9 +64,9 @@ const SessionFeedback = () => {
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
             className="w-20 h-20 rounded-full mx-auto mb-5 flex items-center justify-center"
-            style={{ background: "hsla(var(--healing-green) / 0.15)" }}
+            style={{ background: "hsla(280 60% 65% / 0.15)" }}
           >
-            <Heart size={32} style={{ color: "hsl(var(--healing-green))" }} />
+            <Heart size={32} style={{ color: "hsl(280 60% 65%)" }} />
           </motion.div>
           <h2 className="font-display text-xl font-semibold text-foreground mb-2">Thank you</h2>
           <p className="font-body text-sm text-muted-foreground mb-6 max-w-[260px] mx-auto">
@@ -88,7 +88,7 @@ const SessionFeedback = () => {
     <div className="min-h-screen bg-background">
       <div
         className="ambient-orb animate-pulse-soft"
-        style={{ width: 180, height: 180, top: "5%", right: "-10%", background: "hsl(var(--healing-green))" }}
+        style={{ width: 180, height: 180, top: "5%", right: "-10%", background: "hsl(280 60% 65%)" }}
       />
 
       <div className="overflow-y-auto pb-8 px-5 pt-12 relative z-10">
@@ -167,7 +167,7 @@ const SessionFeedback = () => {
           className="mb-6"
         >
           <div className="flex items-center gap-2 mb-3">
-            <ShieldCheck size={14} style={{ color: "hsl(var(--healing-green))" }} />
+            <ShieldCheck size={14} style={{ color: "hsl(280 60% 65%)" }} />
             <h2 className="font-display text-base font-semibold text-foreground">Safety Check</h2>
           </div>
           <p className="font-body text-xs text-muted-foreground mb-4">
