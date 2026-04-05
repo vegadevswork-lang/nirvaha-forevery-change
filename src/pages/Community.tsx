@@ -434,9 +434,9 @@ const Community = () => {
       </div>
 
       {/* ─── Feed ─── */}
-      <div className="flex-1 overflow-y-auto px-4 pb-28 relative z-10">
+      <div className="flex-1 overflow-y-auto pb-28 relative z-10">
         {filteredPosts.length === 0 ? (
-          <div className="text-center py-16">
+          <div className="text-center py-16 px-4">
             <p className="font-body text-sm text-muted-foreground">No expressions in this space yet.</p>
             <p className="font-body text-xs text-muted-foreground mt-1">Be the first to share 🌿</p>
           </div>
