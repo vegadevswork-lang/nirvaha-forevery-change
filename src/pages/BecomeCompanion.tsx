@@ -352,7 +352,7 @@ const BecomeCompanion = () => {
               <div className="space-y-4">
                 <div>
                   <label className="font-body text-sm font-medium text-foreground mb-1.5 block">What should people call you?</label>
-                  <input value={formData.name} onChange={e => setFormData(p => ({ ...p, name: e.target.value }))} placeholder="Your name or alias" className="glass-input" />
+                  <input value={formData.name} onChange={e => { const v = e.target.value; if (!hasTypedName && v.length > 0) setHasTypedName(true); setFormData(p => ({ ...p, name: v })); }} placeholder="Your name or alias" className="glass-input" />
                 </div>
                 <div>
                   <label className="font-body text-sm font-medium text-foreground mb-1.5 block">Email</label>
@@ -403,12 +403,22 @@ const BecomeCompanion = () => {
                     <p className="font-body text-[11px] text-muted-foreground text-center">Preview — how people will see you</p>
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                        boxShadow: hasTypedName && formData.name.length > 0
+                          ? [
+                              "0 8px 32px hsla(var(--gold) / 0.08)",
+                              "0 8px 40px hsla(var(--gold) / 0.25)",
+                              "0 8px 32px hsla(var(--gold) / 0.08)",
+                            ]
+                          : "0 8px 32px hsla(var(--gold) / 0.08)",
+                      }}
+                      transition={hasTypedName && formData.name.length > 0 ? { boxShadow: { duration: 2, repeat: 2, ease: "easeInOut" } } : {}}
                       className="rounded-2xl p-4 border overflow-hidden relative"
                       style={{
                         background: "hsla(var(--glass-bg))",
-                        borderColor: "hsla(var(--glass-border))",
-                        boxShadow: "0 8px 32px hsla(var(--gold) / 0.08)",
+                        borderColor: hasTypedName && formData.name.length > 0 ? "hsla(var(--gold) / 0.4)" : "hsla(var(--glass-border))",
                       }}
                     >
                       {/* Subtle ambient glow */}
