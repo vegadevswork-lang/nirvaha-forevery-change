@@ -14,6 +14,7 @@ const OnboardingIntro = ({ onBegin }: Props) => {
       exit={{ opacity: 0, y: -30 }}
       transition={{ duration: 0.6 }}
       className="flex flex-col items-center justify-center text-center px-6 w-full max-w-sm mx-auto"
+      style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6), 0 1px 3px rgba(0,0,0,0.4)" }}
     >
       {/* Logo */}
       <motion.div
