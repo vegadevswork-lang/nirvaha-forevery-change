@@ -11,6 +11,8 @@ import {
   categories,
   type ContentItem,
 } from "@/data/collectionData";
+import { usePageLoading } from "@/hooks/use-page-loading";
+import CollectionSkeleton from "@/components/skeletons/CollectionSkeleton";
 
 const typeColor: Record<string, string> = {
   series: "hsl(var(--healing-green))",
@@ -24,6 +26,7 @@ const typeColor: Record<string, string> = {
 
 const Collection = () => {
   const navigate = useNavigate();
+  const isLoading = usePageLoading(800);
   const [activeNav, setActiveNav] = useState("Home");
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchOpen, setSearchOpen] = useState(false);
@@ -63,6 +66,8 @@ const Collection = () => {
       }),
     }))
     .filter((row) => row.items.length > 0);
+
+  if (isLoading) return <CollectionSkeleton />;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

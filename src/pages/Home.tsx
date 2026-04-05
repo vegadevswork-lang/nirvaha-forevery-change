@@ -13,8 +13,12 @@ import CollectionCard from "@/components/home/CollectionCard";
 import CommunityCard from "@/components/home/CommunityCard";
 import BottomNav from "@/components/home/BottomNav";
 import { useMoodLog } from "@/hooks/use-mood-log";
+import { usePageLoading } from "@/hooks/use-page-loading";
+import HomeSkeleton from "@/components/skeletons/HomeSkeleton";
 
 const Home = () => {
+  const isLoading = usePageLoading(700);
+
   const [activeNav, setActiveNav] = useState("Home");
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
   const [sparkleOrigin, setSparkleOrigin] = useState<{ x: number; y: number } | null>(null);
@@ -28,6 +32,8 @@ const Home = () => {
     setSelectedEmotion(label);
     logMood(label);
   };
+
+  if (isLoading) return <HomeSkeleton />;
 
   return (
     <motion.div

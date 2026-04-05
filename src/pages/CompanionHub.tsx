@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/home/BottomNav";
 import MentorCard from "@/components/companion/MentorCard";
 import { mentors, mentorDomains } from "@/data/companionData";
+import { usePageLoading } from "@/hooks/use-page-loading";
+import CompanionSkeleton from "@/components/skeletons/CompanionSkeleton";
 
 const domainIcons: Record<string, any> = {
   career: Briefcase,
@@ -15,6 +17,7 @@ const domainIcons: Record<string, any> = {
 
 const CompanionHub = () => {
   const navigate = useNavigate();
+  const isLoading = usePageLoading(600);
   const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -28,6 +31,8 @@ const CompanionHub = () => {
 
   // Top 3 "For You" (simulated AI matching)
   const forYouMentors = mentors.slice(0, 3);
+
+  if (isLoading) return <CompanionSkeleton />;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
