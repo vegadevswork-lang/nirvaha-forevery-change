@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
 import nirvahaLogo from "@/assets/nirvaha-logo.png";
@@ -16,6 +16,28 @@ const Onboarding = () => {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const current = questions[step];
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Smooth loop: when near end, crossfade restart to avoid freeze/jump
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleTimeUpdate = () => {
+      // Start fading 0.5s before end for seamless loop
+      if (video.duration && video.currentTime >= video.duration - 0.5) {
+        video.style.opacity = "0";
+        setTimeout(() => {
+          video.currentTime = 0;
+          video.play();
+          video.style.opacity = "1";
+        }, 400);
+      }
+    };
+
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    return () => video.removeEventListener("timeupdate", handleTimeUpdate);
+  }, []);
 
   const handleBegin = () => setPhase("questions");
 
@@ -45,21 +67,35 @@ const Onboarding = () => {
   const showBack = phase === "questions" || phase === "recap";
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center px-4 py-8 overflow-hidden bg-background">
+    <div className="relative min-h-screen flex flex-col items-center justify-center px-4 py-8 overflow-hidden bg-black">
       {/* Video Background */}
       <div className="absolute inset-0 z-0">
         <video
+          ref={videoRef}
           autoPlay
           loop
           muted
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: "brightness(0.45) saturate(1.2)" }}
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+          style={{ filter: "brightness(0.35) saturate(1.3) blur(1px)" }}
         >
           <source src="/videos/onboarding-bg.mp4" type="video/mp4" />
         </video>
-        {/* Overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50" />
+
+        {/* Dark overlay for text contrast */}
+        <div className="absolute inset-0 bg-black/25" />
+
+        {/* Gradient overlay top & bottom */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
+
+        {/* Vignette effect */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%)",
+          }}
+        />
       </div>
 
       {/* Back button */}
