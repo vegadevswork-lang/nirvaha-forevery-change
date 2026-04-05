@@ -339,83 +339,126 @@ export const mentors: Mentor[] = [
   },
 ];
 
-export const contributorDomains = [
+/* ── INCLUSIVE CONTRIBUTOR SYSTEM ── */
+
+export interface ContributorRole {
+  id: string;
+  label: string;
+  emoji: string;
+  description: string;
+  tag: string;
+}
+
+export const contributorRoles: ContributorRole[] = [
   {
-    category: "Mental Health & Therapy",
-    roles: [
-      "Licensed Clinical Psychologist",
-      "Cognitive Behavioral Therapist (CBT)",
-      "Dialectical Behavior Therapist (DBT)",
-      "Art / Music / Dance Therapist",
-      "Trauma-Informed Counselor",
-      "Grief & Loss Specialist",
-    ],
+    id: "listener",
+    label: "Listener",
+    emoji: "🌱",
+    description: "I'm a good listener with life experience. I want to support others by being present.",
+    tag: "Empathetic Listener",
   },
   {
-    category: "Life & Wellness Coaching",
-    roles: [
-      "Certified Life Coach (ICF)",
-      "Wellness & Lifestyle Coach",
-      "Mindfulness-Based Stress Reduction (MBSR) Instructor",
-      "Breathwork Facilitator",
-      "Somatic Experiencing Practitioner",
-      "Holistic Nutritionist & Wellness Guide",
-    ],
+    id: "guide",
+    label: "Experienced Guide",
+    emoji: "🌿",
+    description: "I have personal growth experience or informal training. I can guide with perspective.",
+    tag: "Life Guide",
   },
   {
-    category: "Career & Professional Growth",
-    roles: [
-      "Executive Coach",
-      "Career Transition Specialist",
-      "Leadership Development Coach",
-      "Entrepreneurship Mentor",
-      "Organizational Psychologist",
-      "Financial Wellness Advisor",
-    ],
-  },
-  {
-    category: "Relationships & Family",
-    roles: [
-      "Couples Therapist (EFT / Gottman trained)",
-      "Family Systems Therapist",
-      "Pre-marital Counselor",
-      "Divorce & Co-parenting Mediator",
-      "Attachment Theory Specialist",
-      "Intimacy & Communication Coach",
-    ],
-  },
-  {
-    category: "Spiritual & Contemplative",
-    roles: [
-      "Vedanta / Advaita Teacher",
-      "Buddhist Meditation Teacher (Vipassana, Zen)",
-      "Sufi Guide / Murshid",
-      "Yoga Philosophy Instructor",
-      "Interfaith Spiritual Director",
-      "Shamanic / Indigenous Healing Practitioner",
-      "Kirtan / Bhajan / Chanting Guide",
-      "Ritual & Ceremony Facilitator",
-    ],
-  },
-  {
-    category: "Youth & Student Support",
-    roles: [
-      "School Counselor / Adolescent Mentor",
-      "College Transition Coach",
-      "Study Skills & Academic Coach",
-      "Youth Empowerment Facilitator",
-      "Anti-Bullying & Social Skills Trainer",
-    ],
-  },
-  {
-    category: "Community & Social Impact",
-    roles: [
-      "Peer Support Specialist",
-      "Community Health Worker",
-      "Diversity, Equity & Inclusion Coach",
-      "Social Worker (LCSW)",
-      "Crisis Intervention Specialist",
-      "Restorative Justice Facilitator",
-    ],
+    id: "expert",
+    label: "Professional Expert",
+    emoji: "🧠",
+    description: "I'm certified or professionally trained in my field. I bring clinical or specialized expertise.",
+    tag: "Verified Expert",
   },
 ];
+
+export interface SupportDomain {
+  id: string;
+  emoji: string;
+  label: string;
+  topics: string[];
+}
+
+export const supportDomains: SupportDomain[] = [
+  {
+    id: "emotional",
+    emoji: "🧠",
+    label: "Emotional Support",
+    topics: ["Feeling overwhelmed", "Anxiety & overthinking", "Stress & burnout", "Just need someone to listen"],
+  },
+  {
+    id: "relationships",
+    emoji: "💛",
+    label: "Relationships & Life",
+    topics: ["Love & relationships", "Family issues", "Breakups & healing", "Communication struggles"],
+  },
+  {
+    id: "direction",
+    emoji: "🌱",
+    label: "Life Direction & Purpose",
+    topics: ["Feeling lost", "Career confusion", "Finding purpose", "Decision-making"],
+  },
+  {
+    id: "growth",
+    emoji: "🧘",
+    label: "Inner Growth & Healing",
+    topics: ["Self-awareness", "Habits & mindset", "Confidence & self-worth", "Emotional healing"],
+  },
+  {
+    id: "spiritual",
+    emoji: "🌿",
+    label: "Spiritual & Reflection",
+    topics: ["Meditation", "Meaning of life", "Inner peace", "Philosophical guidance"],
+  },
+  {
+    id: "youth",
+    emoji: "🎓",
+    label: "Student & Youth Life",
+    topics: ["Studies stress", "Career pressure", "Identity & growth", "Social anxiety"],
+  },
+  {
+    id: "talk",
+    emoji: "💬",
+    label: "Just Talk / Be Heard",
+    topics: ["Venting", "Sharing thoughts", "Casual emotional support", "No agenda, just presence"],
+  },
+];
+
+export interface Specialization {
+  category: string;
+  roles: string[];
+}
+
+export const specializations: Specialization[] = [
+  {
+    category: "Mental Health",
+    roles: ["Psychologist", "Therapist (CBT/DBT)", "Trauma counselor", "Grief specialist"],
+  },
+  {
+    category: "Coaching & Wellness",
+    roles: ["Life coach", "Wellness coach", "Breathwork / mindfulness", "Somatic practitioner"],
+  },
+  {
+    category: "Career & Growth",
+    roles: ["Career coach", "Leadership mentor", "Entrepreneurship guide", "Financial wellness"],
+  },
+  {
+    category: "Relationships",
+    roles: ["Couples therapist", "Family counselor", "Communication coach", "Attachment specialist"],
+  },
+  {
+    category: "Spiritual",
+    roles: ["Meditation teacher", "Yoga philosophy", "Vedanta / Buddhist guide", "Ritual facilitator"],
+  },
+  {
+    category: "Youth & Social",
+    roles: ["Student mentor", "Academic coach", "Youth counselor", "Community facilitator"],
+  },
+];
+
+// Keep backward compat
+export const contributorDomains = specializations.map(s => ({
+  category: s.category,
+  roles: s.roles,
+}));
