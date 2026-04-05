@@ -124,10 +124,7 @@ const PostCard = ({
               )}
             </div>
 
-            {/* Intent */}
-            <p className="font-body text-[11px] text-muted-foreground italic mb-2">
-              {post.intent}
-            </p>
+            {/* Content — clickable */}
 
             {/* Content — clickable */}
             <button onClick={() => onOpen(post)} className="w-full text-left">

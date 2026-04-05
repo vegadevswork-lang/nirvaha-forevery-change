@@ -35,7 +35,7 @@ const FABMenu = ({ onNewPost }: { onNewPost: () => void }) => {
               whileTap={{ scale: 0.95 }}
               onClick={() => {
                 setOpen(false);
-                navigate("/chat");
+                navigate("/people-chat");
               }}
               className="flex items-center gap-3 pl-4 pr-5 py-3 rounded-2xl shadow-lg"
               style={{
@@ -52,7 +52,7 @@ const FABMenu = ({ onNewPost }: { onNewPost: () => void }) => {
               </div>
               <div className="text-left">
                 <p className="font-body text-sm font-semibold text-foreground">New Chat</p>
-                <p className="font-body text-[10px] text-muted-foreground">Talk to Nirvaha AI</p>
+                <p className="font-body text-[10px] text-muted-foreground">Chat with people</p>
               </div>
             </motion.button>
 
