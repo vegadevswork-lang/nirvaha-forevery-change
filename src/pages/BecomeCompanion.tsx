@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ChevronRight, ChevronDown, Heart, Sparkles, Users, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ChevronRight, ChevronDown, Heart, Sparkles, Users, CheckCircle2, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { contributorRoles, supportDomains, specializations } from "@/data/companionData";
 
@@ -384,29 +384,113 @@ const BecomeCompanion = () => {
                 </div>
               </div>
 
-              {/* Summary chips */}
-              <div className="glass-card p-3 space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-body px-2 py-0.5 rounded-full" style={{ background: "hsla(var(--gold) / 0.12)", color: "hsl(var(--gold))" }}>
-                    {contributorRoles.find(r => r.id === selectedRole)?.tag}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {selectedDomains.map(id => {
-                    const d = supportDomains.find(x => x.id === id);
-                    return d ? (
-                      <span key={id} className="text-[10px] font-body px-2 py-0.5 rounded-full" style={{ background: "hsla(var(--healing-green) / 0.08)", color: "hsl(var(--healing-green))" }}>
-                        {d.emoji} {d.label}
-                      </span>
-                    ) : null;
-                  })}
-                  {selectedSpecs.map(s => (
-                    <span key={s} className="text-[10px] font-body px-2 py-0.5 rounded-full" style={{ background: "hsla(var(--primary) / 0.08)", color: "hsl(var(--primary))" }}>
-                      {s}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              {/* Live Profile Preview */}
+              {(() => {
+                const role = contributorRoles.find(r => r.id === selectedRole);
+                const domains = selectedDomains.map(id => supportDomains.find(x => x.id === id)).filter(Boolean);
+                const initials = formData.name
+                  ? formData.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2)
+                  : "??";
+                const avatarGradient = selectedRole === "expert"
+                  ? "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--gold)))"
+                  : selectedRole === "guide"
+                  ? "linear-gradient(135deg, hsl(var(--healing-green)), hsl(var(--gold)))"
+                  : "linear-gradient(135deg, hsl(var(--gold)), hsl(var(--healing-green)))";
+
+                return (
+                  <div className="space-y-2">
+                    <p className="font-body text-[11px] text-muted-foreground text-center">Preview — how people will see you</p>
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="rounded-2xl p-4 border overflow-hidden relative"
+                      style={{
+                        background: "hsla(var(--glass-bg))",
+                        borderColor: "hsla(var(--glass-border))",
+                        boxShadow: "0 8px 32px hsla(var(--gold) / 0.08)",
+                      }}
+                    >
+                      {/* Subtle ambient glow */}
+                      <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full opacity-20 blur-2xl" style={{ background: avatarGradient }} />
+
+                      <div className="flex items-start gap-3 relative z-10">
+                        {/* Avatar */}
+                        <div
+                          className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+                          style={{ background: avatarGradient }}
+                        >
+                          <span className="text-sm font-display font-bold" style={{ color: "hsl(var(--primary-foreground))" }}>
+                            {initials}
+                          </span>
+                        </div>
+
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-display text-sm font-semibold text-foreground truncate">
+                              {formData.name || "Your Name"}
+                            </h4>
+                            {selectedRole === "expert" && (
+                              <ShieldCheck size={13} style={{ color: "hsl(var(--gold))" }} className="flex-shrink-0" />
+                            )}
+                          </div>
+                          {role && (
+                            <span
+                              className="inline-block text-[10px] font-body px-2 py-0.5 rounded-full mt-1"
+                              style={{ background: "hsla(var(--gold) / 0.12)", color: "hsl(var(--gold))" }}
+                            >
+                              {role.emoji} {role.tag}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Bio preview */}
+                      {formData.motivation && (
+                        <p className="font-body text-xs text-muted-foreground mt-3 leading-relaxed line-clamp-2 italic relative z-10">
+                          "{formData.motivation}"
+                        </p>
+                      )}
+
+                      {/* Domain chips */}
+                      {domains.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-3 relative z-10">
+                          {domains.map(d => d && (
+                            <span
+                              key={d.id}
+                              className="text-[10px] font-body px-2 py-0.5 rounded-full"
+                              style={{ background: "hsla(var(--healing-green) / 0.08)", color: "hsl(var(--healing-green))" }}
+                            >
+                              {d.emoji} {d.label}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Specialization chips */}
+                      {selectedSpecs.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-2 relative z-10">
+                          {selectedSpecs.map(s => (
+                            <span
+                              key={s}
+                              className="text-[10px] font-body px-2 py-0.5 rounded-full"
+                              style={{ background: "hsla(var(--primary) / 0.08)", color: "hsl(var(--primary))" }}
+                            >
+                              {s}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Availability hint */}
+                      <div className="flex items-center gap-1.5 mt-3 relative z-10">
+                        <div className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(var(--healing-green))" }} />
+                        <span className="font-body text-[10px] text-muted-foreground">Available to connect</span>
+                      </div>
+                    </motion.div>
+                  </div>
+                );
+              })()}
 
               <motion.button
                 whileTap={{ scale: 0.97 }}
