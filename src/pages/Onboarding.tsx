@@ -46,30 +46,21 @@ const Onboarding = () => {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center px-4 py-8 overflow-hidden bg-background">
-      {/* Particles */}
+      {/* Video Background */}
       <div className="absolute inset-0 z-0">
-        <Particles
-          particleColors={["#ffffff"]}
-          particleCount={120}
-          particleSpread={10}
-          speed={0.06}
-          particleBaseSize={60}
-          moveParticlesOnHover
-          alphaParticles={false}
-          disableRotation={false}
-          pixelRatio={1}
-        />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "brightness(0.45) saturate(1.2)" }}
+        >
+          <source src="/videos/onboarding-bg.mp4" type="video/mp4" />
+        </video>
+        {/* Overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50" />
       </div>
-
-      {/* Ambient orbs */}
-      <div
-        className="ambient-orb animate-pulse-soft"
-        style={{ width: 280, height: 280, top: "6%", left: "2%", background: "hsl(var(--healing-green))" }}
-      />
-      <div
-        className="ambient-orb animate-pulse-soft"
-        style={{ width: 220, height: 220, bottom: "10%", right: "3%", background: "hsl(var(--gold))", animationDelay: "2s" }}
-      />
 
       {/* Back button */}
       <AnimatePresence>
