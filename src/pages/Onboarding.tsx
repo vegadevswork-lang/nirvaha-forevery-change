@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
 import nirvahaLogo from "@/assets/nirvaha-logo.png";
+import Particles from "@/components/Particles";
 
 import OnboardingIntro from "@/components/onboarding/OnboardingIntro";
 import OnboardingQuestion from "@/components/onboarding/OnboardingQuestion";
