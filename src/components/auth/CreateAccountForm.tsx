@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Eye, EyeOff, Lock, Mail, Phone, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const CreateAccountForm = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [agreed, setAgreed] = useState(false);
@@ -79,9 +81,9 @@ const CreateAccountForm = () => {
         <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="h-4 w-4 rounded border-border accent-primary mt-0.5" required />
         <span className="text-xs font-body text-muted-foreground leading-relaxed">
           I agree to the{" "}
-          <button type="button" className="text-primary underline">Terms of Service</button>{" "}
+          <button type="button" onClick={() => navigate("/terms-of-service")} className="text-primary underline">Terms of Service</button>{" "}
           and{" "}
-          <button type="button" className="text-primary underline">Privacy Policy</button>
+          <button type="button" onClick={() => navigate("/privacy-policy")} className="text-primary underline">Privacy Policy</button>
         </span>
       </label>
 
