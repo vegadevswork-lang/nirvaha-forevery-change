@@ -367,6 +367,8 @@ const Community = () => {
 
   const editingPost = editingPostId ? posts.find((p) => p.id === editingPostId) : null;
 
+  if (isLoading) return <CommunitySkeleton />;
+
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-background flex flex-col relative">
       <SparkleEffect origin={sparkleOrigin} trigger={sparkleTrigger} />

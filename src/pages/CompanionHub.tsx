@@ -32,6 +32,8 @@ const CompanionHub = () => {
   // Top 3 "For You" (simulated AI matching)
   const forYouMentors = mentors.slice(0, 3);
 
+  if (isLoading) return <CompanionSkeleton />;
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Ambient orbs */}
