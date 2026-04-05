@@ -17,6 +17,8 @@ import PostCard from "@/components/community/PostCard";
 import PostDetailView from "@/components/community/PostDetailView";
 import CreatePostFlow from "@/components/community/CreatePostFlow";
 import FABMenu from "@/components/community/FABMenu";
+import { usePageLoading } from "@/hooks/use-page-loading";
+import CommunitySkeleton from "@/components/skeletons/CommunitySkeleton";
 
 /* ─── Panels (Insights, Notifications, Topics, Circles) ─── */
 
