@@ -32,6 +32,7 @@ const Collection = lazy(() => import("./pages/Collection.tsx"));
 const ContentDetail = lazy(() => import("./pages/ContentDetail.tsx"));
 const MyList = lazy(() => import("./pages/MyList.tsx"));
 const Community = lazy(() => import("./pages/Community.tsx"));
+const PeopleChat = lazy(() => import("./pages/PeopleChat.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -67,6 +68,7 @@ const App = () => (
               <Route path="/collection/:id" element={<ContentDetail />} />
               <Route path="/my-list" element={<MyList />} />
               <Route path="/community" element={<Community />} />
+              <Route path="/people-chat" element={<PeopleChat />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
