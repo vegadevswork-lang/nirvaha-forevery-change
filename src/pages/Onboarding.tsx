@@ -18,13 +18,13 @@ const Onboarding = () => {
   const current = questions[step];
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Smooth loop: when near end, crossfade restart to avoid freeze/jump
+  // Slow down video & smooth loop
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    video.playbackRate = 0.6;
 
     const handleTimeUpdate = () => {
-      // Start fading 0.5s before end for seamless loop
       if (video.duration && video.currentTime >= video.duration - 0.5) {
         video.style.opacity = "0";
         setTimeout(() => {
@@ -78,24 +78,13 @@ const Onboarding = () => {
           playsInline
           preload="auto"
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
-          style={{ filter: "brightness(0.35) saturate(1.3) blur(1px)" }}
+          style={{ filter: "brightness(0.55) saturate(1.2)" }}
         >
           <source src="/videos/onboarding-bg.mp4" type="video/mp4" />
         </video>
 
-        {/* Dark overlay for text contrast */}
-        <div className="absolute inset-0 bg-black/25" />
-
-        {/* Gradient overlay top & bottom */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
-
-        {/* Vignette effect */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%)",
-          }}
-        />
+        {/* Soft gradient for text readability — no heavy overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-black/25" />
       </div>
 
       {/* Back button */}
