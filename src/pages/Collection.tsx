@@ -67,6 +67,8 @@ const Collection = () => {
     }))
     .filter((row) => row.items.length > 0);
 
+  if (isLoading) return <CollectionSkeleton />;
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Background ambient */}
