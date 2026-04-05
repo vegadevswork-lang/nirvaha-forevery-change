@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft, Plus, Shield, Search, Bell, Sparkles,
+  ArrowLeft, Shield, Search, Bell, Sparkles,
   Hash, Users, X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ import SortTabs from "@/components/community/SortTabs";
 import PostCard from "@/components/community/PostCard";
 import PostDetailView from "@/components/community/PostDetailView";
 import CreatePostFlow from "@/components/community/CreatePostFlow";
+import FABMenu from "@/components/community/FABMenu";
 
 /* ─── Panels (Insights, Notifications, Topics, Circles) ─── */
 
@@ -369,8 +370,9 @@ const Community = () => {
       <div className="ambient-orb animate-pulse-soft" style={{ width: 220, height: 220, top: "3%", right: "-10%", background: "hsl(var(--healing-green))" }} />
 
       {/* ─── Header ─── */}
-      <div className="px-5 pt-12 pb-2 relative z-10">
-        <div className="flex items-center gap-3 mb-3">
+      <div className="px-4 pt-12 pb-1 relative z-10">
+        {/* Title row */}
+        <div className="flex items-center gap-3 mb-4">
           <motion.button whileTap={{ scale: 0.9 }} onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl flex items-center justify-center glass-card">
             <ArrowLeft size={18} className="text-foreground" />
           </motion.button>
@@ -379,26 +381,26 @@ const Community = () => {
               <Shield size={14} className="text-primary" />
               <h1 className="font-display text-lg text-foreground font-semibold">Nirvaha Space</h1>
             </div>
-            <p className="font-body text-[10px] text-muted-foreground">Anonymous • Safe • Empathetic</p>
+            <p className="font-body text-[10px] text-muted-foreground">Anonymous · Safe · Empathetic</p>
           </div>
-          <div className="flex gap-1">
+          <div className="flex gap-0.5">
             <motion.button whileTap={{ scale: 0.9 }} onClick={() => setShowSearch(!showSearch)} className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: showSearch ? "hsl(var(--primary) / 0.1)" : "transparent" }}>
-              <Search size={15} className={showSearch ? "text-primary" : "text-muted-foreground"} />
+              <Search size={16} className={showSearch ? "text-primary" : "text-muted-foreground"} />
             </motion.button>
             <motion.button whileTap={{ scale: 0.9 }} onClick={() => setShowCircles(true)} className="w-8 h-8 rounded-lg flex items-center justify-center">
-              <Users size={15} className="text-muted-foreground" />
+              <Users size={16} className="text-muted-foreground" />
             </motion.button>
             <motion.button whileTap={{ scale: 0.9 }} onClick={() => setShowTopics(true)} className="w-8 h-8 rounded-lg flex items-center justify-center">
-              <Hash size={15} className="text-muted-foreground" />
+              <Hash size={16} className="text-muted-foreground" />
             </motion.button>
             <motion.button whileTap={{ scale: 0.9 }} onClick={() => setShowNotifications(true)} className="w-8 h-8 rounded-lg flex items-center justify-center relative">
-              <Bell size={15} className="text-muted-foreground" />
+              <Bell size={16} className="text-muted-foreground" />
               {unreadCount > 0 && (
                 <div className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold" style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}>{unreadCount > 9 ? "9+" : unreadCount}</div>
               )}
             </motion.button>
             <motion.button whileTap={{ scale: 0.9 }} onClick={() => setShowInsights(true)} className="w-8 h-8 rounded-lg flex items-center justify-center">
-              <Sparkles size={15} style={{ color: "hsl(var(--gold))" }} />
+              <Sparkles size={16} style={{ color: "hsl(var(--gold))" }} />
             </motion.button>
           </div>
         </div>
@@ -406,7 +408,7 @@ const Community = () => {
         {/* Search bar */}
         <AnimatePresence>
           {showSearch && (
-            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden mb-2">
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden mb-3">
               <div className="relative">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input type="text" placeholder="Search expressions, emotions, topics…" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
@@ -422,19 +424,19 @@ const Community = () => {
           )}
         </AnimatePresence>
 
-        {/* Topic bar (subreddit-style) */}
+        {/* Topic bar */}
         <TopicBar active={activeTopic} onSelect={setActiveTopic} />
 
         {/* Sort tabs */}
-        <div className="mt-2 mb-1">
+        <div className="mt-3 mb-2">
           <SortTabs active={sortMode} onSelect={setSortMode} />
         </div>
       </div>
 
       {/* ─── Feed ─── */}
-      <div className="flex-1 overflow-y-auto px-4 pb-28 relative z-10">
+      <div className="flex-1 overflow-y-auto pb-28 relative z-10">
         {filteredPosts.length === 0 ? (
-          <div className="text-center py-16">
+          <div className="text-center py-16 px-4">
             <p className="font-body text-sm text-muted-foreground">No expressions in this space yet.</p>
             <p className="font-body text-xs text-muted-foreground mt-1">Be the first to share 🌿</p>
           </div>
@@ -455,17 +457,7 @@ const Community = () => {
       </div>
 
       {/* ─── FAB ─── */}
-      <motion.button
-        whileTap={{ scale: 0.9 }}
-        onClick={() => setShowCreate(true)}
-        className="fixed bottom-8 right-5 z-40 w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg"
-        style={{
-          background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--healing-green-light)))",
-          boxShadow: "0 8px 24px hsl(var(--healing-green) / 0.35)",
-        }}
-      >
-        <Plus size={24} className="text-primary-foreground" />
-      </motion.button>
+      <FABMenu onNewPost={() => setShowCreate(true)} />
 
       {/* ─── Overlays ─── */}
       <AnimatePresence>{showCreate && <CreatePostFlow onClose={() => setShowCreate(false)} onPost={handleNewPost} />}</AnimatePresence>
