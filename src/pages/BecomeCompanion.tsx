@@ -167,13 +167,23 @@ const BecomeCompanion = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="space-y-5"
+              className="space-y-6"
             >
-              <div>
+              <div className="text-center mb-2">
                 <h2 className="font-display text-lg font-semibold text-foreground mb-1">Choose your domain(s)</h2>
                 <p className="font-body text-xs text-muted-foreground">
-                  Select the roles that best describe your expertise. You can choose multiple.
+                  Select the roles that best describe your expertise.
                 </p>
+                {selectedRoles.length > 0 && (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="font-body text-xs mt-2"
+                    style={{ color: "hsl(var(--gold))" }}
+                  >
+                    {selectedRoles.length} selected
+                  </motion.p>
+                )}
               </div>
 
               {contributorDomains.map((category, ci) => (
@@ -181,42 +191,50 @@ const BecomeCompanion = () => {
                   key={category.category}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: ci * 0.06 }}
+                  transition={{ delay: ci * 0.05 }}
                 >
-                  <h3 className="font-display text-sm font-semibold text-foreground mb-2">{category.category}</h3>
-                  <div className="flex flex-wrap gap-2 mb-4">
+                  <h3 className="font-display text-xs font-semibold text-muted-foreground mb-3 tracking-widest uppercase">
+                    {category.category}
+                  </h3>
+                  <div className="flex flex-wrap gap-2.5">
                     {category.roles.map(role => {
                       const isActive = selectedRoles.includes(role);
                       return (
-                        <button
+                        <motion.button
                           key={role}
+                          whileTap={{ scale: 0.95 }}
                           onClick={() => toggleRole(role)}
-                          className={`px-3 py-1.5 rounded-full text-xs font-body font-medium transition-all ${
-                            isActive ? "bg-primary text-primary-foreground" : ""
-                          }`}
-                          style={isActive ? {} : {
+                          className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-body font-medium transition-all duration-200"
+                          style={isActive ? {
+                            background: "hsla(var(--gold) / 0.15)",
+                            color: "hsl(var(--gold))",
+                            border: "1.5px solid hsla(var(--gold) / 0.4)",
+                          } : {
                             background: "hsla(var(--glass-bg))",
                             color: "hsl(var(--muted-foreground))",
-                            border: "1px solid hsla(var(--glass-border))",
+                            border: "1.5px solid hsla(var(--glass-border))",
                           }}
                         >
+                          <span className="text-[10px] opacity-70">{isActive ? "✓" : "+"}</span>
                           {role}
-                        </button>
+                        </motion.button>
                       );
                     })}
                   </div>
                 </motion.div>
               ))}
 
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                onClick={() => setStep("info")}
-                disabled={selectedRoles.length === 0}
-                className="btn-primary flex items-center justify-center gap-2 w-full disabled:opacity-40"
-              >
-                Continue
-                <ChevronRight size={16} />
-              </motion.button>
+              <div className="pt-2 pb-4">
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => setStep("info")}
+                  disabled={selectedRoles.length === 0}
+                  className="btn-primary flex items-center justify-center gap-2 w-full disabled:opacity-40"
+                >
+                  Continue
+                  <ChevronRight size={16} />
+                </motion.button>
+              </div>
             </motion.div>
           )}
 
