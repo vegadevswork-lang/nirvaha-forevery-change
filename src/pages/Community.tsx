@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft, Plus, Shield, Search, Bell, Sparkles,
+  ArrowLeft, Shield, Search, Bell, Sparkles,
   Hash, Users, X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ import SortTabs from "@/components/community/SortTabs";
 import PostCard from "@/components/community/PostCard";
 import PostDetailView from "@/components/community/PostDetailView";
 import CreatePostFlow from "@/components/community/CreatePostFlow";
+import FABMenu from "@/components/community/FABMenu";
 
 /* ─── Panels (Insights, Notifications, Topics, Circles) ─── */
 
@@ -455,17 +456,7 @@ const Community = () => {
       </div>
 
       {/* ─── FAB ─── */}
-      <motion.button
-        whileTap={{ scale: 0.9 }}
-        onClick={() => setShowCreate(true)}
-        className="fixed bottom-8 right-5 z-40 w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg"
-        style={{
-          background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--healing-green-light)))",
-          boxShadow: "0 8px 24px hsl(var(--healing-green) / 0.35)",
-        }}
-      >
-        <Plus size={24} className="text-primary-foreground" />
-      </motion.button>
+      <FABMenu onNewPost={() => setShowCreate(true)} />
 
       {/* ─── Overlays ─── */}
       <AnimatePresence>{showCreate && <CreatePostFlow onClose={() => setShowCreate(false)} onPost={handleNewPost} />}</AnimatePresence>
