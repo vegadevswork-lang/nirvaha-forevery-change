@@ -85,6 +85,21 @@ const Onboarding = () => {
 
         {/* Soft gradient for text readability — no heavy overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-black/25" />
+
+        {/* Subtle particle overlay */}
+        <div className="absolute inset-0 z-[1] pointer-events-none" style={{ opacity: 0.4 }}>
+          <Particles
+            particleColors={["#ffffff", "#d4f0e0"]}
+            particleCount={50}
+            particleSpread={8}
+            speed={0.03}
+            particleBaseSize={40}
+            moveParticlesOnHover={false}
+            alphaParticles
+            disableRotation
+            pixelRatio={1}
+          />
+        </div>
       </div>
 
       {/* Back button */}
