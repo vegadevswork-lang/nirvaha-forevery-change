@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ChevronRight, ChevronDown, Heart, Sparkles, Users, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ChevronRight, ChevronDown, Heart, Sparkles, Users, CheckCircle2, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { contributorRoles, supportDomains, specializations } from "@/data/companionData";
 
