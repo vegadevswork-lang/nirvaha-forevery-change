@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import nirvahaLogo from "@/assets/nirvaha-logo.png";
-import introIllustration from "@/assets/onboarding-intro.png";
+import introIllustration from "@/assets/onboarding-meditation.png";
 
 interface Props {
   onBegin: () => void;
