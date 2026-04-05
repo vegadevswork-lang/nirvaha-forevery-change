@@ -52,13 +52,13 @@ const OnboardingIntro = ({ onBegin }: Props) => {
         <div
           className="absolute inset-0 -z-10 rounded-full mx-auto"
           style={{
-            width: "70%",
-            height: "70%",
-            top: "15%",
-            left: "15%",
-            background: "radial-gradient(circle, hsl(var(--gold)) 0%, hsl(var(--healing-green)) 50%, transparent 100%)",
-            filter: "blur(40px)",
-            opacity: 0.35,
+            width: "80%",
+            height: "80%",
+            top: "10%",
+            left: "10%",
+            background: "radial-gradient(circle, hsl(45 90% 55% / 0.6) 0%, hsl(45 90% 50% / 0.3) 40%, transparent 70%)",
+            filter: "blur(20px)",
+            animation: "pulse-soft 3s ease-in-out infinite",
           }}
         />
       </motion.div>
