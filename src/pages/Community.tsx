@@ -305,6 +305,7 @@ const EditPostModal = ({ post, onClose, onSave }: { post: CommunityPost; onClose
 /* ═══════════════ MAIN COMMUNITY PAGE ═══════════════ */
 const Community = () => {
   const navigate = useNavigate();
+  const isLoading = usePageLoading(700);
   const [posts, setPosts] = useState<CommunityPost[]>(samplePosts);
   const [showCreate, setShowCreate] = useState(false);
   const [activePost, setActivePost] = useState<CommunityPost | null>(null);
