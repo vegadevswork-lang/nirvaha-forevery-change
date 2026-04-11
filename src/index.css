@@ -213,6 +213,23 @@
     filter: blur(80px);
     opacity: 0.4;
     pointer-events: none;
+    will-change: transform, opacity;
+    contain: layout paint;
+  }
+
+  /* Performance: GPU-accelerated animations */
+  .gpu-accelerate {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* Optimistic UI: instant feedback */
+  .tap-feedback {
+    transition: transform 0.1s ease, opacity 0.1s ease;
+  }
+  .tap-feedback:active {
+    transform: scale(0.97);
+    opacity: 0.9;
   }
 }
 
