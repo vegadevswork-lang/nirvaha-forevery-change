@@ -90,41 +90,39 @@ const SoundJourney = () => {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           className="rounded-3xl p-6 mb-8 relative overflow-hidden"
-          style={{ background: pkg.gradient, boxShadow: "0 8px 32px hsla(var(--glass-shadow))" }}
+          style={{ background: pkg.gradient, boxShadow: "0 12px 40px hsla(0 0% 0% / 0.2)" }}
         >
-          <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full opacity-15" style={{ background: "hsl(var(--primary-foreground))" }} />
-          <div className="absolute -bottom-6 -left-6 w-20 h-20 rounded-full opacity-10" style={{ background: "hsl(var(--primary-foreground))" }} />
+          <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full opacity-10" style={{ background: "hsl(0 0% 100%)" }} />
 
           <div className="relative z-10">
             <div className="flex items-start gap-4 mb-4">
               <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
-                style={{ background: "hsla(var(--primary-foreground) / 0.2)", backdropFilter: "blur(8px)" }}>
+                style={{ background: "hsla(0 0% 100% / 0.12)", backdropFilter: "blur(8px)" }}>
                 <span className="text-3xl">{pkg.icon}</span>
               </div>
               <div className="flex-1">
-                <h1 className="font-display text-2xl text-foreground font-semibold">{pkg.title}</h1>
-                <p className="font-body text-sm text-foreground/70 mt-0.5">{pkg.purpose}</p>
+                <h1 className="font-display text-2xl font-semibold" style={{ color: "hsl(0 0% 95%)" }}>{pkg.title}</h1>
+                <p className="font-body text-sm mt-0.5" style={{ color: "hsla(0 0% 95% / 0.7)" }}>{pkg.purpose}</p>
               </div>
             </div>
-            <p className="font-body text-xs text-foreground/50 leading-relaxed mb-4">{pkg.description}</p>
             <div className="flex items-center gap-4 mb-4">
-              <span className="font-body text-[11px] text-foreground/60">{pkg.duration}</span>
-              <span className="text-foreground/30">·</span>
-              <span className="font-body text-[11px] text-foreground/60">{sessions.length} sessions</span>
-              <span className="text-foreground/30">·</span>
-              <span className="font-body text-[11px] text-foreground/60">{completedSessions.size} completed</span>
+              <span className="font-body text-[11px]" style={{ color: "hsla(0 0% 95% / 0.5)" }}>{pkg.duration}</span>
+              <span style={{ color: "hsla(0 0% 95% / 0.3)" }}>·</span>
+              <span className="font-body text-[11px]" style={{ color: "hsla(0 0% 95% / 0.5)" }}>{sessions.length} sessions</span>
+              <span style={{ color: "hsla(0 0% 95% / 0.3)" }}>·</span>
+              <span className="font-body text-[11px]" style={{ color: "hsla(0 0% 95% / 0.5)" }}>{completedSessions.size} completed</span>
             </div>
 
             {/* Progress bar */}
-            <div className="h-2 rounded-full overflow-hidden" style={{ background: "hsla(var(--primary-foreground) / 0.15)" }}>
+            <div className="h-2 rounded-full overflow-hidden" style={{ background: "hsla(0 0% 100% / 0.1)" }}>
               <motion.div
                 className="h-full rounded-full"
-                style={{ background: "hsla(var(--primary-foreground) / 0.5)" }}
+                style={{ background: "hsla(0 0% 100% / 0.4)" }}
                 animate={{ width: `${progressPercent}%` }}
                 transition={{ duration: 0.5 }}
               />
             </div>
-            <p className="font-body text-[10px] text-foreground/50 mt-1.5 text-right">
+            <p className="font-body text-[10px] mt-1.5 text-right" style={{ color: "hsla(0 0% 95% / 0.4)" }}>
               {Math.round(progressPercent)}% complete
             </p>
           </div>
