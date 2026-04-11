@@ -109,7 +109,7 @@ const CreatePostFlow = ({
             boxShadow: text.trim().length >= 10 ? "0 0 20px hsl(var(--primary) / 0.3)" : "none",
           }}
         >
-          Plant Seed
+          Post
         </motion.button>
       </div>
 

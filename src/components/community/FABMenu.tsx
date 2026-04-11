@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, PenLine, Plus, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const FABMenu = ({ onNewPost }: { onNewPost: () => void }) => {
@@ -69,11 +69,11 @@ const FABMenu = ({ onNewPost }: { onNewPost: () => void }) => {
             >
               <div className="w-9 h-9 rounded-xl flex items-center justify-center"
                 style={{ background: "hsl(var(--gold) / 0.15)" }}>
-                <span className="text-base">🌱</span>
+                <PenLine size={18} style={{ color: "hsl(var(--gold))" }} />
               </div>
               <div className="text-left">
-                <p className="font-body text-sm font-semibold text-foreground">Plant a Seed</p>
-                <p className="font-body text-[10px] text-muted-foreground/70">Share your wisdom</p>
+                <p className="font-body text-sm font-semibold text-foreground">New Post</p>
+                <p className="font-body text-[10px] text-muted-foreground/70">Share in the community</p>
               </div>
             </motion.button>
           </div>
@@ -84,6 +84,7 @@ const FABMenu = ({ onNewPost }: { onNewPost: () => void }) => {
       <motion.button
         whileTap={{ scale: 0.9 }}
         onClick={() => setOpen(!open)}
+        animate={{ rotate: open ? 45 : 0 }}
         className="fixed bottom-8 right-5 z-40 w-14 h-14 rounded-full flex items-center justify-center"
         style={{
           background: open
@@ -96,12 +97,11 @@ const FABMenu = ({ onNewPost }: { onNewPost: () => void }) => {
           border: open ? "1px solid hsl(var(--border) / 0.2)" : "none",
         }}
       >
-        <motion.span
-          animate={open ? { rotate: 45, scale: 0.9 } : { rotate: 0, scale: 1 }}
-          className="text-xl"
-        >
-          {open ? "✕" : "🌱"}
-        </motion.span>
+        {open ? (
+          <X size={22} className="text-foreground" />
+        ) : (
+          <Plus size={24} className="text-primary-foreground" />
+        )}
       </motion.button>
     </>
   );

@@ -156,38 +156,50 @@ const PostDetailView = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex flex-col bg-background"
+      className="fixed inset-0 z-50 flex flex-col overflow-hidden"
+      style={{ background: "hsl(var(--background))" }}
     >
-      <div
-        className="ambient-orb animate-pulse-soft"
-        style={{
-          width: 180,
-          height: 180,
-          top: "5%",
-          right: "-8%",
-          background: `hsl(${post.auraColor})`,
-        }}
-      />
+      {/* Emerald Void Background */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0" style={{
+          background: `
+            radial-gradient(ellipse 80% 60% at 20% 10%, hsl(${post.auraColor} / 0.08) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 50% at 80% 90%, hsl(var(--healing-green) / 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse 100% 80% at 50% 50%, hsl(var(--gold) / 0.03) 0%, transparent 70%)
+          `,
+        }} />
+        <motion.div
+          animate={{ opacity: [0.04, 0.08, 0.04], scale: [1, 1.15, 1] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[15%] left-[30%] w-[350px] h-[350px] rounded-full"
+          style={{
+            background: `radial-gradient(circle, hsl(${post.auraColor} / 0.15) 0%, transparent 70%)`,
+            filter: "blur(80px)",
+          }}
+        />
+      </div>
 
       {/* Header */}
-      <div className="flex items-center gap-3 px-5 pt-12 pb-3">
+      <div className="flex items-center gap-3 px-5 pt-12 pb-3 relative z-10">
         <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={onClose}
-          className="w-9 h-9 rounded-xl flex items-center justify-center glass-card"
+          className="w-9 h-9 rounded-xl flex items-center justify-center"
+          style={{ background: "hsl(var(--card) / 0.4)", backdropFilter: "blur(12px)", border: "1px solid hsl(var(--border) / 0.1)" }}
         >
           <ArrowLeft size={18} className="text-foreground" />
         </motion.button>
         <div className="flex items-center gap-2 flex-1">
-          <div
+          <motion.div
+            animate={{ boxShadow: [`0 0 8px hsl(${post.auraColor} / 0.3)`, `0 0 16px hsl(${post.auraColor} / 0.5)`, `0 0 8px hsl(${post.auraColor} / 0.3)`] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             className="w-7 h-7 rounded-full flex items-center justify-center text-sm"
             style={{
-              background: `hsl(${post.auraColor})`,
-              boxShadow: `0 0 10px hsl(${post.auraColor} / 0.3)`,
+              background: `radial-gradient(circle at 35% 35%, hsl(${post.auraColor} / 0.8), hsl(${post.auraColor} / 0.3))`,
             }}
           >
             {emotionData?.emoji}
-          </div>
+          </motion.div>
           <div>
             <span className="font-body text-xs font-semibold text-foreground">
               {post.emotion}
@@ -214,13 +226,16 @@ const PostDetailView = ({
         </motion.button>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 pb-4">
+      <div className="flex-1 overflow-y-auto px-5 pb-4 relative z-10">
         {/* Post content */}
         <div
-          className="rounded-2xl border p-5 mb-4"
+          className="rounded-3xl p-5 mb-4"
           style={{
-            background: "hsl(var(--card))",
-            borderColor: "hsl(var(--border) / 0.5)",
+            background: "hsl(var(--card) / 0.45)",
+            backdropFilter: "blur(24px) saturate(1.3)",
+            WebkitBackdropFilter: "blur(24px) saturate(1.3)",
+            border: `1px solid hsl(${post.auraColor} / 0.15)`,
+            boxShadow: `0 0 30px hsl(${post.auraColor} / 0.06), 0 8px 32px hsl(var(--glass-shadow)), inset 0 1px 0 hsl(${post.auraColor} / 0.08)`,
           }}
         >
           {editingPost ? (
