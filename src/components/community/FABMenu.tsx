@@ -84,6 +84,7 @@ const FABMenu = ({ onNewPost }: { onNewPost: () => void }) => {
       <motion.button
         whileTap={{ scale: 0.9 }}
         onClick={() => setOpen(!open)}
+        animate={{ rotate: open ? 45 : 0 }}
         className="fixed bottom-8 right-5 z-40 w-14 h-14 rounded-full flex items-center justify-center"
         style={{
           background: open
@@ -96,12 +97,11 @@ const FABMenu = ({ onNewPost }: { onNewPost: () => void }) => {
           border: open ? "1px solid hsl(var(--border) / 0.2)" : "none",
         }}
       >
-        <motion.span
-          animate={open ? { rotate: 45, scale: 0.9 } : { rotate: 0, scale: 1 }}
-          className="text-xl"
-        >
-          {open ? "✕" : "🌱"}
-        </motion.span>
+        {open ? (
+          <X size={22} className="text-foreground" />
+        ) : (
+          <Plus size={24} className="text-primary-foreground" />
+        )}
       </motion.button>
     </>
   );
