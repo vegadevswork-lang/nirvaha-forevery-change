@@ -29,29 +29,24 @@ const CompanionHub = () => {
     return true;
   });
 
-  // Top 3 "For You" (simulated AI matching)
   const forYouMentors = mentors.slice(0, 3);
 
   if (isLoading) return <CompanionSkeleton />;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Ambient orbs */}
+      {/* Subtle ambient */}
       <div
         className="ambient-orb animate-pulse-soft"
-        style={{ width: 200, height: 200, top: "5%", right: "-10%", background: "hsl(var(--healing-green))" }}
-      />
-      <div
-        className="ambient-orb animate-pulse-soft"
-        style={{ width: 160, height: 160, bottom: "30%", left: "-10%", background: "hsl(var(--gold))", animationDelay: "2s" }}
+        style={{ width: 180, height: 180, top: "4%", right: "-12%", background: "hsl(var(--healing-green))", opacity: 0.4 }}
       />
 
-      <div className="flex-1 overflow-y-auto pb-28 px-5 pt-12 relative z-10">
+      <div className="flex-1 overflow-y-auto pb-28 px-5 pt-14 relative z-10">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-3 mb-5"
+          className="flex items-center gap-3 mb-6"
         >
           <motion.button
             whileTap={{ scale: 0.9 }}
@@ -65,44 +60,39 @@ const CompanionHub = () => {
             <ArrowLeft size={18} className="text-foreground" />
           </motion.button>
           <div>
-            <h1 className="font-display text-xl font-semibold text-foreground">Companion Mode</h1>
-            <p className="font-body text-xs text-muted-foreground">Find your guide</p>
+            <h1 className="font-display text-xl font-semibold text-foreground">Find Your Guide</h1>
+            <p className="font-body text-xs text-muted-foreground mt-0.5">Trusted companions for your journey</p>
           </div>
         </motion.div>
 
         {/* Search */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.08 }}
           className="relative mb-5"
         >
           <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search mentors, specializations..."
+            placeholder="Search by name or specialization..."
             className="glass-input pl-10"
           />
         </motion.div>
 
-        {/* Domain filters */}
+        {/* Domain filters — pill style */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="flex gap-2 overflow-x-auto pb-3 mb-4 scrollbar-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.12 }}
+          className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-none"
         >
           <button
             onClick={() => setSelectedDomain(null)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body font-medium whitespace-nowrap transition-all ${
-              !selectedDomain ? "bg-primary text-primary-foreground" : ""
+            className={`px-3.5 py-2 rounded-full text-xs font-body font-medium whitespace-nowrap transition-all ${
+              !selectedDomain ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted/50 text-muted-foreground"
             }`}
-            style={!selectedDomain ? {} : {
-              background: "hsla(var(--glass-bg))",
-              color: "hsl(var(--muted-foreground))",
-              border: "1px solid hsla(var(--glass-border))",
-            }}
           >
             All
           </button>
@@ -113,14 +103,9 @@ const CompanionHub = () => {
               <button
                 key={d.id}
                 onClick={() => setSelectedDomain(isActive ? null : d.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body font-medium whitespace-nowrap transition-all ${
-                  isActive ? "bg-primary text-primary-foreground" : ""
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-body font-medium whitespace-nowrap transition-all ${
+                  isActive ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted/50 text-muted-foreground"
                 }`}
-                style={isActive ? {} : {
-                  background: "hsla(var(--glass-bg))",
-                  color: "hsl(var(--muted-foreground))",
-                  border: "1px solid hsla(var(--glass-border))",
-                }}
               >
                 <Icon size={12} />
                 {d.label}
@@ -129,44 +114,54 @@ const CompanionHub = () => {
           })}
         </motion.div>
 
-        {/* For You Section */}
+        {/* For You — horizontal scroll cards */}
         {!selectedDomain && !searchQuery && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mb-5"
+            transition={{ delay: 0.16 }}
+            className="mb-8"
           >
             <div className="flex items-center gap-2 mb-3">
               <Sparkles size={14} style={{ color: "hsl(var(--gold))" }} />
-              <h3 className="font-display text-sm font-semibold text-foreground">Recommended for You</h3>
+              <h2 className="font-display text-sm font-semibold text-foreground">Recommended for You</h2>
             </div>
-            {forYouMentors.map((m, i) => (
-              <MentorCard key={m.id} mentor={m} index={i} isForYou />
-            ))}
+            <div className="flex gap-3 overflow-x-auto scrollbar-none pb-1 -mx-1 px-1">
+              {forYouMentors.map((m, i) => (
+                <MentorCard key={m.id} mentor={m} index={i} compact />
+              ))}
+            </div>
           </motion.div>
         )}
 
-        {/* All mentors */}
-        <h3 className="font-display text-sm font-semibold text-foreground mb-3">
-          {selectedDomain ? mentorDomains.find(d => d.id === selectedDomain)?.label : "All Companions"}
-        </h3>
+        {/* All companions — clean list */}
+        <div className="mb-4">
+          <h2 className="font-display text-sm font-semibold text-foreground">
+            {selectedDomain ? mentorDomains.find(d => d.id === selectedDomain)?.label : "All Companions"}
+          </h2>
+          <p className="font-body text-[11px] text-muted-foreground mt-0.5">
+            {filteredMentors.length} companion{filteredMentors.length !== 1 ? "s" : ""} available
+          </p>
+        </div>
+
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedDomain || "all"}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="space-y-1"
           >
             {filteredMentors.length > 0 ? (
               filteredMentors.map((m, i) => (
                 <MentorCard key={m.id} mentor={m} index={i} />
               ))
             ) : (
-              <p className="text-center font-body text-sm text-muted-foreground py-8">
-                No companions found. Try a different search.
-              </p>
+              <div className="text-center py-12">
+                <p className="font-body text-sm text-muted-foreground">No companions found</p>
+                <p className="font-body text-xs text-muted-foreground/60 mt-1">Try a different search term</p>
+              </div>
             )}
           </motion.div>
         </AnimatePresence>
