@@ -33,6 +33,8 @@ const ContentDetail = lazy(() => import("./pages/ContentDetail.tsx"));
 const MyList = lazy(() => import("./pages/MyList.tsx"));
 const Community = lazy(() => import("./pages/Community.tsx"));
 const SoundHealing = lazy(() => import("./pages/SoundHealing.tsx"));
+const SoundCategory = lazy(() => import("./pages/SoundCategory.tsx"));
+const SoundJourney = lazy(() => import("./pages/SoundJourney.tsx"));
 const PeopleChat = lazy(() => import("./pages/PeopleChat.tsx"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
