@@ -190,11 +190,12 @@ const PostDetailView = ({
           <ArrowLeft size={18} className="text-foreground" />
         </motion.button>
         <div className="flex items-center gap-2 flex-1">
-          <div
+          <motion.div
+            animate={{ boxShadow: [`0 0 8px hsl(${post.auraColor} / 0.3)`, `0 0 16px hsl(${post.auraColor} / 0.5)`, `0 0 8px hsl(${post.auraColor} / 0.3)`] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             className="w-7 h-7 rounded-full flex items-center justify-center text-sm"
             style={{
-              background: `hsl(${post.auraColor})`,
-              boxShadow: `0 0 10px hsl(${post.auraColor} / 0.3)`,
+              background: `radial-gradient(circle at 35% 35%, hsl(${post.auraColor} / 0.8), hsl(${post.auraColor} / 0.3))`,
             }}
           >
             {emotionData?.emoji}
