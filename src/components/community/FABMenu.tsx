@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, PenLine, Plus, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const FABMenu = ({ onNewPost }: { onNewPost: () => void }) => {
