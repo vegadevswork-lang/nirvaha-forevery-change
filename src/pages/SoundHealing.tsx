@@ -209,33 +209,45 @@ const SoundHealing = () => {
                   transition={{ delay: 0.35 + i * 0.05 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => navigate(`/sound-healing/journey/${pkg.id}`)}
-                  className="rounded-3xl p-5 cursor-pointer relative overflow-hidden"
-                  style={{ background: pkg.gradient, boxShadow: "0 12px 40px hsla(0 0% 0% / 0.2)" }}
+                  className="rounded-3xl cursor-pointer relative overflow-hidden will-change-transform"
+                  style={{ boxShadow: "0 12px 40px hsla(0 0% 0% / 0.25)" }}
                 >
-                  <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full opacity-10" style={{ background: "hsl(0 0% 100%)" }} />
-                  <div className="relative z-10">
+                  {/* Background image */}
+                  <img
+                    src={journeyImages[pkg.id]}
+                    alt={`${pkg.title} - ${pkg.purpose}`}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                    width={800}
+                    height={512}
+                  />
+                  {/* Gradient overlay for readability */}
+                  <div className="absolute inset-0" style={{
+                    background: `linear-gradient(to bottom, hsla(0 0% 0% / 0.35) 0%, hsla(0 0% 0% / 0.7) 100%)`
+                  }} />
+
+                  <div className="relative z-10 p-5">
                     <div className="flex items-center gap-4 mb-3">
                       <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-                        style={{ background: "hsla(0 0% 100% / 0.12)", backdropFilter: "blur(8px)" }}>
+                        style={{ background: "hsla(0 0% 100% / 0.15)", backdropFilter: "blur(8px)" }}>
                         <span className="text-2xl">{pkg.icon}</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-display text-lg font-semibold" style={{ color: "hsl(0 0% 95%)" }}>{pkg.title}</h4>
-                        <p className="font-body text-xs mt-0.5" style={{ color: "hsla(0 0% 95% / 0.7)" }}>{pkg.purpose}</p>
+                        <h4 className="font-display text-lg font-semibold text-white">{pkg.title}</h4>
+                        <p className="font-body text-xs mt-0.5 text-white/70">{pkg.purpose}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 mb-4 ml-16">
-                      <span className="font-body text-[11px]" style={{ color: "hsla(0 0% 95% / 0.5)" }}>{pkg.duration}</span>
-                      <span style={{ color: "hsla(0 0% 95% / 0.3)" }}>·</span>
-                      <span className="font-body text-[11px]" style={{ color: "hsla(0 0% 95% / 0.5)" }}>{pkg.trackCount} sessions</span>
+                      <span className="font-body text-[11px] text-white/50">{pkg.duration}</span>
+                      <span className="text-white/30">·</span>
+                      <span className="font-body text-[11px] text-white/50">{pkg.trackCount} sessions</span>
                     </div>
                     <motion.button
                       whileTap={{ scale: 0.95 }}
-                      className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-body font-medium"
+                      className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-body font-medium text-white"
                       style={{
                         background: "hsla(0 0% 100% / 0.15)",
                         backdropFilter: "blur(8px)",
-                        color: "hsl(0 0% 95%)",
                       }}
                     >
                       <Play size={14} fill="currentColor" />
