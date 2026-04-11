@@ -1,15 +1,21 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, Clock, ShieldCheck, Award, MessageCircle, Phone, Video, Bookmark, Calendar, ChevronRight } from "lucide-react";
+import { ArrowLeft, Star, Clock, ShieldCheck, Award, MessageCircle, Phone, Video, Bookmark, Calendar, ChevronDown } from "lucide-react";
 import { mentors } from "@/data/companionData";
+
+const sectionAnim = (delay: number) => ({
+  initial: { opacity: 0, y: 14 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.4, delay },
+});
 
 const MentorProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const mentor = mentors.find(m => m.id === id);
   const [selectedSession, setSelectedSession] = useState(0);
-  const [showAllReviews, setShowAllReviews] = useState(false);
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   if (!mentor) {
     return (
@@ -19,168 +25,154 @@ const MentorProfile = () => {
     );
   }
 
-  const formatIcons: Record<string, any> = { Text: MessageCircle, Voice: Phone, Video: Video };
+  const formatIcons: Record<string, any> = { Text: MessageCircle, Voice: Phone, Video };
+  const firstName = mentor.name.split(" ")[0];
+
+  const toggle = (key: string) => setExpandedSection(prev => prev === key ? null : key);
 
   return (
     <div className="min-h-screen bg-background">
       {/* Ambient */}
       <div
         className="ambient-orb animate-pulse-soft"
-        style={{ width: 180, height: 180, top: "2%", right: "-8%", background: "hsl(var(--healing-green))" }}
+        style={{ width: 160, height: 160, top: "2%", right: "-10%", background: "hsl(var(--healing-green))", opacity: 0.35 }}
       />
 
-      <div className="overflow-y-auto pb-8 relative z-10">
+      <div className="overflow-y-auto pb-32 relative z-10">
         {/* Top bar */}
-        <div className="flex items-center justify-between px-5 pt-12 mb-4">
+        <div className="flex items-center justify-between px-5 pt-12 mb-6">
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={() => navigate(-1)}
             className="w-10 h-10 rounded-2xl border flex items-center justify-center"
-            style={{
-              background: "hsla(var(--glass-bg))",
-              borderColor: "hsla(var(--glass-border))",
-            }}
+            style={{ background: "hsla(var(--glass-bg))", borderColor: "hsla(var(--glass-border))" }}
           >
             <ArrowLeft size={18} className="text-foreground" />
           </motion.button>
           <motion.button
             whileTap={{ scale: 0.9 }}
             className="w-10 h-10 rounded-2xl border flex items-center justify-center"
-            style={{
-              background: "hsla(var(--glass-bg))",
-              borderColor: "hsla(var(--glass-border))",
-            }}
+            style={{ background: "hsla(var(--glass-bg))", borderColor: "hsla(var(--glass-border))" }}
           >
             <Bookmark size={18} className="text-muted-foreground" />
           </motion.button>
         </div>
 
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="px-5 flex items-start gap-4 mb-6"
-        >
-          <div
-            className="w-20 h-20 rounded-3xl flex items-center justify-center flex-shrink-0"
-            style={{ background: mentor.avatarGradient }}
-          >
-            <span className="text-2xl font-display font-semibold" style={{ color: "hsl(var(--primary-foreground))" }}>
-              {mentor.name.split(" ").map(n => n[0]).join("")}
+        {/* ── Hero Card ── */}
+        <motion.div {...sectionAnim(0)} className="px-5 mb-8">
+          <div className="flex items-center gap-4">
+            <div
+              className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0"
+              style={{ background: mentor.avatarGradient }}
+            >
+              <span className="text-xl font-display font-semibold text-white">
+                {mentor.name.split(" ").map(n => n[0]).join("")}
+              </span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <h1 className="font-display text-lg font-semibold text-foreground leading-tight">{mentor.name}</h1>
+              <p className="font-body text-xs text-muted-foreground mt-0.5">{mentor.title}</p>
+              <div className="flex items-center gap-2.5 mt-2">
+                <span className="flex items-center gap-1 text-xs font-body">
+                  <Star size={12} className="fill-current" style={{ color: "hsl(var(--gold))" }} />
+                  <span className="text-foreground font-medium">{mentor.rating}</span>
+                  <span className="text-muted-foreground">({mentor.reviewCount})</span>
+                </span>
+                <span className="w-1 h-1 rounded-full bg-muted-foreground/30" />
+                <span className="flex items-center gap-1 text-xs font-body" style={{ color: "hsl(var(--healing-green))" }}>
+                  <Clock size={11} />
+                  {mentor.nextAvailable}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Trust badges — inline, subtle */}
+          <div className="flex items-center gap-3 mt-4 pl-1">
+            {mentor.verified && (
+              <span className="flex items-center gap-1 text-[11px] font-body text-muted-foreground">
+                <ShieldCheck size={12} style={{ color: "hsl(var(--healing-green))" }} />
+                Verified
+              </span>
+            )}
+            {mentor.certified && (
+              <span className="flex items-center gap-1 text-[11px] font-body text-muted-foreground">
+                <Award size={12} style={{ color: "hsl(var(--gold))" }} />
+                Certified
+              </span>
+            )}
+            <span className="text-[11px] font-body text-muted-foreground">
+              {mentor.sessionsCompleted}+ sessions
             </span>
           </div>
-          <div className="flex-1">
-            <h1 className="font-display text-xl font-semibold text-foreground">{mentor.name}</h1>
-            <p className="font-body text-sm text-muted-foreground">{mentor.title}</p>
-            <p className="font-body text-xs text-muted-foreground mt-0.5">{mentor.location}</p>
-            <div className="flex items-center gap-3 mt-2">
-              <span className="flex items-center gap-1 text-sm font-body">
-                <Star size={14} className="fill-current" style={{ color: "hsl(var(--gold))" }} />
-                <span className="text-foreground font-medium">{mentor.rating}</span>
-                <span className="text-muted-foreground text-xs">| {mentor.reviewCount} reviews</span>
+        </motion.div>
+
+        {/* ── About ── */}
+        <motion.div {...sectionAnim(0.08)} className="px-5 mb-6">
+          <h2 className="font-display text-sm font-semibold text-foreground mb-2">About {firstName}</h2>
+          <p className="font-body text-[13px] text-muted-foreground leading-relaxed">{mentor.bio}</p>
+        </motion.div>
+
+        {/* ── Specializations — horizontal chips ── */}
+        <motion.div {...sectionAnim(0.12)} className="px-5 mb-6">
+          <div className="flex flex-wrap gap-2">
+            {mentor.specializations.map(s => (
+              <span
+                key={s}
+                className="text-[11px] font-body px-3 py-1.5 rounded-full"
+                style={{ background: "hsla(var(--healing-green) / 0.08)", color: "hsl(var(--healing-green))" }}
+              >
+                {s}
               </span>
-            </div>
-            <div className="flex items-center gap-1 mt-1">
-              <Clock size={12} className="text-muted-foreground" />
-              <span className="font-body text-xs" style={{ color: "hsl(var(--healing-green))" }}>
-                Next: {mentor.nextAvailable}
-              </span>
-            </div>
+            ))}
           </div>
         </motion.div>
 
-        {/* Trust Layer */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="px-5 mb-5"
-        >
-          <div className="glass-card p-4">
-            <div className="flex flex-wrap gap-3">
-              {mentor.verified && (
-                <span className="flex items-center gap-1.5 text-xs font-body" style={{ color: "hsl(var(--healing-green))" }}>
-                  <ShieldCheck size={14} />
-                  Background Verified
-                </span>
-              )}
-              {mentor.certified && (
-                <span className="flex items-center gap-1.5 text-xs font-body" style={{ color: "hsl(var(--healing-green))" }}>
-                  <Award size={14} />
-                  Nirvaha Certified Guide
-                </span>
-              )}
-              <span className="flex items-center gap-1.5 text-xs font-body text-muted-foreground">
-                <Calendar size={14} />
-                {mentor.sessionsCompleted} sessions completed
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-1.5 mt-3">
-              {mentor.specializations.map(s => (
-                <span
-                  key={s}
-                  className="text-[11px] font-body px-2.5 py-1 rounded-full"
-                  style={{
-                    background: "hsla(var(--healing-green) / 0.08)",
-                    color: "hsl(var(--healing-green))",
-                  }}
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-          </div>
+        {/* ── Expandable details (progressive disclosure) ── */}
+        <motion.div {...sectionAnim(0.16)} className="px-5 mb-6 space-y-2">
+          {[
+            { key: "audience", title: "Who I work with", content: mentor.targetAudience.join(" · ") },
+            { key: "approach", title: "My approach", content: mentor.approach },
+            { key: "expect", title: "What to expect", content: mentor.expectation },
+          ].map(({ key, title, content }) => (
+            <button
+              key={key}
+              onClick={() => toggle(key)}
+              className="w-full text-left rounded-2xl p-3.5 transition-colors"
+              style={{ background: "hsla(var(--glass-bg))", border: "1px solid hsla(var(--glass-border))" }}
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-display text-xs font-semibold text-foreground">{title}</span>
+                <ChevronDown
+                  size={14}
+                  className={`text-muted-foreground transition-transform ${expandedSection === key ? "rotate-180" : ""}`}
+                />
+              </div>
+              <AnimatePresence>
+                {expandedSection === key && (
+                  <motion.p
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="font-body text-xs text-muted-foreground leading-relaxed mt-2 overflow-hidden"
+                  >
+                    {content}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </button>
+          ))}
         </motion.div>
 
-        {/* Bio / Connection Layer */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="px-5 mb-5"
-        >
-          <h3 className="font-display text-sm font-semibold text-foreground mb-2">About {mentor.name.split(" ")[0]}</h3>
-          <p className="font-body text-sm text-muted-foreground leading-relaxed">{mentor.bio}</p>
-        </motion.div>
-
-        {/* Specificity Layer */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="px-5 mb-5 space-y-3"
-        >
-          <div className="glass-card p-4">
-            <h4 className="font-display text-xs font-semibold text-foreground mb-1.5">I work best with:</h4>
-            <div className="flex flex-wrap gap-1.5">
-              {mentor.targetAudience.map(t => (
-                <span key={t} className="text-[11px] font-body text-muted-foreground">• {t}</span>
-              ))}
-            </div>
-          </div>
-          <div className="glass-card p-4">
-            <h4 className="font-display text-xs font-semibold text-foreground mb-1.5">My approach:</h4>
-            <p className="font-body text-xs text-muted-foreground leading-relaxed">{mentor.approach}</p>
-          </div>
-          <div className="glass-card p-4">
-            <h4 className="font-display text-xs font-semibold text-foreground mb-1.5">Expect:</h4>
-            <p className="font-body text-xs text-muted-foreground leading-relaxed">{mentor.expectation}</p>
-          </div>
-        </motion.div>
-
-        {/* Reviews / Social Proof */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25 }}
-          className="px-5 mb-5"
-        >
-          <h3 className="font-display text-sm font-semibold text-foreground mb-3">What people say</h3>
-          {mentor.reviews.slice(0, showAllReviews ? undefined : 2).map((r, i) => (
-            <div key={i} className="glass-card p-3 mb-2">
-              <div className="flex items-center gap-2 mb-1.5">
+        {/* ── Reviews — show 1, expandable ── */}
+        <motion.div {...sectionAnim(0.2)} className="px-5 mb-6">
+          <h2 className="font-display text-sm font-semibold text-foreground mb-3">What people say</h2>
+          {mentor.reviews.slice(0, 1).map((r, i) => (
+            <div key={i} className="rounded-2xl p-3.5 mb-2" style={{ background: "hsla(var(--glass-bg))", border: "1px solid hsla(var(--glass-border))" }}>
+              <div className="flex items-center gap-2 mb-2">
                 <div
-                  className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-body font-semibold"
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-body font-semibold"
                   style={{ background: "hsla(var(--healing-green) / 0.1)", color: "hsl(var(--healing-green))" }}
                 >
                   {r.author[0]}
@@ -195,85 +187,83 @@ const MentorProfile = () => {
               <p className="font-body text-xs text-muted-foreground leading-relaxed italic">"{r.text}"</p>
             </div>
           ))}
-          {mentor.reviews.length > 2 && (
+          {mentor.reviews.length > 1 && (
             <button
-              onClick={() => setShowAllReviews(!showAllReviews)}
+              onClick={() => toggle("reviews")}
               className="font-body text-xs font-medium flex items-center gap-1 mt-1"
               style={{ color: "hsl(var(--primary))" }}
             >
-              {showAllReviews ? "Show less" : `See all ${mentor.reviewCount} reviews`}
-              <ChevronRight size={12} />
+              {expandedSection === "reviews" ? "Show less" : `See all ${mentor.reviewCount} reviews`}
+              <ChevronDown size={12} className={expandedSection === "reviews" ? "rotate-180" : ""} />
             </button>
           )}
-        </motion.div>
-
-        {/* Session Options / Logistics */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="px-5 mb-5"
-        >
-          <h3 className="font-display text-sm font-semibold text-foreground mb-3">Book a Session</h3>
-
-          {/* Session duration selector */}
-          <div className="flex gap-2 mb-3">
-            {mentor.sessionOptions.map((opt, i) => (
-              <button
-                key={i}
-                onClick={() => setSelectedSession(i)}
-                className={`flex-1 py-3 rounded-2xl font-body text-sm font-medium transition-all ${
-                  selectedSession === i ? "bg-primary text-primary-foreground" : "glass-card"
-                }`}
+          <AnimatePresence>
+            {expandedSection === "reviews" && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="overflow-hidden mt-2 space-y-2"
               >
-                <span className="block">{opt.duration}</span>
-                <span className={`text-xs ${selectedSession === i ? "opacity-80" : "text-muted-foreground"}`}>
-                  ₹{opt.price}
-                </span>
-              </button>
-            ))}
-          </div>
-
-          {/* Format badges */}
-          <div className="flex gap-2 mb-3">
-            {mentor.formats.map(f => {
-              const Icon = formatIcons[f] || MessageCircle;
-              return (
-                <span key={f} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body glass-card">
-                  <Icon size={12} />
-                  {f}
-                </span>
-              );
-            })}
-          </div>
-
-          <div className="flex items-center gap-2 mb-4 text-xs font-body text-muted-foreground">
-            <Clock size={12} />
-            <span>{mentor.availability}</span>
-            <span className="mx-1">·</span>
-            <span>Responds {mentor.responseTime.toLowerCase()}</span>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex gap-3">
-            <motion.button
-              whileTap={{ scale: 0.97 }}
-              className="flex-1 btn-primary flex items-center justify-center gap-2"
-              onClick={() => navigate(`/companion/book/${mentor.id}?session=${selectedSession}`)}
-            >
-              <Calendar size={16} />
-              Book Session
-            </motion.button>
-            <motion.button
-              whileTap={{ scale: 0.97 }}
-              className="btn-guest px-4 flex items-center justify-center gap-2"
-              style={{ width: "auto" }}
-            >
-              <MessageCircle size={16} />
-              Message
-            </motion.button>
-          </div>
+                {mentor.reviews.slice(1).map((r, i) => (
+                  <div key={i} className="rounded-2xl p-3.5" style={{ background: "hsla(var(--glass-bg))", border: "1px solid hsla(var(--glass-border))" }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div
+                        className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-body font-semibold"
+                        style={{ background: "hsla(var(--healing-green) / 0.1)", color: "hsl(var(--healing-green))" }}
+                      >
+                        {r.author[0]}
+                      </div>
+                      <span className="font-body text-xs font-medium text-foreground">{r.author}</span>
+                      <div className="flex gap-0.5 ml-auto">
+                        {Array.from({ length: r.rating }).map((_, j) => (
+                          <Star key={j} size={10} className="fill-current" style={{ color: "hsl(var(--gold))" }} />
+                        ))}
+                      </div>
+                    </div>
+                    <p className="font-body text-xs text-muted-foreground leading-relaxed italic">"{r.text}"</p>
+                  </div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
+      </div>
+
+      {/* ── Sticky bottom CTA ── */}
+      <div className="fixed bottom-0 left-0 right-0 z-20 px-5 pb-5 pt-3" style={{ background: "linear-gradient(to top, hsl(var(--background)) 70%, transparent)" }}>
+        {/* Session selector */}
+        <div className="flex gap-2 mb-3">
+          {mentor.sessionOptions.map((opt, i) => (
+            <button
+              key={i}
+              onClick={() => setSelectedSession(i)}
+              className={`flex-1 py-2.5 rounded-2xl font-body text-sm font-medium transition-all ${
+                selectedSession === i ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted/50 text-muted-foreground"
+              }`}
+            >
+              {opt.duration} · ₹{opt.price}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-2.5">
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            className="flex-1 btn-primary flex items-center justify-center gap-2"
+            onClick={() => navigate(`/companion/book/${mentor.id}?session=${selectedSession}`)}
+          >
+            <Calendar size={16} />
+            Book Session
+          </motion.button>
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            className="w-12 h-12 rounded-2xl border flex items-center justify-center flex-shrink-0"
+            style={{ background: "hsla(var(--glass-bg))", borderColor: "hsla(var(--glass-border))" }}
+          >
+            <MessageCircle size={18} className="text-foreground" />
+          </motion.button>
+        </div>
       </div>
     </div>
   );
