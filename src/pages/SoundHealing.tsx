@@ -18,6 +18,13 @@ import groundingImg from "@/assets/sound-grounding.jpg";
 import sleepImg from "@/assets/sound-sleep.jpg";
 import focusImg from "@/assets/sound-focus.jpg";
 
+import pregnancyImg from "@/assets/journey-pregnancy.jpg";
+import examImg from "@/assets/journey-exam.jpg";
+import employeeImg from "@/assets/journey-employee.jpg";
+import emotionalImg from "@/assets/journey-emotional.jpg";
+import sleepJourneyImg from "@/assets/journey-sleep.jpg";
+import anxietyImg from "@/assets/journey-anxiety.jpg";
+
 const categoryImages: Record<string, string> = {
   binaural: binauralImg,
   mantras: mantrasImg,
