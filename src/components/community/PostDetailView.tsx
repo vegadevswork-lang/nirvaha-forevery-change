@@ -226,13 +226,16 @@ const PostDetailView = ({
         </motion.button>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 pb-4">
+      <div className="flex-1 overflow-y-auto px-5 pb-4 relative z-10">
         {/* Post content */}
         <div
-          className="rounded-2xl border p-5 mb-4"
+          className="rounded-3xl p-5 mb-4"
           style={{
-            background: "hsl(var(--card))",
-            borderColor: "hsl(var(--border) / 0.5)",
+            background: "hsl(var(--card) / 0.45)",
+            backdropFilter: "blur(24px) saturate(1.3)",
+            WebkitBackdropFilter: "blur(24px) saturate(1.3)",
+            border: `1px solid hsl(${post.auraColor} / 0.15)`,
+            boxShadow: `0 0 30px hsl(${post.auraColor} / 0.06), 0 8px 32px hsl(var(--glass-shadow)), inset 0 1px 0 hsl(${post.auraColor} / 0.08)`,
           }}
         >
           {editingPost ? (
