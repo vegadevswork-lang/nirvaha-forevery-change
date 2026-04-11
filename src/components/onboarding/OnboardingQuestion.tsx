@@ -8,12 +8,48 @@ import leafImg from "@/assets/onboarding-leaf.png";
 import wavesImg from "@/assets/onboarding-waves.png";
 import compassImg from "@/assets/onboarding-compass.png";
 import bubblesImg from "@/assets/onboarding-bubbles.png";
+import mirrorImg from "@/assets/onboarding-mirror.png";
+import sparklesImg from "@/assets/onboarding-sparkles.png";
+import spiralImg from "@/assets/onboarding-spiral.png";
+import phoneImg from "@/assets/onboarding-phone.png";
+import sealedImg from "@/assets/onboarding-sealed.png";
+import chatImg from "@/assets/onboarding-chat.png";
+import mistImg from "@/assets/onboarding-mist.png";
+import diamondImg from "@/assets/onboarding-diamond.png";
+import balanceImg from "@/assets/onboarding-balance.png";
+import doveImg from "@/assets/onboarding-dove.png";
+import brainImg from "@/assets/onboarding-brain.png";
+import aiImg from "@/assets/onboarding-ai.png";
+import journalImg from "@/assets/onboarding-journal.png";
+import meditateImg from "@/assets/onboarding-meditate.png";
+import rainbowImg from "@/assets/onboarding-rainbow.png";
+import timerImg from "@/assets/onboarding-timer.png";
+import clockImg from "@/assets/onboarding-clock.png";
+import plantImg from "@/assets/onboarding-plant.png";
 
 const illustrationMap: Record<string, string> = {
   leaf: leafImg,
   waves: wavesImg,
   compass: compassImg,
   bubbles: bubblesImg,
+  mirror: mirrorImg,
+  sparkles: sparklesImg,
+  spiral: spiralImg,
+  phone: phoneImg,
+  sealed: sealedImg,
+  chat: chatImg,
+  mist: mistImg,
+  diamond: diamondImg,
+  balance: balanceImg,
+  dove: doveImg,
+  brain: brainImg,
+  ai: aiImg,
+  journal: journalImg,
+  meditate: meditateImg,
+  rainbow: rainbowImg,
+  timer: timerImg,
+  clock: clockImg,
+  plant: plantImg,
 };
 
 interface Props {
@@ -108,7 +144,7 @@ const OnboardingQuestion = ({ question, subtitle, options, layout, onSelect }: P
   );
 };
 
-/* Grid Card with optional illustration */
+/* Grid Card with illustration */
 function GridCard({ opt, index, selected, onSelect }: {
   opt: OnboardingOption; index: number; selected: number | null;
   onSelect: (i: number, e: React.MouseEvent) => void;
@@ -134,26 +170,16 @@ function GridCard({ opt, index, selected, onSelect }: {
         }
       `}
     >
-      {illustration ? (
-        <motion.img
-          src={illustration}
-          alt={opt.label}
-          className="w-12 h-12 object-contain"
-          loading="lazy"
-          width={512}
-          height={512}
-          animate={isSelected ? { scale: [1, 1.2, 1.1], rotate: [0, 5, -3, 0] } : {}}
-          transition={{ duration: 0.5 }}
-        />
-      ) : (
-        <motion.span
-          className="text-3xl"
-          animate={isSelected ? { scale: [1, 1.3, 1.1], rotate: [0, 10, -5, 0] } : {}}
-          transition={{ duration: 0.5 }}
-        >
-          {opt.icon}
-        </motion.span>
-      )}
+      <motion.img
+        src={illustration || ""}
+        alt={opt.label}
+        className="w-12 h-12 object-contain"
+        loading="lazy"
+        width={512}
+        height={512}
+        animate={isSelected ? { scale: [1, 1.2, 1.1], rotate: [0, 5, -3, 0] } : {}}
+        transition={{ duration: 0.5 }}
+      />
       <span className="font-body text-sm font-medium text-foreground leading-tight">
         {opt.label}
       </span>
@@ -172,13 +198,14 @@ function GridCard({ opt, index, selected, onSelect }: {
   );
 }
 
-/* List Card */
+/* List Card with illustration */
 function ListCard({ opt, index, selected, onSelect }: {
   opt: OnboardingOption; index: number; selected: number | null;
   onSelect: (i: number, e: React.MouseEvent) => void;
 }) {
   const isSelected = selected === index;
   const isOther = selected !== null && !isSelected;
+  const illustration = opt.illustration ? illustrationMap[opt.illustration] : null;
 
   return (
     <motion.button
@@ -197,12 +224,15 @@ function ListCard({ opt, index, selected, onSelect }: {
         }
       `}
     >
-      <motion.span
-        className="text-2xl flex-shrink-0"
+      <motion.img
+        src={illustration || ""}
+        alt={opt.label}
+        className="w-10 h-10 object-contain flex-shrink-0"
+        loading="lazy"
+        width={512}
+        height={512}
         animate={isSelected ? { scale: [1, 1.3, 1.1] } : {}}
-      >
-        {opt.icon}
-      </motion.span>
+      />
       <div>
         <span className="font-body text-sm font-medium text-foreground">{opt.label}</span>
         <p className="font-body text-xs text-muted-foreground mt-0.5">{opt.description}</p>
@@ -211,13 +241,14 @@ function ListCard({ opt, index, selected, onSelect }: {
   );
 }
 
-/* Pill Card */
+/* Pill Card with illustration */
 function PillCard({ opt, index, selected, onSelect }: {
   opt: OnboardingOption; index: number; selected: number | null;
   onSelect: (i: number, e: React.MouseEvent) => void;
 }) {
   const isSelected = selected === index;
   const isOther = selected !== null && !isSelected;
+  const illustration = opt.illustration ? illustrationMap[opt.illustration] : null;
 
   return (
     <motion.button
@@ -226,7 +257,7 @@ function PillCard({ opt, index, selected, onSelect }: {
       transition={{ duration: 0.4, delay: 0.08 * index }}
       onClick={(e) => onSelect(index, e)}
       className={`
-        glass-card px-6 py-4 flex flex-col items-center gap-1 cursor-pointer min-w-[120px]
+        glass-card px-6 py-4 flex flex-col items-center gap-1.5 cursor-pointer min-w-[120px]
         transition-all duration-300
         ${isSelected
           ? "border-accent ring-2 ring-accent/30 scale-[1.05]"
@@ -236,7 +267,14 @@ function PillCard({ opt, index, selected, onSelect }: {
         }
       `}
     >
-      <span className="text-xl">{opt.icon}</span>
+      <img
+        src={illustration || ""}
+        alt={opt.label}
+        className="w-9 h-9 object-contain"
+        loading="lazy"
+        width={512}
+        height={512}
+      />
       <span className="font-body text-sm font-medium text-foreground">{opt.label}</span>
     </motion.button>
   );
