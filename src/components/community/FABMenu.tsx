@@ -72,8 +72,8 @@ const FABMenu = ({ onNewPost }: { onNewPost: () => void }) => {
                 <PenLine size={18} style={{ color: "hsl(var(--gold))" }} />
               </div>
               <div className="text-left">
-                <p className="font-body text-sm font-semibold text-foreground">Plant a Seed</p>
-                <p className="font-body text-[10px] text-muted-foreground/70">Share your wisdom</p>
+                <p className="font-body text-sm font-semibold text-foreground">New Post</p>
+                <p className="font-body text-[10px] text-muted-foreground/70">Share in the community</p>
               </div>
             </motion.button>
           </div>
