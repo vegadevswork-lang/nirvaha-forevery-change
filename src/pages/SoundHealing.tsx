@@ -36,6 +36,15 @@ const categoryImages: Record<string, string> = {
   focus: focusImg,
 };
 
+const journeyImages: Record<string, string> = {
+  pregnancy: pregnancyImg,
+  exam: examImg,
+  employee: employeeImg,
+  emotional: emotionalImg,
+  "sleep-recovery": sleepJourneyImg,
+  anxiety: anxietyImg,
+};
+
 const SoundHealingSkeleton = () => (
   <div className="min-h-screen bg-background flex flex-col">
     <div className="flex-1 pb-28 px-5 pt-12">
