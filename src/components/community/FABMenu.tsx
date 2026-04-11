@@ -69,7 +69,7 @@ const FABMenu = ({ onNewPost }: { onNewPost: () => void }) => {
             >
               <div className="w-9 h-9 rounded-xl flex items-center justify-center"
                 style={{ background: "hsl(var(--gold) / 0.15)" }}>
-                <span className="text-base">🌱</span>
+                <PenLine size={18} style={{ color: "hsl(var(--gold))" }} />
               </div>
               <div className="text-left">
                 <p className="font-body text-sm font-semibold text-foreground">Plant a Seed</p>

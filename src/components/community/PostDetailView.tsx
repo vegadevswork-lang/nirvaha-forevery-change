@@ -156,18 +156,28 @@ const PostDetailView = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex flex-col bg-background"
+      className="fixed inset-0 z-50 flex flex-col overflow-hidden"
+      style={{ background: "hsl(var(--background))" }}
     >
-      <div
-        className="ambient-orb animate-pulse-soft"
-        style={{
-          width: 180,
-          height: 180,
-          top: "5%",
-          right: "-8%",
-          background: `hsl(${post.auraColor})`,
-        }}
-      />
+      {/* Emerald Void Background */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0" style={{
+          background: `
+            radial-gradient(ellipse 80% 60% at 20% 10%, hsl(${post.auraColor} / 0.08) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 50% at 80% 90%, hsl(var(--healing-green) / 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse 100% 80% at 50% 50%, hsl(var(--gold) / 0.03) 0%, transparent 70%)
+          `,
+        }} />
+        <motion.div
+          animate={{ opacity: [0.04, 0.08, 0.04], scale: [1, 1.15, 1] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[15%] left-[30%] w-[350px] h-[350px] rounded-full"
+          style={{
+            background: `radial-gradient(circle, hsl(${post.auraColor} / 0.15) 0%, transparent 70%)`,
+            filter: "blur(80px)",
+          }}
+        />
+      </div>
 
       {/* Header */}
       <div className="flex items-center gap-3 px-5 pt-12 pb-3">
