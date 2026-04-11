@@ -11,6 +11,7 @@ import JournalCard from "@/components/home/JournalCard";
 import CompanionCard from "@/components/home/CompanionCard";
 import CollectionCard from "@/components/home/CollectionCard";
 import CommunityCard from "@/components/home/CommunityCard";
+import SoundHealingCard from "@/components/home/SoundHealingCard";
 import BottomNav from "@/components/home/BottomNav";
 import { useMoodLog } from "@/hooks/use-mood-log";
 import { usePageLoading } from "@/hooks/use-page-loading";
@@ -91,6 +92,8 @@ const Home = () => {
         <CompanionCard />
 
         <CollectionCard />
+
+        <SoundHealingCard />
 
         <CommunityCard />
 

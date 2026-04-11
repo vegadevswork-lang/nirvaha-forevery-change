@@ -32,6 +32,7 @@ const Collection = lazy(() => import("./pages/Collection.tsx"));
 const ContentDetail = lazy(() => import("./pages/ContentDetail.tsx"));
 const MyList = lazy(() => import("./pages/MyList.tsx"));
 const Community = lazy(() => import("./pages/Community.tsx"));
+const SoundHealing = lazy(() => import("./pages/SoundHealing.tsx"));
 const PeopleChat = lazy(() => import("./pages/PeopleChat.tsx"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
@@ -70,6 +71,7 @@ const App = () => (
               <Route path="/collection/:id" element={<ContentDetail />} />
               <Route path="/my-list" element={<MyList />} />
               <Route path="/community" element={<Community />} />
+              <Route path="/sound-healing" element={<SoundHealing />} />
               <Route path="/people-chat" element={<PeopleChat />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
