@@ -199,7 +199,7 @@ const PostDetailView = ({
             }}
           >
             {emotionData?.emoji}
-          </div>
+          </motion.div>
           <div>
             <span className="font-body text-xs font-semibold text-foreground">
               {post.emotion}
