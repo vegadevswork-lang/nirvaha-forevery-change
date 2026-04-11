@@ -192,29 +192,6 @@ const SoundHealing = () => {
                 </div>
               </motion.div>
             ))}
-          </div>
-                        <span className="font-body text-[10px] text-foreground/60">·</span>
-                        <span className="font-body text-[10px] text-foreground/60">{pkg.trackCount} sessions</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-body font-medium"
-                    style={{
-                      background: "hsla(var(--primary-foreground) / 0.35)",
-                      backdropFilter: "blur(8px)",
-                      color: "hsl(var(--foreground))",
-                    }}
-                  >
-                    <Play size={14} fill="currentColor" />
-                    Start journey
-                  </motion.button>
-                </div>
-              </motion.div>
-            ))}
-          </div>
         </motion.div>
       </div>
 
