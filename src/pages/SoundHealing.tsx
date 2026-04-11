@@ -192,6 +192,7 @@ const SoundHealing = () => {
                 </div>
               </motion.div>
             ))}
+          </div>
         </motion.div>
       </div>
 
