@@ -55,7 +55,7 @@ const SoundHealing = () => {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <motion.button whileTap={{ scale: 0.9 }} onClick={() => navigate(-1)}
+            <motion.button whileTap={{ scale: 0.9 }} onClick={() => navigate("/home")}
               className="w-10 h-10 rounded-2xl flex items-center justify-center"
               style={{ background: "hsla(var(--glass-bg))", border: "1px solid hsla(var(--glass-border))" }}>
               <ArrowLeft size={18} className="text-foreground" />
