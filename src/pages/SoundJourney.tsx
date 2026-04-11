@@ -114,15 +114,15 @@ const SoundJourney = () => {
             </div>
 
             {/* Progress bar */}
-            <div className="h-2 rounded-full overflow-hidden" style={{ background: "hsla(var(--primary-foreground) / 0.15)" }}>
+            <div className="h-2 rounded-full overflow-hidden" style={{ background: "hsla(0 0% 100% / 0.1)" }}>
               <motion.div
                 className="h-full rounded-full"
-                style={{ background: "hsla(var(--primary-foreground) / 0.5)" }}
+                style={{ background: "hsla(0 0% 100% / 0.4)" }}
                 animate={{ width: `${progressPercent}%` }}
                 transition={{ duration: 0.5 }}
               />
             </div>
-            <p className="font-body text-[10px] text-foreground/50 mt-1.5 text-right">
+            <p className="font-body text-[10px] mt-1.5 text-right" style={{ color: "hsla(0 0% 95% / 0.4)" }}>
               {Math.round(progressPercent)}% complete
             </p>
           </div>
