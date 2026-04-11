@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Globe, Hash } from "lucide-react";
+import { Hash } from "lucide-react";
 import SparkleEffect from "@/components/onboarding/SparkleEffect";
 import { communityTopics } from "@/data/communityData";
 import {
@@ -66,27 +66,35 @@ const CreatePostFlow = ({
     onClose();
   };
 
-  const selectedTopic = communityTopics.find(t => t.label === topic);
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex flex-col bg-background"
+      className="fixed inset-0 z-50 flex flex-col"
+      style={{
+        background: "hsl(var(--background) / 0.6)",
+        backdropFilter: "blur(40px) saturate(1.2)",
+        WebkitBackdropFilter: "blur(40px) saturate(1.2)",
+      }}
     >
       <SparkleEffect origin={sparkleOrigin} trigger={sparkleTrigger} />
+
+      {/* Ambient glow */}
       <div
-        className="ambient-orb animate-pulse-soft"
-        style={{ width: 200, height: 200, top: "5%", right: "-10%", background: "hsl(var(--healing-green))" }}
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[300px] h-[300px] rounded-full pointer-events-none"
+        style={{
+          background: "radial-gradient(circle, hsl(var(--healing-green) / 0.08) 0%, transparent 70%)",
+          filter: "blur(60px)",
+        }}
       />
 
       {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-12 pb-3 relative z-10">
+      <div className="flex items-center justify-between px-5 pt-14 pb-4 relative z-10">
         <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={onClose}
-          className="font-body text-sm text-muted-foreground"
+          className="font-body text-sm text-muted-foreground/70"
         >
           Cancel
         </motion.button>
@@ -94,80 +102,77 @@ const CreatePostFlow = ({
           whileTap={{ scale: 0.97 }}
           onClick={handleSubmit}
           disabled={text.trim().length < 10 || modResult?.isCrisis}
-          className="px-5 py-2 rounded-full font-body text-sm font-semibold disabled:opacity-30"
+          className="px-6 py-2 rounded-2xl font-body text-sm font-semibold disabled:opacity-20 transition-all"
           style={{
             background: "hsl(var(--primary))",
             color: "hsl(var(--primary-foreground))",
+            boxShadow: text.trim().length >= 10 ? "0 0 20px hsl(var(--primary) / 0.3)" : "none",
           }}
         >
-          Post
+          Plant Seed
         </motion.button>
       </div>
 
-      {/* Compose area */}
-      <div className="flex-1 overflow-y-auto px-4 relative z-10">
-        {/* User avatar + textarea */}
-        <div className="flex gap-3 pt-2">
-          <div
-            className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1"
+      {/* Compose — centered thought bubble */}
+      <div className="flex-1 flex items-start justify-center overflow-y-auto px-6 pt-8 relative z-10">
+        <motion.div
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.15, duration: 0.5, ease: "easeOut" }}
+          className="w-full max-w-sm"
+        >
+          <textarea
+            value={text}
+            onChange={(e) => handleTextChange(e.target.value)}
+            placeholder="What wisdom is your heart seeking today?"
+            rows={10}
+            autoFocus
+            className="w-full bg-transparent text-base resize-none font-body outline-none leading-[1.85] text-center"
             style={{
-              background: "linear-gradient(135deg, hsl(var(--primary) / 0.4), hsl(var(--healing-green) / 0.3))",
+              color: "hsl(var(--foreground) / 0.9)",
+              caretColor: "hsl(var(--primary))",
             }}
-          >
-            <span className="text-sm">✨</span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <textarea
-              value={text}
-              onChange={(e) => handleTextChange(e.target.value)}
-              placeholder="What's on your mind?"
-              rows={8}
-              autoFocus
-              className="w-full bg-transparent text-base resize-none font-body outline-none leading-relaxed placeholder:text-muted-foreground"
-              style={{ color: "hsl(var(--foreground))" }}
-            />
-          </div>
-        </div>
+          />
 
-        {/* Moderation */}
-        <AnimatePresence>
-          {modResult && (
-            <div className="mt-2">
-              <ModerationBanner result={modResult} onDismiss={() => setModResult(null)} />
-            </div>
+          {/* Moderation */}
+          <AnimatePresence>
+            {modResult && (
+              <div className="mt-4">
+                <ModerationBanner result={modResult} onDismiss={() => setModResult(null)} />
+              </div>
+            )}
+          </AnimatePresence>
+
+          {saferTip && (
+            <p className="font-body text-[11px] text-muted-foreground/60 mt-3 italic text-center">
+              {saferTip}
+            </p>
           )}
-        </AnimatePresence>
-
-        {saferTip && (
-          <p className="font-body text-[11px] text-muted-foreground mt-2 italic px-13">
-            {saferTip}
-          </p>
-        )}
+        </motion.div>
       </div>
 
       {/* Bottom bar */}
-      <div className="px-4 pb-8 pt-3 relative z-10" style={{ borderTop: "1px solid hsl(var(--border) / 0.15)" }}>
+      <div className="px-5 pb-8 pt-3 relative z-10" style={{ borderTop: "1px solid hsl(var(--border) / 0.1)" }}>
         <div className="flex items-center justify-between">
-          {/* Topic selector */}
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => setShowTopics(!showTopics)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
-            style={{ background: "hsl(var(--muted) / 0.5)", border: "1px solid hsl(var(--border) / 0.2)" }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl"
+            style={{
+              background: "hsl(var(--muted) / 0.3)",
+              border: "1px solid hsl(var(--border) / 0.15)",
+            }}
           >
-            <Hash size={13} className="text-primary" />
-            <span className="font-body text-xs text-foreground">{topic}</span>
+            <Hash size={12} className="text-primary/60" />
+            <span className="font-body text-xs text-foreground/70">{topic}</span>
           </motion.button>
 
-          <div className="flex items-center gap-3">
-            <Globe size={16} className="text-muted-foreground" />
-            <span className="font-body text-[10px] text-muted-foreground">
-              {text.length} chars
-            </span>
-          </div>
+          <span className="font-body text-[10px] text-muted-foreground/40">
+            {text.length} chars
+          </span>
         </div>
 
-        {/* Topic picker dropdown */}
+        {/* Topic picker */}
         <AnimatePresence>
           {showTopics && (
             <motion.div
@@ -181,19 +186,16 @@ const CreatePostFlow = ({
                   <motion.button
                     key={t.label}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => {
-                      setTopic(t.label);
-                      setShowTopics(false);
-                    }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body transition-all"
+                    onClick={() => { setTopic(t.label); setShowTopics(false); }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs font-body transition-all"
                     style={topic === t.label ? {
                       background: "hsl(var(--primary) / 0.12)",
                       color: "hsl(var(--primary))",
-                      border: "1px solid hsl(var(--primary) / 0.3)",
+                      border: "1px solid hsl(var(--primary) / 0.25)",
                     } : {
-                      background: "hsl(var(--muted) / 0.4)",
-                      color: "hsl(var(--foreground))",
-                      border: "1px solid hsl(var(--border) / 0.2)",
+                      background: "hsl(var(--muted) / 0.3)",
+                      color: "hsl(var(--foreground) / 0.7)",
+                      border: "1px solid hsl(var(--border) / 0.1)",
                     }}
                   >
                     <span>{t.emoji}</span>
@@ -205,8 +207,8 @@ const CreatePostFlow = ({
           )}
         </AnimatePresence>
 
-        <p className="font-body text-[10px] text-muted-foreground text-center mt-3">
-          🛡️ Your identity stays anonymous. Only your aura is visible.
+        <p className="font-body text-[10px] text-muted-foreground/40 text-center mt-4 font-display italic">
+          🛡️ Your identity remains sacred. Only your aura is visible.
         </p>
       </div>
     </motion.div>

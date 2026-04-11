@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Shield, Search, Bell, Sparkles,
@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SparkleEffect from "@/components/onboarding/SparkleEffect";
-import { emotions, communityTopics, getTimeAgo } from "@/data/communityData";
+import { emotions, communityTopics, getTimeAgo, getEmotionPath, sacredPaths, type SacredPath } from "@/data/communityData";
 import { samplePosts } from "@/data/samplePosts";
 import { useSavedPosts } from "@/hooks/use-saved-posts";
 import { useNotifications, useFollowedTopics } from "@/hooks/use-notifications";
@@ -31,7 +31,6 @@ const InsightsPanel = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex flex-col bg-background">
-      <div className="ambient-orb animate-pulse-soft" style={{ width: 200, height: 200, top: "5%", right: "-10%", background: "hsl(var(--healing-green))" }} />
       <div className="flex items-center gap-3 px-5 pt-12 pb-4">
         <motion.button whileTap={{ scale: 0.9 }} onClick={onClose} className="w-9 h-9 rounded-xl flex items-center justify-center glass-card"><ArrowLeft size={18} className="text-foreground" /></motion.button>
         <div>
@@ -203,12 +202,11 @@ const CirclesPanel = ({ onClose }: { onClose: () => void }) => {
     const em = emotions.find((e) => e.label === activeCircle.emotion);
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex flex-col bg-background">
-        <div className="ambient-orb animate-pulse-soft" style={{ width: 160, height: 160, top: "5%", right: "-8%", background: `hsl(${em?.color || "152 35% 45%"})` }} />
         <div className="flex items-center gap-3 px-5 pt-12 pb-4">
           <motion.button whileTap={{ scale: 0.9 }} onClick={() => setActiveCircle(null)} className="w-9 h-9 rounded-xl flex items-center justify-center glass-card"><ArrowLeft size={18} className="text-foreground" /></motion.button>
           <div className="flex-1">
             <h1 className="font-display text-base text-foreground font-semibold">{activeCircle.name}</h1>
-            <p className="font-body text-[10px] text-muted-foreground">{activeCircle.members}/{activeCircle.maxMembers} members • {getTimeRemaining(activeCircle.expiresAt)}</p>
+            <p className="font-body text-[10px] text-muted-foreground">{activeCircle.members}/{activeCircle.maxMembers} members · {getTimeRemaining(activeCircle.expiresAt)}</p>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto px-5 pb-4">
@@ -248,7 +246,6 @@ const CirclesPanel = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex flex-col bg-background">
-      <div className="ambient-orb animate-pulse-soft" style={{ width: 200, height: 200, top: "5%", right: "-10%", background: "hsl(var(--healing-green))" }} />
       <div className="flex items-center gap-3 px-5 pt-12 pb-4">
         <motion.button whileTap={{ scale: 0.9 }} onClick={onClose} className="w-9 h-9 rounded-xl flex items-center justify-center glass-card"><ArrowLeft size={18} className="text-foreground" /></motion.button>
         <div>
@@ -291,13 +288,13 @@ const CirclesPanel = ({ onClose }: { onClose: () => void }) => {
 const EditPostModal = ({ post, onClose, onSave }: { post: CommunityPost; onClose: () => void; onSave: (id: string, content: string) => void }) => {
   const [text, setText] = useState(post.content);
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[60] flex items-center justify-center p-5" style={{ background: "hsla(0 0% 0% / 0.5)" }}>
-      <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} className="rounded-2xl border p-5 w-full max-w-sm" style={{ background: "hsl(var(--card))", borderColor: "hsl(var(--border) / 0.5)" }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[60] flex items-center justify-center p-5" style={{ background: "hsla(0 0% 0% / 0.5)", backdropFilter: "blur(20px)" }}>
+      <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} className="rounded-3xl p-6 w-full max-w-sm" style={{ background: "hsl(var(--card) / 0.9)", backdropFilter: "blur(24px)", border: "1px solid hsl(var(--border) / 0.2)", boxShadow: "0 24px 64px hsl(var(--glass-shadow))" }}>
         <h3 className="font-display text-base text-foreground font-semibold mb-3">Edit Expression</h3>
-        <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full rounded-xl border px-3 py-2 text-sm resize-none font-body mb-3" style={{ background: "hsl(var(--muted) / 0.5)", borderColor: "hsl(var(--border))", color: "hsl(var(--foreground))" }} rows={4} />
+        <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full rounded-2xl border px-4 py-3 text-sm resize-none font-body mb-4" style={{ background: "hsl(var(--muted) / 0.3)", borderColor: "hsl(var(--border) / 0.15)", color: "hsl(var(--foreground))" }} rows={4} />
         <div className="flex gap-2">
-          <motion.button whileTap={{ scale: 0.97 }} onClick={() => { if (text.trim().length >= 10) onSave(post.id, text); }} disabled={text.trim().length < 10} className="flex-1 py-2.5 rounded-xl font-body text-xs font-medium disabled:opacity-40" style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}>Save</motion.button>
-          <motion.button whileTap={{ scale: 0.97 }} onClick={onClose} className="px-4 py-2.5 rounded-xl font-body text-xs text-muted-foreground" style={{ background: "hsl(var(--muted))" }}>Cancel</motion.button>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => { if (text.trim().length >= 10) onSave(post.id, text); }} disabled={text.trim().length < 10} className="flex-1 py-2.5 rounded-2xl font-body text-xs font-medium disabled:opacity-40" style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}>Save</motion.button>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={onClose} className="px-5 py-2.5 rounded-2xl font-body text-xs text-muted-foreground" style={{ background: "hsl(var(--muted) / 0.3)" }}>Cancel</motion.button>
         </div>
       </motion.div>
     </motion.div>
@@ -312,7 +309,7 @@ const Community = () => {
   const [showCreate, setShowCreate] = useState(false);
   const [activePost, setActivePost] = useState<CommunityPost | null>(null);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
-  const [activeTopic, setActiveTopic] = useState("All");
+  const [activePath, setActivePath] = useState("all");
   const [sortMode, setSortMode] = useState<SortMode>("new");
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
@@ -351,61 +348,102 @@ const Community = () => {
     if (found) { setActivePost(found); setShowNotifications(false); }
   }, [posts]);
 
-  // Filter & sort
-  const filteredPosts = posts
+  // Get the active path's ambient hue for background shift
+  const activePathData = sacredPaths.find((p) => p.id === activePath);
+  const ambientHue = activePathData?.hue || "152 35% 45%";
+
+  // Filter by sacred path
+  const filteredPosts = useMemo(() => posts
     .filter((p) => {
-      if (activeTopic !== "All" && p.topicSpace !== activeTopic) return false;
+      if (activePath !== "all") {
+        const postPath = getEmotionPath(p.emotion);
+        if (postPath !== activePath) return false;
+      }
       if (searchQuery && !p.content.toLowerCase().includes(searchQuery.toLowerCase())) return false;
       return true;
     })
     .sort((a, b) => {
       if (sortMode === "new") return b.timestamp.getTime() - a.timestamp.getTime();
       if (sortMode === "resonated") return b.resonances - a.resonances;
-      // "seeking" — prioritize posts with fewer responses
       return a.responses.length - b.responses.length;
-    });
+    }), [posts, activePath, searchQuery, sortMode]);
 
   const editingPost = editingPostId ? posts.find((p) => p.id === editingPostId) : null;
 
   if (isLoading) return <CommunitySkeleton />;
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-background flex flex-col relative">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen flex flex-col relative overflow-hidden"
+      style={{ background: "hsl(var(--background))" }}
+    >
       <SparkleEffect origin={sparkleOrigin} trigger={sparkleTrigger} />
-      <div className="ambient-orb animate-pulse-soft" style={{ width: 220, height: 220, top: "3%", right: "-10%", background: "hsl(var(--healing-green))" }} />
+
+      {/* ─── Emerald Void Background ─── */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        {/* Base deep gradient */}
+        <div className="absolute inset-0" style={{
+          background: `
+            radial-gradient(ellipse 80% 60% at 20% 10%, hsl(${ambientHue} / 0.08) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 50% at 80% 90%, hsl(var(--healing-green) / 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse 100% 80% at 50% 50%, hsl(var(--gold) / 0.03) 0%, transparent 70%)
+          `,
+        }} />
+        {/* Breathing pulse orb */}
+        <motion.div
+          animate={{
+            opacity: [0.04, 0.08, 0.04],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[15%] left-[30%] w-[400px] h-[400px] rounded-full"
+          style={{
+            background: `radial-gradient(circle, hsl(${ambientHue} / 0.15) 0%, transparent 70%)`,
+            filter: "blur(80px)",
+          }}
+        />
+        {/* Gold nebula wisp */}
+        <motion.div
+          animate={{ opacity: [0.02, 0.05, 0.02], y: [0, -20, 0] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-[20%] right-[10%] w-[250px] h-[250px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, hsl(var(--gold) / 0.08) 0%, transparent 70%)",
+            filter: "blur(60px)",
+          }}
+        />
+      </div>
 
       {/* ─── Header ─── */}
       <div className="px-4 pt-12 pb-1 relative z-10">
-        {/* Title row */}
         <div className="flex items-center gap-3 mb-4">
-          <motion.button whileTap={{ scale: 0.9 }} onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl flex items-center justify-center glass-card">
+          <motion.button whileTap={{ scale: 0.9 }} onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "hsl(var(--card) / 0.4)", backdropFilter: "blur(12px)", border: "1px solid hsl(var(--border) / 0.1)" }}>
             <ArrowLeft size={18} className="text-foreground" />
           </motion.button>
           <div className="flex-1">
             <div className="flex items-center gap-1.5">
-              <Shield size={14} className="text-primary" />
+              <Shield size={14} style={{ color: `hsl(${ambientHue})` }} />
               <h1 className="font-display text-lg text-foreground font-semibold">Nirvaha Space</h1>
             </div>
-            <p className="font-body text-[10px] text-muted-foreground">Anonymous · Safe · Empathetic</p>
+            <p className="font-body text-[10px] text-muted-foreground/60 italic">A Digital Sanctuary for the Soul</p>
           </div>
           <div className="flex gap-0.5">
-            <motion.button whileTap={{ scale: 0.9 }} onClick={() => setShowSearch(!showSearch)} className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: showSearch ? "hsl(var(--primary) / 0.1)" : "transparent" }}>
-              <Search size={16} className={showSearch ? "text-primary" : "text-muted-foreground"} />
+            <motion.button whileTap={{ scale: 0.9 }} onClick={() => setShowSearch(!showSearch)} className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: showSearch ? `hsl(${ambientHue} / 0.1)` : "transparent" }}>
+              <Search size={16} className={showSearch ? "text-primary" : "text-muted-foreground/60"} />
             </motion.button>
             <motion.button whileTap={{ scale: 0.9 }} onClick={() => setShowCircles(true)} className="w-8 h-8 rounded-lg flex items-center justify-center">
-              <Users size={16} className="text-muted-foreground" />
-            </motion.button>
-            <motion.button whileTap={{ scale: 0.9 }} onClick={() => setShowTopics(true)} className="w-8 h-8 rounded-lg flex items-center justify-center">
-              <Hash size={16} className="text-muted-foreground" />
+              <Users size={16} className="text-muted-foreground/60" />
             </motion.button>
             <motion.button whileTap={{ scale: 0.9 }} onClick={() => setShowNotifications(true)} className="w-8 h-8 rounded-lg flex items-center justify-center relative">
-              <Bell size={16} className="text-muted-foreground" />
+              <Bell size={16} className="text-muted-foreground/60" />
               {unreadCount > 0 && (
                 <div className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold" style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}>{unreadCount > 9 ? "9+" : unreadCount}</div>
               )}
             </motion.button>
             <motion.button whileTap={{ scale: 0.9 }} onClick={() => setShowInsights(true)} className="w-8 h-8 rounded-lg flex items-center justify-center">
-              <Sparkles size={16} style={{ color: "hsl(var(--gold))" }} />
+              <Sparkles size={16} style={{ color: `hsl(var(--gold) / 0.7)` }} />
             </motion.button>
           </div>
         </div>
@@ -415,22 +453,22 @@ const Community = () => {
           {showSearch && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden mb-3">
               <div className="relative">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <input type="text" placeholder="Search expressions, emotions, topics…" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded-xl border pl-9 pr-8 py-2.5 text-xs font-body outline-none"
-                  style={{ background: "hsl(var(--muted) / 0.4)", borderColor: "hsl(var(--border) / 0.5)", color: "hsl(var(--foreground))" }}
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/50" />
+                <input type="text" placeholder="Search expressions…" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full rounded-2xl pl-9 pr-8 py-2.5 text-xs font-body outline-none"
+                  style={{ background: "hsl(var(--card) / 0.4)", backdropFilter: "blur(12px)", border: "1px solid hsl(var(--border) / 0.1)", color: "hsl(var(--foreground))" }}
                   autoFocus
                 />
                 {searchQuery && (
-                  <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2"><X size={13} className="text-muted-foreground" /></button>
+                  <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2"><X size={13} className="text-muted-foreground/50" /></button>
                 )}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Topic bar */}
-        <TopicBar active={activeTopic} onSelect={setActiveTopic} />
+        {/* Sacred Paths navigation */}
+        <TopicBar active={activePath} onSelect={setActivePath} />
 
         {/* Sort tabs */}
         <div className="mt-3 mb-2">
@@ -439,24 +477,37 @@ const Community = () => {
       </div>
 
       {/* ─── Feed ─── */}
-      <div className="flex-1 overflow-y-auto pb-28 relative z-10">
+      <div className="flex-1 overflow-y-auto pb-28 px-4 relative z-10">
         {filteredPosts.length === 0 ? (
           <div className="text-center py-16 px-4">
-            <p className="font-body text-sm text-muted-foreground">No expressions in this space yet.</p>
-            <p className="font-body text-xs text-muted-foreground mt-1">Be the first to share 🌿</p>
+            <motion.div
+              animate={{ opacity: [0.4, 0.8, 0.4] }}
+              transition={{ duration: 4, repeat: Infinity }}
+              className="text-4xl mb-4"
+            >
+              🌱
+            </motion.div>
+            <p className="font-display text-sm text-foreground/70 italic">This path is quiet…</p>
+            <p className="font-body text-xs text-muted-foreground/50 mt-1">Be the first to plant a seed of wisdom</p>
           </div>
         ) : (
-          filteredPosts.map((post) => (
-            <PostCard
+          filteredPosts.map((post, i) => (
+            <motion.div
               key={post.id}
-              post={post}
-              onOpen={setActivePost}
-              isSaved={isPostSaved(post.id)}
-              onToggleSave={() => isPostSaved(post.id) ? unsavePost(post.id) : savePost(post.id, post.emotion, post.intent)}
-              onEdit={setEditingPostId}
-              onDelete={handleDeletePost}
-              onResonate={handleResonate}
-            />
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05, duration: 0.4 }}
+            >
+              <PostCard
+                post={post}
+                onOpen={setActivePost}
+                isSaved={isPostSaved(post.id)}
+                onToggleSave={() => isPostSaved(post.id) ? unsavePost(post.id) : savePost(post.id, post.emotion, post.intent)}
+                onEdit={setEditingPostId}
+                onDelete={handleDeletePost}
+                onResonate={handleResonate}
+              />
+            </motion.div>
           ))
         )}
       </div>
