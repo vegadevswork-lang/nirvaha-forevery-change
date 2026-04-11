@@ -180,11 +180,12 @@ const PostDetailView = ({
       </div>
 
       {/* Header */}
-      <div className="flex items-center gap-3 px-5 pt-12 pb-3">
+      <div className="flex items-center gap-3 px-5 pt-12 pb-3 relative z-10">
         <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={onClose}
-          className="w-9 h-9 rounded-xl flex items-center justify-center glass-card"
+          className="w-9 h-9 rounded-xl flex items-center justify-center"
+          style={{ background: "hsl(var(--card) / 0.4)", backdropFilter: "blur(12px)", border: "1px solid hsl(var(--border) / 0.1)" }}
         >
           <ArrowLeft size={18} className="text-foreground" />
         </motion.button>
