@@ -156,23 +156,43 @@ const SoundHealing = () => {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => navigate(`/sound-healing/journey/${pkg.id}`)}
                 className="rounded-3xl p-5 cursor-pointer relative overflow-hidden"
-                style={{ background: pkg.gradient, boxShadow: "0 8px 32px hsla(var(--glass-shadow))" }}
+                style={{ background: pkg.gradient, boxShadow: "0 12px 40px hsla(0 0% 0% / 0.2)" }}
               >
-                <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full opacity-15" style={{ background: "hsl(var(--primary-foreground))" }} />
-                <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-full opacity-10" style={{ background: "hsl(var(--primary-foreground))" }} />
+                <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full opacity-10" style={{ background: "hsl(0 0% 100%)" }} />
 
                 <div className="relative z-10">
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-center gap-4 mb-3">
                     <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-                      style={{ background: "hsla(var(--primary-foreground) / 0.2)", backdropFilter: "blur(8px)" }}>
+                      style={{ background: "hsla(0 0% 100% / 0.12)", backdropFilter: "blur(8px)" }}>
                       <span className="text-2xl">{pkg.icon}</span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-display text-base text-foreground font-semibold">{pkg.title}</h4>
-                      <p className="font-body text-xs text-foreground/70 mt-0.5">{pkg.purpose}</p>
-                      <p className="font-body text-[11px] text-foreground/50 mt-2 leading-relaxed line-clamp-2">{pkg.description}</p>
-                      <div className="flex items-center gap-3 mt-3">
-                        <span className="font-body text-[10px] text-foreground/60">{pkg.duration}</span>
+                      <h4 className="font-display text-lg font-semibold" style={{ color: "hsl(0 0% 95%)" }}>{pkg.title}</h4>
+                      <p className="font-body text-xs mt-0.5" style={{ color: "hsla(0 0% 95% / 0.7)" }}>{pkg.purpose}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 mb-4 ml-16">
+                    <span className="font-body text-[11px]" style={{ color: "hsla(0 0% 95% / 0.5)" }}>{pkg.duration}</span>
+                    <span style={{ color: "hsla(0 0% 95% / 0.3)" }}>·</span>
+                    <span className="font-body text-[11px]" style={{ color: "hsla(0 0% 95% / 0.5)" }}>{pkg.trackCount} sessions</span>
+                  </div>
+
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-body font-medium"
+                    style={{
+                      background: "hsla(0 0% 100% / 0.15)",
+                      backdropFilter: "blur(8px)",
+                      color: "hsl(0 0% 95%)",
+                    }}
+                  >
+                    <Play size={14} fill="currentColor" />
+                    Start journey
+                  </motion.button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
                         <span className="font-body text-[10px] text-foreground/60">·</span>
                         <span className="font-body text-[10px] text-foreground/60">{pkg.trackCount} sessions</span>
                       </div>
