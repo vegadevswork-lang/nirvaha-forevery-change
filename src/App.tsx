@@ -74,6 +74,8 @@ const App = () => (
               <Route path="/my-list" element={<MyList />} />
               <Route path="/community" element={<Community />} />
               <Route path="/sound-healing" element={<SoundHealing />} />
+              <Route path="/sound-healing/category/:categoryId" element={<SoundCategory />} />
+              <Route path="/sound-healing/journey/:journeyId" element={<SoundJourney />} />
               <Route path="/people-chat" element={<PeopleChat />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
