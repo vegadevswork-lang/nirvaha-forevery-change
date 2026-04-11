@@ -101,7 +101,7 @@ const SoundHealing = () => {
           </div>
         </motion.div>
 
-        {/* Sound Library */}
+        {/* Sound Library — clickable categories */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-8">
           <h3 className="font-display text-base text-foreground font-medium mb-4">Sound Library</h3>
           <div className="grid grid-cols-2 gap-3.5">
@@ -112,6 +112,7 @@ const SoundHealing = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25 + i * 0.04 }}
                 whileTap={{ scale: 0.97 }}
+                onClick={() => navigate(`/sound-healing/category/${cat.id}`)}
                 className="rounded-2xl p-4 cursor-pointer transition-all relative overflow-hidden"
                 style={{
                   background: "hsla(var(--glass-bg))",
@@ -119,10 +120,8 @@ const SoundHealing = () => {
                   backdropFilter: "blur(12px)",
                 }}
               >
-                {/* Subtle glow */}
                 <div className="absolute -top-6 -right-6 w-16 h-16 rounded-full opacity-10"
                   style={{ background: "hsl(var(--healing-green))" }} />
-
                 <div className="relative z-10">
                   <div className="flex items-start justify-between mb-3">
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center"
@@ -143,7 +142,7 @@ const SoundHealing = () => {
           </div>
         </motion.div>
 
-        {/* Wellness Packages / Sound Journeys */}
+        {/* Wellness Packages — clickable journeys */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-8">
           <h3 className="font-display text-base text-foreground font-medium mb-1">Sound Journeys</h3>
           <p className="font-body text-xs text-muted-foreground mb-4">Guided packages for specific life needs</p>
@@ -155,17 +154,12 @@ const SoundHealing = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.35 + i * 0.05 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={() => navigate(`/sound-healing/journey/${pkg.id}`)}
                 className="rounded-3xl p-5 cursor-pointer relative overflow-hidden"
-                style={{
-                  background: pkg.gradient,
-                  boxShadow: "0 8px 32px hsla(var(--glass-shadow))",
-                }}
+                style={{ background: pkg.gradient, boxShadow: "0 8px 32px hsla(var(--glass-shadow))" }}
               >
-                {/* Decorative circles */}
-                <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full opacity-15"
-                  style={{ background: "hsl(var(--primary-foreground))" }} />
-                <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-full opacity-10"
-                  style={{ background: "hsl(var(--primary-foreground))" }} />
+                <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full opacity-15" style={{ background: "hsl(var(--primary-foreground))" }} />
+                <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-full opacity-10" style={{ background: "hsl(var(--primary-foreground))" }} />
 
                 <div className="relative z-10">
                   <div className="flex items-start gap-4">

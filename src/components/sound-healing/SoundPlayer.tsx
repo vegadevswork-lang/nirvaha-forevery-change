@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, SkipForward, SkipBack, Repeat, Volume2, X } from "lucide-react";
+import { Play, Pause, SkipForward, SkipBack, Repeat, Volume2, X, VolumeX } from "lucide-react";
+import { useSoundEngine } from "@/hooks/use-sound-engine";
 
 interface SoundPlayerProps {
-  track: { title: string; description: string; moodTag: string; icon: string; duration: string } | null;
+  track: { id?: string; title: string; description: string; moodTag: string; icon: string; duration: string } | null;
   onClose: () => void;
 }
 
@@ -29,23 +30,38 @@ const WaveformVisual = ({ playing }: { playing: boolean }) => (
 );
 
 const SoundPlayer = ({ track, onClose }: SoundPlayerProps) => {
-  const [playing, setPlaying] = useState(false);
+  const { play, stop, isPlaying, volume, setVolume } = useSoundEngine();
   const [progress, setProgress] = useState(0);
+  const [showVolume, setShowVolume] = useState(false);
 
   useEffect(() => {
-    if (!playing) return;
+    if (!isPlaying) return;
     const interval = setInterval(() => {
       setProgress((p) => (p >= 100 ? 0 : p + 0.5));
     }, 200);
     return () => clearInterval(interval);
-  }, [playing]);
+  }, [isPlaying]);
 
   useEffect(() => {
     if (track) {
-      setPlaying(false);
       setProgress(0);
+      stop();
     }
-  }, [track]);
+  }, [track, stop]);
+
+  const handlePlayPause = () => {
+    if (!track) return;
+    if (isPlaying) {
+      stop();
+    } else {
+      play(track.title);
+    }
+  };
+
+  const handleClose = () => {
+    stop();
+    onClose();
+  };
 
   return (
     <AnimatePresence>
@@ -59,18 +75,14 @@ const SoundPlayer = ({ track, onClose }: SoundPlayerProps) => {
           style={{ background: "hsl(var(--background))" }}
         >
           {/* Ambient glow */}
-          <div
-            className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full opacity-20 blur-3xl"
-            style={{ background: "hsl(var(--healing-green))" }}
-          />
-          <div
-            className="absolute bottom-1/3 right-1/4 w-48 h-48 rounded-full opacity-15 blur-3xl"
-            style={{ background: "hsl(var(--gold))" }}
-          />
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full opacity-20 blur-3xl"
+            style={{ background: "hsl(var(--healing-green))" }} />
+          <div className="absolute bottom-1/3 right-1/4 w-48 h-48 rounded-full opacity-15 blur-3xl"
+            style={{ background: "hsl(var(--gold))" }} />
 
           {/* Header */}
           <div className="relative z-10 flex items-center justify-between px-5 pt-14 pb-4">
-            <motion.button whileTap={{ scale: 0.9 }} onClick={onClose}
+            <motion.button whileTap={{ scale: 0.9 }} onClick={handleClose}
               className="w-10 h-10 rounded-full flex items-center justify-center"
               style={{ background: "hsla(var(--glass-bg))", border: "1px solid hsla(var(--glass-border))" }}>
               <X size={18} className="text-muted-foreground" />
@@ -81,27 +93,26 @@ const SoundPlayer = ({ track, onClose }: SoundPlayerProps) => {
 
           {/* Content */}
           <div className="flex-1 flex flex-col items-center justify-center px-8 relative z-10">
-            {/* Icon */}
             <motion.div
-              animate={playing ? { scale: [1, 1.05, 1] } : {}}
+              animate={isPlaying ? { scale: [1, 1.05, 1] } : {}}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               className="w-28 h-28 rounded-full flex items-center justify-center mb-4"
               style={{
                 background: "linear-gradient(135deg, hsla(var(--healing-green) / 0.15), hsla(var(--gold) / 0.12))",
-                boxShadow: playing ? "0 0 60px hsla(var(--healing-green) / 0.2)" : "none",
+                boxShadow: isPlaying ? "0 0 60px hsla(var(--healing-green) / 0.2)" : "none",
               }}
             >
               <span className="text-5xl">{track.icon}</span>
             </motion.div>
 
             <h2 className="font-display text-2xl text-foreground font-semibold text-center">{track.title}</h2>
-            <p className="font-body text-sm text-muted-foreground mt-1 text-center">{track.description}</p>
+            <p className="font-body text-sm text-muted-foreground mt-1 text-center max-w-xs">{track.description}</p>
             <span className="inline-block mt-3 px-3 py-1 rounded-full text-xs font-body"
               style={{ background: "hsla(var(--healing-green) / 0.1)", color: "hsl(var(--primary))" }}>
               {track.moodTag}
             </span>
 
-            <WaveformVisual playing={playing} />
+            <WaveformVisual playing={isPlaying} />
 
             {/* Progress */}
             <div className="w-full max-w-xs mb-6">
@@ -109,7 +120,9 @@ const SoundPlayer = ({ track, onClose }: SoundPlayerProps) => {
                 <motion.div className="h-full rounded-full" style={{ width: `${progress}%`, background: "linear-gradient(90deg, hsl(var(--healing-green)), hsl(var(--gold)))" }} />
               </div>
               <div className="flex justify-between mt-1.5">
-                <span className="text-[10px] text-muted-foreground font-body">0:00</span>
+                <span className="text-[10px] text-muted-foreground font-body">
+                  {Math.floor(progress * 0.12)}:{String(Math.floor((progress * 7.2) % 60)).padStart(2, "0")}
+                </span>
                 <span className="text-[10px] text-muted-foreground font-body">{track.duration}</span>
               </div>
             </div>
@@ -118,17 +131,46 @@ const SoundPlayer = ({ track, onClose }: SoundPlayerProps) => {
             <div className="flex items-center gap-6">
               <motion.button whileTap={{ scale: 0.85 }} className="text-muted-foreground"><Repeat size={20} /></motion.button>
               <motion.button whileTap={{ scale: 0.85 }} className="text-foreground"><SkipBack size={24} /></motion.button>
-              <motion.button whileTap={{ scale: 0.9 }} onClick={() => setPlaying(!playing)}
+              <motion.button whileTap={{ scale: 0.9 }} onClick={handlePlayPause}
                 className="w-16 h-16 rounded-full flex items-center justify-center"
                 style={{
                   background: "linear-gradient(135deg, hsl(var(--healing-green)), hsl(var(--healing-green-light)))",
                   boxShadow: "0 8px 32px hsla(var(--healing-green) / 0.3)",
                 }}>
-                {playing ? <Pause size={28} className="text-primary-foreground" /> : <Play size={28} className="text-primary-foreground ml-1" />}
+                {isPlaying ? <Pause size={28} className="text-primary-foreground" /> : <Play size={28} className="text-primary-foreground ml-1" />}
               </motion.button>
               <motion.button whileTap={{ scale: 0.85 }} className="text-foreground"><SkipForward size={24} /></motion.button>
-              <motion.button whileTap={{ scale: 0.85 }} className="text-muted-foreground"><Volume2 size={20} /></motion.button>
+              <motion.button whileTap={{ scale: 0.85 }} className="text-muted-foreground" onClick={() => setShowVolume(!showVolume)}>
+                {volume > 0 ? <Volume2 size={20} /> : <VolumeX size={20} />}
+              </motion.button>
             </div>
+
+            {/* Volume slider */}
+            <AnimatePresence>
+              {showVolume && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-4 w-full max-w-xs"
+                >
+                  <div className="flex items-center gap-3">
+                    <VolumeX size={14} className="text-muted-foreground" />
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.01"
+                      value={volume}
+                      onChange={(e) => setVolume(parseFloat(e.target.value))}
+                      className="flex-1 h-1 rounded-full appearance-none cursor-pointer"
+                      style={{ accentColor: "hsl(var(--healing-green))" }}
+                    />
+                    <Volume2 size={14} className="text-muted-foreground" />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Intention */}
