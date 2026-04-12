@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff, Lock, Mail, Phone, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 
 const CreateAccountForm = () => {
   const navigate = useNavigate();
@@ -16,7 +17,6 @@ const CreateAccountForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Signup logic placeholder
   };
 
   const fieldClass = "glass-input pl-10";
@@ -88,9 +88,14 @@ const CreateAccountForm = () => {
       </label>
 
       {/* CTA */}
-      <button type="submit" className="btn-primary mt-2">
+      <InteractiveHoverButton
+        type="submit"
+        variant="default"
+        hoverContent="Begin your journey →"
+        className="w-full h-12 rounded-2xl mt-2"
+      >
         Create Account
-      </button>
+      </InteractiveHoverButton>
 
       <p className="trust-text text-center">
         Start your personalized wellness journey
