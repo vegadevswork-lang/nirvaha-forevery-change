@@ -99,14 +99,22 @@ const CreatePostFlow = ({
           Cancel
         </motion.button>
         <motion.button
-          whileTap={{ scale: 0.97 }}
+          whileTap={{ scale: 0.92 }}
           onClick={handleSubmit}
           disabled={text.trim().length < 10 || modResult?.isCrisis}
-          className="px-6 py-2 rounded-2xl font-body text-sm font-semibold disabled:opacity-20 transition-all"
+          className="px-6 py-2.5 font-display text-sm font-semibold disabled:opacity-20 transition-all"
           style={{
-            background: "hsl(var(--primary))",
-            color: "hsl(var(--primary-foreground))",
-            boxShadow: text.trim().length >= 10 ? "0 0 20px hsl(var(--primary) / 0.3)" : "none",
+            borderRadius: "22px 26px 20px 24px",
+            background: "hsla(152 25% 14% / 0.45)",
+            backdropFilter: "blur(28px) saturate(1.6)",
+            WebkitBackdropFilter: "blur(28px) saturate(1.6)",
+            color: "hsl(var(--primary))",
+            border: text.trim().length >= 10
+              ? "1px solid hsl(var(--primary) / 0.35)"
+              : "1px solid hsl(var(--border) / 0.1)",
+            boxShadow: text.trim().length >= 10
+              ? "0 0 24px hsl(var(--primary) / 0.15), inset 0 1px 0 hsla(150 30% 90% / 0.06)"
+              : "inset 0 1px 0 hsla(150 30% 90% / 0.06)",
           }}
         >
           Post
@@ -155,16 +163,22 @@ const CreatePostFlow = ({
       <div className="px-5 pb-8 pt-3 relative z-10" style={{ borderTop: "1px solid hsl(var(--border) / 0.1)" }}>
         <div className="flex items-center justify-between">
           <motion.button
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.92 }}
             onClick={() => setShowTopics(!showTopics)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl"
+            className="flex items-center gap-1.5 px-4 py-2"
             style={{
-              background: "hsl(var(--muted) / 0.3)",
-              border: "1px solid hsl(var(--border) / 0.15)",
+              borderRadius: "20px 24px 18px 22px",
+              background: "hsla(160 20% 15% / 0.35)",
+              backdropFilter: "blur(28px) saturate(1.6)",
+              WebkitBackdropFilter: "blur(28px) saturate(1.6)",
+              border: showTopics
+                ? "1px solid hsl(var(--primary) / 0.3)"
+                : "1px solid hsla(150 20% 80% / 0.08)",
+              boxShadow: "inset 0 1px 0 hsla(150 30% 90% / 0.06), 0 8px 32px hsla(160 20% 5% / 0.2)",
             }}
           >
-            <Hash size={12} className="text-primary/60" />
-            <span className="font-body text-xs text-foreground/70">{topic}</span>
+            <Hash size={12} style={{ color: "hsl(var(--primary) / 0.6)" }} />
+            <span className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.7)" }}>{topic}</span>
           </motion.button>
 
           <span className="font-body text-[10px] text-muted-foreground/40">
@@ -185,17 +199,23 @@ const CreatePostFlow = ({
                 {communityTopics.map((t) => (
                   <motion.button
                     key={t.label}
-                    whileTap={{ scale: 0.95 }}
+                    whileTap={{ scale: 0.92 }}
                     onClick={() => { setTopic(t.label); setShowTopics(false); }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs font-body transition-all"
+                    className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-body transition-all"
                     style={topic === t.label ? {
-                      background: "hsl(var(--primary) / 0.12)",
+                      borderRadius: "18px 22px 16px 20px",
+                      background: "hsla(152 25% 14% / 0.5)",
+                      backdropFilter: "blur(28px) saturate(1.6)",
                       color: "hsl(var(--primary))",
-                      border: "1px solid hsl(var(--primary) / 0.25)",
+                      border: "1px solid hsl(var(--primary) / 0.3)",
+                      boxShadow: "0 0 16px hsl(var(--primary) / 0.1), inset 0 1px 0 hsla(150 30% 90% / 0.06)",
                     } : {
-                      background: "hsl(var(--muted) / 0.3)",
+                      borderRadius: "18px 22px 16px 20px",
+                      background: "hsla(160 20% 15% / 0.3)",
+                      backdropFilter: "blur(20px) saturate(1.4)",
                       color: "hsl(var(--foreground) / 0.7)",
-                      border: "1px solid hsl(var(--border) / 0.1)",
+                      border: "1px solid hsla(150 20% 80% / 0.06)",
+                      boxShadow: "inset 0 1px 0 hsla(150 30% 90% / 0.04)",
                     }}
                   >
                     <span>{t.emoji}</span>
