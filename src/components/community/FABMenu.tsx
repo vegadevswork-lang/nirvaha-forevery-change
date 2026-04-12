@@ -174,19 +174,28 @@ const FABMenu = ({ onNewPost }: { onNewPost: () => void }) => {
       <motion.button
         whileTap={{ scale: 0.85 }}
         onClick={() => setOpen(!open)}
-        animate={{
-          rotate: open ? 45 : 0,
-          scale: open ? 0.9 : 1,
+        animate={open ? {
+          rotate: 45,
+          scale: 0.9,
+        } : {
+          rotate: 0,
+          scale: [1, 1.06, 1],
+          boxShadow: [
+            "0 0 30px hsl(145 40% 55% / 0.3), 0 0 60px hsl(145 40% 55% / 0.1), 0 4px 16px hsla(160 20% 5% / 0.25)",
+            "0 0 40px hsl(145 40% 55% / 0.45), 0 0 80px hsl(145 40% 55% / 0.18), 0 4px 16px hsla(160 20% 5% / 0.25)",
+            "0 0 30px hsl(145 40% 55% / 0.3), 0 0 60px hsl(145 40% 55% / 0.1), 0 4px 16px hsla(160 20% 5% / 0.25)",
+          ],
         }}
-        transition={pebbleSpring}
+        transition={open ? pebbleSpring : {
+          rotate: pebbleSpring,
+          scale: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
+          boxShadow: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
+        }}
         className="fixed bottom-8 right-5 z-40 w-14 h-14 rounded-full flex items-center justify-center"
         style={{
           background: open
             ? "hsla(160 15% 18% / 0.7)"
             : "radial-gradient(circle at 38% 38%, hsl(var(--healing-green-light)), hsl(var(--primary)))",
-          boxShadow: open
-            ? "inset 0 1px 0 hsla(150 30% 90% / 0.06)"
-            : "0 0 30px hsl(var(--healing-green) / 0.35), 0 0 60px hsl(var(--healing-green) / 0.12), 0 4px 16px hsla(160 20% 5% / 0.25)",
           backdropFilter: open ? "blur(20px) saturate(1.4)" : undefined,
           WebkitBackdropFilter: open ? "blur(20px) saturate(1.4)" : undefined,
           border: open ? "1px solid hsla(150 20% 80% / 0.08)" : "none",
