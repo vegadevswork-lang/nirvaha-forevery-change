@@ -5,15 +5,6 @@ import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button
 import { useNavigate } from "react-router-dom";
 
 /* ── Custom SVG Icons ── */
-const SproutIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 22V12" />
-    <path d="M12 12C12 12 7 8 4 9C1 10 2 15 5 16C8 17 12 12 12 12Z" />
-    <path d="M12 12C12 12 17 8 20 9C23 10 22 15 19 16C16 17 12 12 12 12Z" />
-    <circle cx="12" cy="22" r="1" fill="currentColor" stroke="none" />
-  </svg>
-);
-
 const RippleIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
     <circle cx="12" cy="12" r="3" />
@@ -32,7 +23,6 @@ const pebbleSpring = {
 
 const FABMenu = ({ onNewPost }: { onNewPost: () => void }) => {
   const [open, setOpen] = useState(false);
-  const [hoveredBtn, setHoveredBtn] = useState<string | null>(null);
   const navigate = useNavigate();
 
   return (
