@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 
 const OnboardingComplete = () => {
   const navigate = useNavigate();
@@ -41,15 +42,20 @@ const OnboardingComplete = () => {
         This is your space to understand yourself.
       </motion.p>
 
-      <motion.button
+      <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 1.0 }}
-        onClick={() => navigate("/")}
-        className="btn-primary max-w-xs"
       >
-        Enter Nirvaha
-      </motion.button>
+        <InteractiveHoverButton
+          onClick={() => navigate("/")}
+          variant="default"
+          hoverContent="Step inside →"
+          className="w-full max-w-xs h-12 rounded-2xl"
+        >
+          Enter Nirvaha
+        </InteractiveHoverButton>
+      </motion.div>
     </motion.div>
   );
 };

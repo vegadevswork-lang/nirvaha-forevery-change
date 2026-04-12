@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import nirvahaLogo from "@/assets/nirvaha-logo.png";
 import introIllustration from "@/assets/onboarding-meditation.png";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 
 interface Props {
   onBegin: () => void;
@@ -89,17 +90,20 @@ const OnboardingIntro = ({ onBegin }: Props) => {
         just a few questions
       </motion.p>
 
-      <motion.button
+      <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 1.0 }}
-        onClick={onBegin}
-        className="btn-primary max-w-xs text-base tracking-wide"
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
       >
-        BEGIN
-      </motion.button>
+        <InteractiveHoverButton
+          onClick={onBegin}
+          variant="default"
+          hoverContent="Let's go →"
+          className="w-full max-w-xs h-12 rounded-2xl text-base tracking-wide"
+        >
+          BEGIN
+        </InteractiveHoverButton>
+      </motion.div>
     </motion.div>
   );
 };
