@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus } from "lucide-react";
+import { Plus, PenLine } from "lucide-react";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { useNavigate } from "react-router-dom";
 
 /* ── Custom SVG Icons ── */
@@ -59,113 +60,84 @@ const FABMenu = ({ onNewPost }: { onNewPost: () => void }) => {
       <AnimatePresence>
         {open && (
           <div className="fixed bottom-28 right-4 z-40 flex flex-col gap-4 items-end">
-            {/* Seek Resonance — secondary, slightly smaller */}
-            <motion.button
+            {/* Seek Resonance */}
+            <motion.div
               initial={{ opacity: 0, y: 40, scale: 0.3, rotate: -8 }}
               animate={{ opacity: 1, y: 0, scale: 1, rotate: 2 }}
               exit={{ opacity: 0, y: 30, scale: 0.4, rotate: -5 }}
               transition={{ ...pebbleSpring, delay: 0.08 }}
-              whileTap={{ scale: 0.92 }}
-              onHoverStart={() => setHoveredBtn("resonance")}
-              onHoverEnd={() => setHoveredBtn(null)}
-              onTouchStart={() => setHoveredBtn("resonance")}
-              onTouchEnd={() => setHoveredBtn(null)}
-              onClick={() => { setOpen(false); navigate("/people-chat"); }}
-              className="flex items-center gap-3 px-5 py-3.5"
-              style={{
-                borderRadius: "28px 24px 26px 22px",
-                background: "hsla(160 20% 15% / 0.35)",
-                backdropFilter: "blur(28px) saturate(1.6)",
-                WebkitBackdropFilter: "blur(28px) saturate(1.6)",
-                border: hoveredBtn === "resonance"
-                  ? "1px solid hsl(var(--primary) / 0.4)"
-                  : "1px solid hsla(150 20% 80% / 0.08)",
-                boxShadow: hoveredBtn === "resonance"
-                  ? "0 0 24px hsl(var(--primary) / 0.15), inset 0 1px 0 hsla(150 30% 90% / 0.06)"
-                  : "inset 0 1px 0 hsla(150 30% 90% / 0.06), 0 8px 32px hsla(160 20% 5% / 0.3)",
-                transition: "border 0.3s ease, box-shadow 0.3s ease",
-              }}
             >
-              <div
-                className="w-10 h-10 flex items-center justify-center"
+              <InteractiveHoverButton
+                variant="glass"
+                onClick={() => { setOpen(false); navigate("/people-chat"); }}
+                className="flex items-center gap-3 px-5 py-3.5"
                 style={{
-                  borderRadius: "50%",
-                  background: "radial-gradient(circle at 40% 35%, hsl(var(--primary) / 0.2), hsl(var(--primary) / 0.06))",
-                  color: "hsl(var(--primary))",
+                  borderRadius: "28px 24px 26px 22px",
+                  background: "hsla(160 20% 15% / 0.35)",
+                  backdropFilter: "blur(28px) saturate(1.6)",
+                  WebkitBackdropFilter: "blur(28px) saturate(1.6)",
+                  border: "1px solid hsl(var(--glass-border))",
                 }}
               >
-                <RippleIcon />
-              </div>
-              <div className="text-left">
-                <p
-                  className="font-display text-sm font-semibold"
+                <div
+                  className="w-10 h-10 flex items-center justify-center rounded-full"
                   style={{
-                    color: "hsl(var(--foreground) / 0.95)",
-                    letterSpacing: hoveredBtn === "resonance" ? "0.04em" : "0.01em",
-                    transition: "letter-spacing 0.4s ease",
+                    background: "radial-gradient(circle at 40% 35%, hsl(var(--primary) / 0.2), hsl(var(--primary) / 0.06))",
+                    color: "hsl(var(--primary))",
                   }}
                 >
-                  Seek Resonance
-                </p>
-                <p className="font-body text-[10px]" style={{ color: "hsl(var(--muted-foreground) / 0.6)" }}>
-                  Find a soul to walk the path with
-                </p>
-              </div>
-            </motion.button>
+                  <RippleIcon />
+                </div>
+                <div className="text-left">
+                  <p className="font-display text-sm font-semibold" style={{ color: "hsl(var(--foreground) / 0.95)" }}>
+                    Seek Resonance
+                  </p>
+                  <p className="font-body text-[10px]" style={{ color: "hsl(var(--muted-foreground) / 0.6)" }}>
+                    Find a soul to walk the path with
+                  </p>
+                </div>
+              </InteractiveHoverButton>
+            </motion.div>
 
-            {/* Plant a Thought — primary, slightly larger */}
-            <motion.button
+            {/* Plant a Thought */}
+            <motion.div
               initial={{ opacity: 0, y: 50, scale: 0.3, rotate: 5 }}
               animate={{ opacity: 1, y: 0, scale: 1, rotate: -1.5 }}
               exit={{ opacity: 0, y: 35, scale: 0.4, rotate: 3 }}
               transition={{ ...pebbleSpring, delay: 0 }}
-              whileTap={{ scale: 0.92 }}
-              onHoverStart={() => setHoveredBtn("thought")}
-              onHoverEnd={() => setHoveredBtn(null)}
-              onTouchStart={() => setHoveredBtn("thought")}
-              onTouchEnd={() => setHoveredBtn(null)}
-              onClick={() => { setOpen(false); onNewPost(); }}
-              className="flex items-center gap-3.5 px-6 py-4"
-              style={{
-                borderRadius: "26px 30px 22px 28px",
-                background: "hsla(152 25% 14% / 0.45)",
-                backdropFilter: "blur(28px) saturate(1.6)",
-                WebkitBackdropFilter: "blur(28px) saturate(1.6)",
-                border: hoveredBtn === "thought"
-                  ? "1px solid hsl(var(--gold) / 0.4)"
-                  : "1px solid hsla(42 40% 80% / 0.08)",
-                boxShadow: hoveredBtn === "thought"
-                  ? "0 0 28px hsl(var(--gold) / 0.12), inset 0 1px 0 hsla(42 50% 90% / 0.08)"
-                  : "inset 0 1px 0 hsla(42 50% 90% / 0.06), 0 8px 32px hsla(160 20% 5% / 0.3)",
-                transition: "border 0.3s ease, box-shadow 0.3s ease",
-              }}
             >
-              <div
-                className="w-11 h-11 flex items-center justify-center"
+              <InteractiveHoverButton
+                variant="glass"
+                onClick={() => { setOpen(false); onNewPost(); }}
+                className="flex items-center gap-3.5 px-6 py-4"
+                sweepColor="hsl(var(--gold) / 0.15)"
                 style={{
-                  borderRadius: "50%",
-                  background: "radial-gradient(circle at 40% 35%, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.08))",
-                  color: "hsl(var(--gold))",
+                  borderRadius: "26px 30px 22px 28px",
+                  background: "hsla(152 25% 14% / 0.45)",
+                  backdropFilter: "blur(28px) saturate(1.6)",
+                  WebkitBackdropFilter: "blur(28px) saturate(1.6)",
+                  border: "1px solid hsl(var(--gold) / 0.15)",
                 }}
               >
-                <SproutIcon />
-              </div>
-              <div className="text-left">
-                <p
-                  className="font-display text-[15px] font-semibold"
+                <div
+                  className="w-11 h-11 flex items-center justify-center rounded-full"
                   style={{
-                    color: "hsl(var(--foreground) / 0.95)",
-                    letterSpacing: hoveredBtn === "thought" ? "0.04em" : "0.01em",
-                    transition: "letter-spacing 0.4s ease",
+                    background: "radial-gradient(circle at 40% 35%, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.08))",
+                    color: "hsl(var(--gold))",
                   }}
                 >
-                  Plant a Thought
-                </p>
-                <p className="font-body text-[10px]" style={{ color: "hsl(var(--muted-foreground) / 0.6)" }}>
-                  Release your heart to the collective
-                </p>
-              </div>
-            </motion.button>
+                  <PenLine size={20} />
+                </div>
+                <div className="text-left">
+                  <p className="font-display text-[15px] font-semibold" style={{ color: "hsl(var(--foreground) / 0.95)" }}>
+                    Plant a Thought
+                  </p>
+                  <p className="font-body text-[10px]" style={{ color: "hsl(var(--muted-foreground) / 0.6)" }}>
+                    Release your heart to the collective
+                  </p>
+                </div>
+              </InteractiveHoverButton>
+            </motion.div>
           </div>
         )}
       </AnimatePresence>
