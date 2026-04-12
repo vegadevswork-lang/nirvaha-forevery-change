@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { questions } from "./onboardingData";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 
 interface Props {
   answers: number[];
@@ -77,18 +78,21 @@ const OnboardingRecap = ({ answers }: Props) => {
         })}
       </div>
 
-      <motion.button
+      <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 1.0 }}
-        onClick={handleEnter}
-        disabled={exiting}
-        className="btn-primary max-w-xs text-base tracking-wide"
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
       >
-        Enter Nirvaha
-      </motion.button>
+        <InteractiveHoverButton
+          onClick={handleEnter}
+          disabled={exiting}
+          variant="default"
+          hoverContent="Your sanctuary awaits ✨"
+          className="w-full max-w-xs h-12 rounded-2xl text-base tracking-wide"
+        >
+          Enter Nirvaha
+        </InteractiveHoverButton>
+      </motion.div>
     </motion.div>
   );
 };
