@@ -78,14 +78,19 @@ const Onboarding = () => {
           muted
           playsInline
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
-          style={{ filter: "brightness(0.55) saturate(1.2)" }}
+          poster="/videos/onboarding-bg-poster.jpg"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            filter: "brightness(0.5) saturate(1.3)",
+            willChange: "transform",
+          }}
         >
-          <source src="/videos/onboarding-bg.mp4" type="video/mp4" />
+          <source src="/videos/onboarding-bg-hd.mp4" type="video/mp4" />
         </video>
 
-        {/* Soft gradient for text readability — no heavy overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-black/25" />
+        {/* Gradient overlays for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/40" />
+        <div className="absolute inset-0 bg-black/15" />
 
         {/* Subtle particle overlay */}
         <div className="absolute inset-0 z-[1] pointer-events-none" style={{ opacity: 0.4 }}>
