@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
-import nirvahaLogo from "@/assets/nirvaha-logo.png";
 import Particles from "@/components/Particles";
 
 import OnboardingIntro from "@/components/onboarding/OnboardingIntro";
@@ -19,7 +18,6 @@ const Onboarding = () => {
   const current = questions[step];
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Slow down video & smooth loop
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -65,10 +63,18 @@ const Onboarding = () => {
     }
   };
 
+  const handleSkip = () => {
+    setPhase("recap");
+    // Fill remaining answers with 0
+    const remaining = questions.length - answers.length;
+    setAnswers((prev) => [...prev, ...Array(remaining).fill(0)]);
+  };
+
   const showBack = phase === "questions" || phase === "recap";
+  const showSkip = phase === "questions";
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center px-4 py-8 overflow-hidden bg-black">
+    <div className="relative min-h-[100dvh] flex flex-col items-center justify-center px-4 py-8 overflow-hidden bg-black">
       {/* Video Background */}
       <div className="absolute inset-0 z-0">
         <video
@@ -88,11 +94,9 @@ const Onboarding = () => {
           <source src="/videos/onboarding-bg-hd.mp4" type="video/mp4" />
         </video>
 
-        {/* Gradient overlays for text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/40" />
         <div className="absolute inset-0 bg-black/15" />
 
-        {/* Subtle particle overlay */}
         <div className="absolute inset-0 z-[1] pointer-events-none" style={{ opacity: 0.4 }}>
           <Particles
             particleColors={["#ffffff", "#d4f0e0"]}
@@ -117,15 +121,31 @@ const Onboarding = () => {
             exit={{ opacity: 0, x: -12 }}
             transition={{ duration: 0.3 }}
             onClick={handleBack}
-            className="absolute top-6 left-4 z-20 glass-card p-2.5 rounded-full hover:scale-105 transition-transform"
+            className="absolute top-6 left-4 z-20 p-2 rounded-full hover:bg-white/10 transition-colors"
             aria-label="Go back"
           >
-            <ChevronLeft size={20} className="text-foreground" />
+            <ChevronLeft size={22} className="text-foreground" />
           </motion.button>
         )}
       </AnimatePresence>
 
-      <div className="relative z-10 w-full max-w-lg flex flex-col items-center">
+      {/* Skip button */}
+      <AnimatePresence>
+        {showSkip && (
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={handleSkip}
+            className="absolute top-7 right-5 z-20 font-body text-sm font-semibold text-foreground hover:text-foreground/70 transition-colors"
+          >
+            Skip
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      <div className="relative z-10 w-full max-w-lg flex flex-col items-center flex-1 pt-16">
         <AnimatePresence mode="wait">
           {phase === "intro" && (
             <motion.div
@@ -134,7 +154,7 @@ const Onboarding = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, y: -30 }}
               transition={{ duration: 0.5 }}
-              className="w-full"
+              className="w-full flex-1 flex items-center"
             >
               <OnboardingIntro onBegin={handleBegin} />
             </motion.div>
@@ -147,32 +167,15 @@ const Onboarding = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -40 }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full flex flex-col items-center"
+              className="w-full flex flex-col items-center flex-1"
             >
-              <motion.img
-                src={nirvahaLogo}
-                alt="Nirvaha"
-                className="h-10 mb-3"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4 }}
-              />
-
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="font-body text-xs tracking-widest uppercase text-muted-foreground mb-2"
-              >
-                {current.progressLabel}
-              </motion.span>
-
+              {/* Progress bar */}
               <OnboardingStepper currentStep={step} totalSteps={questions.length} />
 
               <OnboardingQuestion
                 question={current.question}
                 subtitle={current.subtitle}
                 options={current.options}
-                layout={current.layout}
                 onSelect={handleSelect}
               />
             </motion.div>
@@ -184,7 +187,7 @@ const Onboarding = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="w-full"
+              className="w-full flex-1 flex items-center"
             >
               <OnboardingRecap answers={answers} />
             </motion.div>

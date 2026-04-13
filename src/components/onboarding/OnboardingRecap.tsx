@@ -8,7 +8,6 @@ interface Props {
   answers: number[];
 }
 
-const recapIcons = ["🎯", "🧠", "💎", "🛤️", "⏱️"];
 const recapLabels = ["Your focus is", "When stressed, you", "You're seeking", "You'll explore through", "You'll start with"];
 
 const OnboardingRecap = ({ answers }: Props) => {
@@ -27,7 +26,6 @@ const OnboardingRecap = ({ answers }: Props) => {
       transition={{ duration: exiting ? 0.8 : 0.6, ease: "easeInOut" }}
       className="flex flex-col items-center w-full max-w-sm mx-auto px-4 relative"
     >
-      {/* Expanding glow on exit */}
       {exiting && (
         <motion.div
           initial={{ scale: 0, opacity: 0.6 }}
@@ -45,11 +43,12 @@ const OnboardingRecap = ({ answers }: Props) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
         className="font-display text-2xl sm:text-3xl text-foreground mb-8 font-semibold"
+        style={{ textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}
       >
         So, to recap
       </motion.h1>
 
-      <div className="flex flex-col gap-4 w-full mb-10">
+      <div className="flex flex-col gap-3 w-full mb-10">
         {answers.map((answerIdx, qIdx) => {
           const q = questions[qIdx];
           if (!q || answerIdx == null) return null;
@@ -62,9 +61,8 @@ const OnboardingRecap = ({ answers }: Props) => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.3 + qIdx * 0.12 }}
-              className="glass-card px-5 py-4 flex items-center gap-4"
+              className="bg-[hsl(0_0%_18%)] rounded-2xl px-5 py-4 flex items-center gap-4"
             >
-              <span className="text-2xl flex-shrink-0">{recapIcons[qIdx] || "✨"}</span>
               <div>
                 <p className="font-body text-xs text-muted-foreground uppercase tracking-wider">
                   {recapLabels[qIdx] || "You chose"}
@@ -88,7 +86,7 @@ const OnboardingRecap = ({ answers }: Props) => {
           disabled={exiting}
           variant="default"
           hoverContent="Your sanctuary awaits ✨"
-          className="w-full max-w-xs h-12 rounded-2xl text-base tracking-wide"
+          className="px-10 h-12 rounded-full text-base"
         >
           Enter Nirvaha
         </InteractiveHoverButton>
