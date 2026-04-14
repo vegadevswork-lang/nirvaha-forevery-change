@@ -39,7 +39,7 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-6 pt-3"
+      className="fixed bottom-16 left-0 right-0 z-40 px-4 pb-3 pt-3"
       style={{
         background: "linear-gradient(to top, hsl(var(--background)), hsla(var(--background) / 0.95), transparent)",
       }}

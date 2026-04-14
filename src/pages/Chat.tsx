@@ -166,7 +166,7 @@ const Chat = () => {
       {/* Messages area */}
       <div
         ref={scrollRef}
-        className="flex-1 overflow-y-auto px-4 pt-24 pb-24 relative z-10"
+        className="flex-1 overflow-y-auto px-4 pt-24 pb-36 relative z-10"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <AnimatePresence>
@@ -191,9 +191,7 @@ const Chat = () => {
         )}
       </div>
 
-      <div className="pb-20">
-        <ChatInput onSend={handleSend} disabled={isTyping} />
-      </div>
+      <ChatInput onSend={handleSend} disabled={isTyping} />
       <BottomNav />
     </div>
   );
