@@ -44,10 +44,6 @@ const Collection = () => {
   const scrollRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const { isSaved, toggleSave } = useSavedContent();
 
-  if (showIntro) {
-    return <NirvahaIntro onComplete={() => setShowIntro(false)} />;
-  }
-
   // Auto-slide hero
   const nextSlide = useCallback(() => {
     setHeroIndex((i) => (i + 1) % heroSlides.length);
@@ -57,6 +53,10 @@ const Collection = () => {
     const timer = setInterval(nextSlide, 5000);
     return () => clearInterval(timer);
   }, [nextSlide]);
+
+  if (showIntro) {
+    return <NirvahaIntro onComplete={() => setShowIntro(false)} />;
+  }
 
   const hero = heroSlides[heroIndex];
 
