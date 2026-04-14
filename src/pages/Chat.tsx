@@ -154,10 +154,9 @@ const Chat = () => {
       <img
         src={chariotBg}
         alt=""
-        className="absolute inset-0 w-full h-full object-cover"
+        className="fixed inset-0 w-full h-full object-cover z-0"
       />
-      {/* Dark overlay for readability */}
-      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.9) 100%)" }} />
+      <div className="fixed inset-0 z-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.9) 100%)" }} />
 
       <SparkleEffect origin={sparkleOrigin} trigger={sparkleTrigger} />
 
