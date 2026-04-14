@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Bell } from "lucide-react";
+import { User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import SparkleEffect from "@/components/onboarding/SparkleEffect";
 import EmotionChips from "@/components/home/EmotionChips";
 import AiHeroCard from "@/components/home/AiHeroCard";
