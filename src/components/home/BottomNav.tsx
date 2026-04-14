@@ -22,7 +22,7 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { unreadCount } = useNotifications();
-  const { entries: moodEntries } = useMoodLog();
+  const { moodLog } = useMoodLog();
 
   const currentActive = active || navItems.find(n => location.pathname.startsWith(n.route))?.label || "Home";
 
