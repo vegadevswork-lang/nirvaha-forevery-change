@@ -1,14 +1,15 @@
 import { motion } from "framer-motion";
-import { Home as HomeIcon, MessageCircle, Users, Play, Headphones, Globe } from "lucide-react";
+import { Home as HomeIcon, Sparkles, Users, Play, Headphones, Globe } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useNotifications } from "@/hooks/use-notifications";
 
 const navItems = [
-  { label: "Home", icon: HomeIcon, route: "/home" },
-  { label: "AI", icon: MessageCircle, route: "/chat" },
-  { label: "Companion", icon: Users, route: "/companion" },
-  { label: "Collection", icon: Play, route: "/collection" },
-  { label: "Sounds", icon: Headphones, route: "/sound-healing" },
-  { label: "Space", icon: Globe, route: "/community" },
+  { label: "Home", icon: HomeIcon, route: "/home", badgeKey: null },
+  { label: "Inner Guide", icon: Sparkles, route: "/chat", badgeKey: null },
+  { label: "Companion", icon: Users, route: "/companion", badgeKey: null },
+  { label: "Collection", icon: Play, route: "/collection", badgeKey: "new" as const },
+  { label: "Sounds", icon: Headphones, route: "/sound-healing", badgeKey: null },
+  { label: "Space", icon: Globe, route: "/community", badgeKey: "notifications" as const },
 ];
 
 interface BottomNavProps {
@@ -19,22 +20,31 @@ interface BottomNavProps {
 const BottomNav = ({ active, onSelect }: BottomNavProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { unreadCount } = useNotifications();
 
-  // Determine active from route if not passed
   const currentActive = active || navItems.find(n => location.pathname.startsWith(n.route))?.label || "Home";
+
+  const getBadgeCount = (badgeKey: string | null): number => {
+    if (badgeKey === "notifications") return unreadCount;
+    if (badgeKey === "new") return 0; // Could show a dot for new content
+    return 0;
+  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
       <div
-        className="mx-3 mb-3 rounded-2xl px-1 py-1.5 flex items-center justify-around"
+        className="mx-3 mb-3 rounded-2xl px-1 py-2 flex items-center justify-around"
         style={{
-          background: "hsla(var(--foreground) / 0.85)",
-          backdropFilter: "blur(20px)",
-          boxShadow: "0 -2px 20px hsla(var(--foreground) / 0.15)",
+          background: "hsla(var(--foreground) / 0.92)",
+          backdropFilter: "blur(24px)",
+          boxShadow: "0 -2px 24px hsla(var(--foreground) / 0.2)",
         }}
       >
         {navItems.map((item) => {
           const isActive = currentActive === item.label;
+          const badgeCount = getBadgeCount(item.badgeKey);
+          const showDot = item.badgeKey === "new";
+
           return (
             <button
               key={item.label}
@@ -43,7 +53,7 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
                 navigate(item.route);
               }}
               className="flex flex-col items-center justify-center gap-0.5 relative"
-              style={{ width: `${100 / navItems.length}%`, minHeight: 44 }}
+              style={{ width: `${100 / navItems.length}%`, minHeight: 48 }}
             >
               {/* Active pill background */}
               {isActive && (
@@ -57,26 +67,47 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
 
               <motion.div
                 className="relative z-10"
-                animate={{ scale: isActive ? 1.05 : 1 }}
+                animate={{ scale: isActive ? 1.08 : 1 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
               >
                 <item.icon
-                  size={18}
-                  strokeWidth={isActive ? 2.2 : 1.6}
+                  size={20}
+                  strokeWidth={isActive ? 2.4 : 2}
                   style={{
                     color: isActive
                       ? "hsl(var(--primary-foreground))"
-                      : "hsla(var(--primary-foreground) / 0.4)",
+                      : "hsla(var(--primary-foreground) / 0.6)",
                   }}
                 />
+
+                {/* Badge count */}
+                {badgeCount > 0 && (
+                  <span
+                    className="absolute -top-1.5 -right-2.5 min-w-[16px] h-4 rounded-full flex items-center justify-center text-[9px] font-bold px-1"
+                    style={{
+                      background: "hsl(var(--destructive))",
+                      color: "hsl(var(--destructive-foreground))",
+                    }}
+                  >
+                    {badgeCount > 9 ? "9+" : badgeCount}
+                  </span>
+                )}
+
+                {/* New content dot */}
+                {showDot && badgeCount === 0 && (
+                  <span
+                    className="absolute -top-0.5 -right-1 w-2 h-2 rounded-full"
+                    style={{ background: "hsl(var(--accent))" }}
+                  />
+                )}
               </motion.div>
 
               <span
-                className="text-[8px] font-body font-medium tracking-wide relative z-10 leading-none"
+                className="text-[9px] font-body font-semibold tracking-wide relative z-10 leading-none mt-0.5"
                 style={{
                   color: isActive
                     ? "hsl(var(--primary-foreground))"
-                    : "hsla(var(--primary-foreground) / 0.35)",
+                    : "hsla(var(--primary-foreground) / 0.55)",
                 }}
               >
                 {item.label}
