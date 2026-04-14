@@ -63,10 +63,10 @@ const BookSession = () => {
         )}
       </AnimatePresence>
       <div className="ambient-orb animate-pulse-soft"
-        style={{ width: 180, height: 180, top: "5%", right: "-10%", background: "hsl(35 80% 55%)" }}
+        style={{ width: 180, height: 180, top: "5%", right: "-10%", background: "hsl(var(--healing-green))", opacity: 0.35 }}
       />
       <div className="ambient-orb animate-pulse-soft"
-        style={{ width: 120, height: 120, bottom: "20%", left: "-8%", background: "hsl(var(--gold))", animationDelay: "1.5s" }}
+        style={{ width: 120, height: 120, bottom: "20%", left: "-8%", background: "hsl(var(--healing-green))", opacity: 0.2, animationDelay: "1.5s" }}
       />
 
       <div className="overflow-y-auto pb-8 px-5 pt-12 relative z-10">
