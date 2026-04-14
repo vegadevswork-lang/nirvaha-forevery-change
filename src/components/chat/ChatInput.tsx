@@ -59,9 +59,8 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
           onInput={handleInput}
-          placeholder="Share what's on your mind..."
           rows={1}
-          className="flex-1 bg-transparent resize-none outline-none font-body text-sm py-1.5"
+          className="flex-1 bg-transparent resize-none outline-none font-body text-sm py-1.5 placeholder:text-white/40"
           style={{ maxHeight: 100, color: "rgba(255,255,255,0.9)" }}
           placeholder="Share what's on your mind..."
           disabled={disabled}
