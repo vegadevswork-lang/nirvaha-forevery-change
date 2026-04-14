@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Bell } from "lucide-react";
+import { User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import SparkleEffect from "@/components/onboarding/SparkleEffect";
 import EmotionChips from "@/components/home/EmotionChips";
 import AiHeroCard from "@/components/home/AiHeroCard";
@@ -18,6 +19,7 @@ import { usePageLoading } from "@/hooks/use-page-loading";
 import HomeSkeleton from "@/components/skeletons/HomeSkeleton";
 
 const Home = () => {
+  const navigate = useNavigate();
   const isLoading = usePageLoading(700);
 
   const [activeNav, setActiveNav] = useState("Home");
@@ -74,14 +76,15 @@ const Home = () => {
           </div>
           <motion.button
             whileTap={{ scale: 0.92 }}
-            className="w-10 h-10 rounded-2xl border flex items-center justify-center"
+            onClick={() => navigate("/profile")}
+            className="w-10 h-10 rounded-full border flex items-center justify-center"
             style={{
               background: "hsla(var(--glass-bg))",
               borderColor: "hsla(var(--glass-border))",
               backdropFilter: "blur(12px)",
             }}
           >
-            <Bell size={18} className="text-muted-foreground" />
+            <User size={18} className="text-muted-foreground" />
           </motion.button>
         </motion.div>
 

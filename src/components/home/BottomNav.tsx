@@ -1,169 +1,92 @@
 import { motion } from "framer-motion";
-import { Home as HomeIcon, MessageCircle, Flame, User } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Home as HomeIcon, MessageCircle, Users, Play, Headphones, Globe } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const navItems = [
-  { label: "Home", icon: HomeIcon },
-  { label: "Chat", icon: MessageCircle },
-  { label: "Wellness", icon: Flame },
-  { label: "Profile", icon: User },
+  { label: "Home", icon: HomeIcon, route: "/home" },
+  { label: "AI", icon: MessageCircle, route: "/chat" },
+  { label: "Companion", icon: Users, route: "/companion" },
+  { label: "Collection", icon: Play, route: "/collection" },
+  { label: "Sounds", icon: Headphones, route: "/sound-healing" },
+  { label: "Space", icon: Globe, route: "/community" },
 ];
 
 interface BottomNavProps {
-  active: string;
-  onSelect: (label: string) => void;
+  active?: string;
+  onSelect?: (label: string) => void;
 }
-
-const routeMap: Record<string, string> = {
-  Home: "/home",
-  Chat: "/chat",
-  Wellness: "/wellness",
-  Profile: "/profile",
-};
 
 const BottomNav = ({ active, onSelect }: BottomNavProps) => {
   const navigate = useNavigate();
-  const activeIndex = navItems.findIndex((n) => n.label === active);
-  const itemCount = navItems.length;
-  const itemWidth = 100 / itemCount;
+  const location = useLocation();
+
+  // Determine active from route if not passed
+  const currentActive = active || navItems.find(n => location.pathname.startsWith(n.route))?.label || "Home";
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50">
-      <div className="relative backdrop-blur-xl" style={{ height: 64, filter: "drop-shadow(0 -2px 16px hsla(var(--foreground) / 0.15))" }}>
-        {/* Nav bar background with animated notch */}
-        <svg
-          className="absolute inset-0 w-full"
-          viewBox="0 0 400 64"
-          preserveAspectRatio="none"
-          style={{
-            height: 64,
-            overflow: "visible",
-          }}
-        >
-          <motion.path
-            animate={{ d: generateNavPath(activeIndex, itemCount) }}
-            transition={{ type: "spring", stiffness: 300, damping: 26 }}
-            fill="hsla(var(--foreground) / 0.82)"
-          />
-        </svg>
-
-        {/* Floating active circle */}
-        <motion.div
-          className="absolute z-20"
-          animate={{
-            left: `calc(${activeIndex * itemWidth}% + ${itemWidth / 2}% - 24px)`,
-          }}
-          transition={{ type: "spring", stiffness: 300, damping: 26 }}
-          style={{ top: -12 }}
-        >
-          {/* Glow pulse ring */}
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            style={{ background: "hsl(var(--primary))" }}
-            animate={{
-              boxShadow: [
-                "0 0 0px 0px hsla(var(--healing-green) / 0.3)",
-                "0 0 12px 4px hsla(var(--healing-green) / 0.25)",
-                "0 0 0px 0px hsla(var(--healing-green) / 0.3)",
-              ],
-            }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <div
-            className="w-12 h-12 rounded-full flex items-center justify-center relative"
-            style={{ background: "hsl(var(--primary))" }}
-          >
-            {navItems[activeIndex] && (
-              <motion.div
-                key={active}
-                initial={{ scale: 0.7, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              >
-                {(() => {
-                  const Icon = navItems[activeIndex].icon;
-                  return (
-                    <Icon
-                      size={20}
-                      strokeWidth={2.2}
-                      style={{ color: "hsl(var(--primary-foreground))" }}
-                    />
-                  );
-                })()}
-              </motion.div>
-            )}
-          </div>
-        </motion.div>
-
-        {/* Nav items */}
-        <div className="absolute inset-0 flex items-center justify-around px-2 z-10">
-          {navItems.map((item, i) => {
-            const isActive = active === item.label;
-            return (
-              <button
-                key={item.label}
-                onClick={() => {
-                  onSelect(item.label);
-                  const route = routeMap[item.label];
-                  if (route) navigate(route);
-                }}
-                className="flex flex-col items-center justify-center relative"
-                style={{ width: `${itemWidth}%`, height: 64 }}
-              >
-                {/* Only show icon when NOT active (active icon is in the floating circle) */}
+    <div className="fixed bottom-0 left-0 right-0 z-50">
+      <div
+        className="mx-3 mb-3 rounded-2xl px-1 py-1.5 flex items-center justify-around"
+        style={{
+          background: "hsla(var(--foreground) / 0.85)",
+          backdropFilter: "blur(20px)",
+          boxShadow: "0 -2px 20px hsla(var(--foreground) / 0.15)",
+        }}
+      >
+        {navItems.map((item) => {
+          const isActive = currentActive === item.label;
+          return (
+            <button
+              key={item.label}
+              onClick={() => {
+                onSelect?.(item.label);
+                navigate(item.route);
+              }}
+              className="flex flex-col items-center justify-center gap-0.5 relative"
+              style={{ width: `${100 / navItems.length}%`, minHeight: 44 }}
+            >
+              {/* Active pill background */}
+              {isActive && (
                 <motion.div
-                  animate={{ opacity: isActive ? 0 : 1, scale: isActive ? 0.5 : 1 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <item.icon
-                    size={20}
-                    strokeWidth={1.8}
-                    style={{ color: "hsla(var(--primary-foreground) / 0.4)" }}
-                  />
-                </motion.div>
+                  layoutId="nav-pill"
+                  className="absolute inset-x-1 -inset-y-0.5 rounded-xl"
+                  style={{ background: "hsl(var(--primary))" }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
+              )}
 
-                {/* Label appears below for active */}
-                <motion.span
-                  animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 4 }}
-                  transition={{ duration: 0.2 }}
-                  className="text-[9px] font-body font-semibold tracking-wide absolute"
-                  style={{ bottom: 8, color: "hsl(var(--primary-foreground))" }}
-                >
-                  {item.label}
-                </motion.span>
-              </button>
-            );
-          })}
-        </div>
+              <motion.div
+                className="relative z-10"
+                animate={{ scale: isActive ? 1.05 : 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              >
+                <item.icon
+                  size={18}
+                  strokeWidth={isActive ? 2.2 : 1.6}
+                  style={{
+                    color: isActive
+                      ? "hsl(var(--primary-foreground))"
+                      : "hsla(var(--primary-foreground) / 0.4)",
+                  }}
+                />
+              </motion.div>
+
+              <span
+                className="text-[8px] font-body font-medium tracking-wide relative z-10 leading-none"
+                style={{
+                  color: isActive
+                    ? "hsl(var(--primary-foreground))"
+                    : "hsla(var(--primary-foreground) / 0.35)",
+                }}
+              >
+                {item.label}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
 };
-
-function generateNavPath(activeIdx: number, total: number): string {
-  const w = 400;
-  const h = 64;
-  const r = 32; // corner radius
-  const sectionW = w / total;
-  const cx = sectionW * activeIdx + sectionW / 2;
-  const notchW = 34;
-  const notchH = 16;
-
-  return `
-    M ${r} 0
-    L ${cx - notchW} 0
-    C ${cx - notchW * 0.55} 0, ${cx - notchW * 0.35} ${-notchH}, ${cx} ${-notchH}
-    C ${cx + notchW * 0.35} ${-notchH}, ${cx + notchW * 0.55} 0, ${cx + notchW} 0
-    L ${w - r} 0
-    Q ${w} 0, ${w} ${r}
-    L ${w} ${h - r}
-    Q ${w} ${h}, ${w - r} ${h}
-    L ${r} ${h}
-    Q 0 ${h}, 0 ${h - r}
-    L 0 ${r}
-    Q 0 0, ${r} 0
-    Z
-  `;
-}
 
 export default BottomNav;
