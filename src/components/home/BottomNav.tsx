@@ -29,7 +29,7 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
   const [pillPos, setPillPos] = useState({ left: 0, width: 0 });
   const [bounceKey, setBounceKey] = useState(0);
 
-  const currentActive = active || navItems.find(n => location.pathname.startsWith(n.route))?.label || "Home";
+  const currentActive = navItems.find(n => location.pathname.startsWith(n.route))?.label || active || "Home";
   const activeIndex = navItems.findIndex(n => n.label === currentActive);
 
   const hasTodayMood = moodLog.some(e => {
