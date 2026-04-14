@@ -75,14 +75,15 @@ const Home = () => {
           </div>
           <motion.button
             whileTap={{ scale: 0.92 }}
-            className="w-10 h-10 rounded-2xl border flex items-center justify-center"
+            onClick={() => navigate("/profile")}
+            className="w-10 h-10 rounded-full border flex items-center justify-center"
             style={{
               background: "hsla(var(--glass-bg))",
               borderColor: "hsla(var(--glass-border))",
               backdropFilter: "blur(12px)",
             }}
           >
-            <Bell size={18} className="text-muted-foreground" />
+            <User size={18} className="text-muted-foreground" />
           </motion.button>
         </motion.div>
 
