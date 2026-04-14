@@ -24,7 +24,6 @@ const AiHeroCard = () => {
     />
     {/* Dark overlay for text readability */}
     <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.65) 100%)" }} />
-  >
     {/* Decorative circles */}
     <div
       className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-20"
