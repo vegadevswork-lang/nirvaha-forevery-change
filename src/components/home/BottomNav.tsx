@@ -1,5 +1,5 @@
-import { useRef, useEffect, useState } from "react";
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useRef, useEffect, useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Home as HomeIcon, Sparkles, Users, Play, Headphones, Globe } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useNotifications } from "@/hooks/use-notifications";
@@ -26,7 +26,8 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
   const { moodLog } = useMoodLog();
   const navRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const [pillStyle, setPillStyle] = useState({ left: 0, width: 0 });
+  const [pillPos, setPillPos] = useState({ left: 0, width: 0 });
+  const [bounceKey, setBounceKey] = useState(0);
 
   const currentActive = active || navItems.find(n => location.pathname.startsWith(n.route))?.label || "Home";
   const activeIndex = navItems.findIndex(n => n.label === currentActive);
@@ -45,48 +46,57 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
     return 0;
   };
 
-  // Measure active item position for pill
-  useEffect(() => {
+  const measurePill = useCallback(() => {
     const el = itemRefs.current[activeIndex];
     const container = navRef.current;
     if (el && container) {
-      const containerRect = container.getBoundingClientRect();
-      const elRect = el.getBoundingClientRect();
-      setPillStyle({
-        left: elRect.left - containerRect.left,
-        width: elRect.width,
-      });
+      const cr = container.getBoundingClientRect();
+      const er = el.getBoundingClientRect();
+      setPillPos({ left: er.left - cr.left, width: er.width });
     }
   }, [activeIndex]);
 
+  useEffect(() => {
+    measurePill();
+    setBounceKey(k => k + 1);
+  }, [activeIndex, measurePill]);
+
+  // Re-measure on resize
+  useEffect(() => {
+    window.addEventListener("resize", measurePill);
+    return () => window.removeEventListener("resize", measurePill);
+  }, [measurePill]);
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4">
+    <div className="fixed bottom-0 left-0 right-0 z-50 px-3 pb-3">
       <div
         ref={navRef}
-        className="relative rounded-[28px] px-1 py-1 flex items-center"
+        className="relative rounded-full px-1.5 py-1.5 flex items-center"
         style={{
-          background: "hsl(var(--foreground))",
-          boxShadow: "0 8px 40px hsla(var(--foreground) / 0.35), 0 2px 8px hsla(var(--foreground) / 0.15)",
+          background: "#1a2a22",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2)",
         }}
       >
-        {/* Animated pill background */}
+        {/* Sliding pill */}
         <motion.div
-          className="absolute rounded-[22px] z-0"
+          className="absolute rounded-full"
           animate={{
-            left: pillStyle.left,
-            width: pillStyle.width,
+            left: pillPos.left,
+            width: pillPos.width,
+            scaleX: [1, 1.04, 1],
+            scaleY: [1, 0.96, 1],
           }}
           transition={{
-            type: "spring",
-            stiffness: 350,
-            damping: 30,
-            mass: 0.8,
+            left: { type: "spring", stiffness: 300, damping: 28, mass: 0.9 },
+            width: { type: "spring", stiffness: 300, damping: 28, mass: 0.9 },
+            scaleX: { duration: 0.35, ease: "easeOut" },
+            scaleY: { duration: 0.35, ease: "easeOut" },
           }}
           style={{
-            top: 4,
-            bottom: 4,
+            top: 5,
+            bottom: 5,
             background: "hsl(var(--primary))",
-            boxShadow: "0 2px 12px hsla(var(--primary) / 0.4)",
+            boxShadow: "0 2px 16px hsla(var(--primary) / 0.5)",
           }}
         />
 
@@ -96,93 +106,76 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
           const showDot = item.badgeKey === "new";
 
           return (
-            <motion.button
+            <button
               key={item.label}
               ref={(el) => { itemRefs.current[index] = el; }}
               onClick={() => {
                 onSelect?.(item.label);
                 navigate(item.route);
               }}
-              className="relative z-10 flex items-center justify-center gap-1.5 py-2.5"
-              animate={{
-                paddingLeft: isActive ? 14 : 8,
-                paddingRight: isActive ? 14 : 8,
-                flex: isActive ? 1.8 : 1,
+              className="relative z-10 flex items-center justify-center gap-1.5 transition-all duration-300 ease-out"
+              style={{
+                flex: isActive ? 1.7 : 1,
+                padding: isActive ? "10px 14px" : "10px 6px",
+                minHeight: 44,
               }}
-              transition={{
-                type: "spring",
-                stiffness: 350,
-                damping: 30,
-                mass: 0.8,
-              }}
-              style={{ minHeight: 44 }}
             >
-              <motion.div
-                className="relative"
-                animate={{
-                  scale: isActive ? 1.05 : 1,
-                  y: isActive ? 0 : 0,
-                }}
-                transition={{ type: "spring", stiffness: 400, damping: 22 }}
-              >
-                <item.icon
-                  size={19}
-                  strokeWidth={isActive ? 2.3 : 1.7}
-                  style={{
-                    color: isActive
-                      ? "hsl(var(--primary-foreground))"
-                      : "hsla(var(--primary-foreground) / 0.4)",
-                    transition: "color 0.25s ease",
-                  }}
-                />
+              <div className="relative">
+                <motion.div
+                  key={`icon-${item.label}-${bounceKey}`}
+                  animate={isActive ? { scale: [1, 1.15, 1] } : { scale: 1 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                  <item.icon
+                    size={19}
+                    strokeWidth={isActive ? 2.3 : 1.6}
+                    style={{
+                      color: isActive ? "#f5f0e8" : "rgba(245,240,232,0.35)",
+                      transition: "color 0.3s ease",
+                    }}
+                  />
+                </motion.div>
 
                 {/* Badge */}
                 {badgeCount > 0 && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
+                  <span
                     className="absolute -top-1.5 -right-2.5 min-w-[15px] h-[15px] rounded-full flex items-center justify-center text-[8px] font-bold px-0.5"
                     style={{
                       background: "hsl(var(--destructive))",
-                      color: "hsl(var(--destructive-foreground))",
-                      boxShadow: "0 2px 6px hsla(var(--destructive) / 0.4)",
+                      color: "#fff",
+                      boxShadow: "0 2px 6px rgba(200,50,50,0.4)",
                     }}
                   >
                     {badgeCount > 9 ? "9+" : badgeCount}
-                  </motion.span>
+                  </span>
                 )}
 
                 {/* New dot */}
                 {showDot && badgeCount === 0 && (
                   <span
                     className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full"
-                    style={{ background: "hsl(var(--accent))", boxShadow: "0 0 4px hsl(var(--accent))" }}
+                    style={{ background: "hsl(var(--accent))", boxShadow: "0 0 6px hsl(var(--accent))" }}
                   />
                 )}
-              </motion.div>
+              </div>
 
-              {/* Label with smooth reveal */}
+              {/* Label */}
               <AnimatePresence mode="wait">
                 {isActive && (
                   <motion.span
-                    key={item.label}
-                    initial={{ opacity: 0, width: 0, x: -4 }}
+                    key={`label-${item.label}`}
+                    initial={{ opacity: 0, width: 0, x: -6 }}
                     animate={{ opacity: 1, width: "auto", x: 0 }}
-                    exit={{ opacity: 0, width: 0, x: -4 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 350,
-                      damping: 28,
-                      mass: 0.6,
-                    }}
+                    exit={{ opacity: 0, width: 0, x: -6 }}
+                    transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
                     className="text-[11px] font-body font-bold whitespace-nowrap overflow-hidden leading-none"
-                    style={{ color: "hsl(var(--primary-foreground))" }}
+                    style={{ color: "#f5f0e8" }}
                   >
                     {item.label}
                   </motion.span>
                 )}
               </AnimatePresence>
-            </motion.button>
+            </button>
           );
         })}
       </div>
