@@ -8,6 +8,7 @@ import QuickReplies from "@/components/chat/QuickReplies";
 import MoodTracker from "@/components/chat/MoodTracker";
 import SparkleEffect from "@/components/onboarding/SparkleEffect";
 import { useMoodLog } from "@/hooks/use-mood-log";
+import BottomNav from "@/components/home/BottomNav";
 
 // Nirvaha persona responses
 const nirvahaResponses: Record<string, string[]> = {
@@ -190,7 +191,10 @@ const Chat = () => {
         )}
       </div>
 
-      <ChatInput onSend={handleSend} disabled={isTyping} />
+      <div className="pb-20">
+        <ChatInput onSend={handleSend} disabled={isTyping} />
+      </div>
+      <BottomNav />
     </div>
   );
 };
