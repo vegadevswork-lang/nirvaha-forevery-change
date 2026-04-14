@@ -9,6 +9,7 @@ import MoodTracker from "@/components/chat/MoodTracker";
 import SparkleEffect from "@/components/onboarding/SparkleEffect";
 import { useMoodLog } from "@/hooks/use-mood-log";
 import BottomNav from "@/components/home/BottomNav";
+import chariotBg from "@/assets/chariot.jpeg";
 
 // Nirvaha persona responses
 const nirvahaResponses: Record<string, string[]> = {
@@ -148,18 +149,17 @@ const Chat = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col relative">
-      <SparkleEffect origin={sparkleOrigin} trigger={sparkleTrigger} />
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
+      {/* Chariot background */}
+      <img
+        src={chariotBg}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.9) 100%)" }} />
 
-      {/* Ambient orbs */}
-      <div
-        className="ambient-orb animate-pulse-soft"
-        style={{ width: 200, height: 200, top: "10%", right: "-10%", background: "hsl(var(--healing-green))" }}
-      />
-      <div
-        className="ambient-orb animate-pulse-soft"
-        style={{ width: 160, height: 160, bottom: "20%", left: "-8%", background: "hsl(var(--gold))", animationDelay: "2s" }}
-      />
+      <SparkleEffect origin={sparkleOrigin} trigger={sparkleTrigger} />
 
       <ChatHeader />
 

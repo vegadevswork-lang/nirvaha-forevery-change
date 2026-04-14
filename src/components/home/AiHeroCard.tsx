@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { MessageCircle, Sparkles, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import chariotBg from "@/assets/chariot.jpeg";
 
 const AiHeroCard = () => {
   const navigate = useNavigate();
@@ -13,17 +12,10 @@ const AiHeroCard = () => {
     transition={{ duration: 0.6, delay: 0.2 }}
     className="relative rounded-3xl overflow-hidden mb-6"
     style={{
-      boxShadow: "0 16px 48px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2)",
+      background: "linear-gradient(160deg, hsl(var(--primary)), hsl(var(--healing-green-light)))",
+      boxShadow: "0 16px 48px hsla(var(--healing-green) / 0.25), 0 4px 12px hsla(var(--healing-green) / 0.15)",
     }}
   >
-    {/* Background image */}
-    <img
-      src={chariotBg}
-      alt=""
-      className="absolute inset-0 w-full h-full object-cover"
-    />
-    {/* Dark overlay for text readability */}
-    <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.65) 100%)" }} />
     {/* Decorative circles */}
     <div
       className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-20"
