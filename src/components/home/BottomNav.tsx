@@ -1,4 +1,5 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Home as HomeIcon, Sparkles, Users, Play, Headphones, Globe } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useNotifications } from "@/hooks/use-notifications";
@@ -23,8 +24,12 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
   const location = useLocation();
   const { unreadCount } = useNotifications();
   const { moodLog } = useMoodLog();
+  const navRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [pillStyle, setPillStyle] = useState({ left: 0, width: 0 });
 
   const currentActive = active || navItems.find(n => location.pathname.startsWith(n.route))?.label || "Home";
+  const activeIndex = navItems.findIndex(n => n.label === currentActive);
 
   const hasTodayMood = moodLog.some(e => {
     const d = new Date(e.timestamp);
@@ -40,16 +45,52 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
     return 0;
   };
 
+  // Measure active item position for pill
+  useEffect(() => {
+    const el = itemRefs.current[activeIndex];
+    const container = navRef.current;
+    if (el && container) {
+      const containerRect = container.getBoundingClientRect();
+      const elRect = el.getBoundingClientRect();
+      setPillStyle({
+        left: elRect.left - containerRect.left,
+        width: elRect.width,
+      });
+    }
+  }, [activeIndex]);
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50">
+    <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4">
       <div
-        className="mx-3 mb-3 rounded-full px-1.5 py-1.5 flex items-center justify-between gap-0.5"
+        ref={navRef}
+        className="relative rounded-[28px] px-1 py-1 flex items-center"
         style={{
           background: "hsl(var(--foreground))",
-          boxShadow: "0 4px 30px hsla(var(--foreground) / 0.3)",
+          boxShadow: "0 8px 40px hsla(var(--foreground) / 0.35), 0 2px 8px hsla(var(--foreground) / 0.15)",
         }}
       >
-        {navItems.map((item) => {
+        {/* Animated pill background */}
+        <motion.div
+          className="absolute rounded-[22px] z-0"
+          animate={{
+            left: pillStyle.left,
+            width: pillStyle.width,
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 350,
+            damping: 30,
+            mass: 0.8,
+          }}
+          style={{
+            top: 4,
+            bottom: 4,
+            background: "hsl(var(--primary))",
+            boxShadow: "0 2px 12px hsla(var(--primary) / 0.4)",
+          }}
+        />
+
+        {navItems.map((item, index) => {
           const isActive = currentActive === item.label;
           const badgeCount = getBadgeCount(item.badgeKey);
           const showDot = item.badgeKey === "new";
@@ -57,81 +98,90 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
           return (
             <motion.button
               key={item.label}
+              ref={(el) => { itemRefs.current[index] = el; }}
               onClick={() => {
                 onSelect?.(item.label);
                 navigate(item.route);
               }}
-              className="relative flex items-center justify-center rounded-full overflow-hidden"
+              className="relative z-10 flex items-center justify-center gap-1.5 py-2.5"
               animate={{
-                flex: isActive ? 1.6 : 1,
+                paddingLeft: isActive ? 14 : 8,
+                paddingRight: isActive ? 14 : 8,
+                flex: isActive ? 1.8 : 1,
               }}
-              transition={{ type: "spring", stiffness: 400, damping: 28 }}
-              style={{ minHeight: 42 }}
+              transition={{
+                type: "spring",
+                stiffness: 350,
+                damping: 30,
+                mass: 0.8,
+              }}
+              style={{ minHeight: 44 }}
             >
-              {/* Active pill background */}
-              {isActive && (
-                <motion.div
-                  layoutId="nav-active-pill"
-                  className="absolute inset-0 rounded-full"
-                  style={{ background: "hsl(var(--primary))" }}
-                  transition={{ type: "spring", stiffness: 400, damping: 28 }}
-                />
-              )}
-
               <motion.div
-                className="relative z-10 flex items-center gap-1.5"
-                animate={{ scale: isActive ? 1.02 : 1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="relative"
+                animate={{
+                  scale: isActive ? 1.05 : 1,
+                  y: isActive ? 0 : 0,
+                }}
+                transition={{ type: "spring", stiffness: 400, damping: 22 }}
               >
-                <div className="relative">
-                  <item.icon
-                    size={18}
-                    strokeWidth={isActive ? 2.4 : 1.8}
+                <item.icon
+                  size={19}
+                  strokeWidth={isActive ? 2.3 : 1.7}
+                  style={{
+                    color: isActive
+                      ? "hsl(var(--primary-foreground))"
+                      : "hsla(var(--primary-foreground) / 0.4)",
+                    transition: "color 0.25s ease",
+                  }}
+                />
+
+                {/* Badge */}
+                {badgeCount > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1.5 -right-2.5 min-w-[15px] h-[15px] rounded-full flex items-center justify-center text-[8px] font-bold px-0.5"
                     style={{
-                      color: isActive
-                        ? "hsl(var(--primary-foreground))"
-                        : "hsla(var(--primary-foreground) / 0.45)",
+                      background: "hsl(var(--destructive))",
+                      color: "hsl(var(--destructive-foreground))",
+                      boxShadow: "0 2px 6px hsla(var(--destructive) / 0.4)",
                     }}
+                  >
+                    {badgeCount > 9 ? "9+" : badgeCount}
+                  </motion.span>
+                )}
+
+                {/* New dot */}
+                {showDot && badgeCount === 0 && (
+                  <span
+                    className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full"
+                    style={{ background: "hsl(var(--accent))", boxShadow: "0 0 4px hsl(var(--accent))" }}
                   />
-
-                  {/* Badge count */}
-                  {badgeCount > 0 && (
-                    <span
-                      className="absolute -top-1.5 -right-2 min-w-[14px] h-3.5 rounded-full flex items-center justify-center text-[8px] font-bold px-0.5"
-                      style={{
-                        background: "hsl(var(--destructive))",
-                        color: "hsl(var(--destructive-foreground))",
-                      }}
-                    >
-                      {badgeCount > 9 ? "9+" : badgeCount}
-                    </span>
-                  )}
-
-                  {/* New content dot */}
-                  {showDot && badgeCount === 0 && (
-                    <span
-                      className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full"
-                      style={{ background: "hsl(var(--accent))" }}
-                    />
-                  )}
-                </div>
-
-                {/* Label - only visible when active */}
-                <AnimatePresence>
-                  {isActive && (
-                    <motion.span
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: "auto" }}
-                      exit={{ opacity: 0, width: 0 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 28 }}
-                      className="text-[11px] font-body font-bold whitespace-nowrap overflow-hidden"
-                      style={{ color: "hsl(var(--primary-foreground))" }}
-                    >
-                      {item.label}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
+                )}
               </motion.div>
+
+              {/* Label with smooth reveal */}
+              <AnimatePresence mode="wait">
+                {isActive && (
+                  <motion.span
+                    key={item.label}
+                    initial={{ opacity: 0, width: 0, x: -4 }}
+                    animate={{ opacity: 1, width: "auto", x: 0 }}
+                    exit={{ opacity: 0, width: 0, x: -4 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 350,
+                      damping: 28,
+                      mass: 0.6,
+                    }}
+                    className="text-[11px] font-body font-bold whitespace-nowrap overflow-hidden leading-none"
+                    style={{ color: "hsl(var(--primary-foreground))" }}
+                  >
+                    {item.label}
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </motion.button>
           );
         })}
