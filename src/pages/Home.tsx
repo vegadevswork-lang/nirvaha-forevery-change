@@ -19,6 +19,7 @@ import { usePageLoading } from "@/hooks/use-page-loading";
 import HomeSkeleton from "@/components/skeletons/HomeSkeleton";
 
 const Home = () => {
+  const navigate = useNavigate();
   const isLoading = usePageLoading(700);
 
   const [activeNav, setActiveNav] = useState("Home");
