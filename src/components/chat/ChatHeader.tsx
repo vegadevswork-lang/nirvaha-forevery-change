@@ -11,13 +11,13 @@ const ChatHeader = () => {
       animate={{ opacity: 1, y: 0 }}
       className="fixed top-0 left-0 right-0 z-40 px-4 pt-10 pb-3"
       style={{
-        background: "linear-gradient(to bottom, hsl(var(--background)), hsla(var(--background) / 0.9))",
+        background: "linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.4), transparent)",
         backdropFilter: "blur(20px)",
       }}
     >
       <div className="flex items-center justify-between">
         <button onClick={() => navigate("/home")} className="p-2 -ml-2">
-          <ArrowLeft size={20} className="text-foreground" />
+          <ArrowLeft size={20} style={{ color: "rgba(255,255,255,0.9)" }} />
         </button>
 
         <div className="flex items-center gap-3">
@@ -43,13 +43,13 @@ const ChatHeader = () => {
             </div>
           </div>
           <div>
-            <h1 className="font-display text-base font-semibold text-foreground leading-tight">Nirvaha</h1>
-            <p className="text-[10px] font-body text-muted-foreground">Your wise companion</p>
+            <h1 className="font-display text-base font-semibold leading-tight" style={{ color: "rgba(255,255,255,0.95)" }}>Nirvaha</h1>
+            <p className="text-[10px] font-body" style={{ color: "rgba(255,255,255,0.55)" }}>Your wise companion</p>
           </div>
         </div>
 
         <button className="p-2 -mr-2">
-          <MoreVertical size={18} className="text-muted-foreground" />
+          <MoreVertical size={18} style={{ color: "rgba(255,255,255,0.5)" }} />
         </button>
       </div>
     </motion.div>

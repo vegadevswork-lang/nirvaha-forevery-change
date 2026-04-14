@@ -30,10 +30,11 @@ const MoodTracker = ({ onMoodSelect, onDismiss }: MoodTrackerProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 10 }}
-      className="glass-card p-5 mb-3 mx-1"
+      className="rounded-2xl border p-5 mb-3 mx-1"
+      style={{ background: "rgba(0,0,0,0.4)", borderColor: "rgba(255,255,255,0.1)", backdropFilter: "blur(24px)" }}
     >
-      <p className="font-display text-sm font-semibold text-foreground mb-1">How are you feeling right now?</p>
-      <p className="font-body text-[11px] text-muted-foreground mb-4">Tracking your mood helps us support you better 🌱</p>
+      <p className="font-display text-sm font-semibold mb-1" style={{ color: "rgba(255,255,255,0.95)" }}>How are you feeling right now?</p>
+      <p className="font-body text-[11px] mb-4" style={{ color: "rgba(255,255,255,0.55)" }}>Tracking your mood helps us support you better 🌱</p>
 
       <div className="grid grid-cols-3 gap-2.5">
         {moods.map((mood) => {
@@ -46,13 +47,13 @@ const MoodTracker = ({ onMoodSelect, onDismiss }: MoodTrackerProps) => {
               className="flex flex-col items-center gap-1 py-3 rounded-xl border transition-all duration-200"
               style={{
                 background: isSelected
-                  ? "hsla(var(--healing-green) / 0.1)"
-                  : "hsla(var(--glass-bg))",
+                  ? "rgba(255,255,255,0.15)"
+                  : "rgba(255,255,255,0.05)",
                 borderColor: isSelected
-                  ? "hsl(var(--primary))"
-                  : "hsla(var(--glass-border))",
+                  ? "rgba(255,255,255,0.3)"
+                  : "rgba(255,255,255,0.08)",
                 boxShadow: isSelected
-                  ? "0 0 16px hsla(var(--healing-green) / 0.2)"
+                  ? "0 0 16px rgba(255,255,255,0.1)"
                   : "none",
               }}
             >

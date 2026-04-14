@@ -41,16 +41,16 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
     <div
       className="fixed bottom-16 left-0 right-0 z-40 px-4 pb-3 pt-3"
       style={{
-        background: "linear-gradient(to top, hsl(var(--background)), hsla(var(--background) / 0.95), transparent)",
+        background: "linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.5), transparent)",
       }}
     >
       <div
         className="flex items-end gap-2 rounded-2xl border px-3 py-2"
         style={{
-          background: "hsla(var(--glass-bg))",
-          borderColor: "hsl(var(--border))",
+          background: "rgba(0,0,0,0.4)",
+          borderColor: "rgba(255,255,255,0.12)",
           backdropFilter: "blur(20px)",
-          boxShadow: "0 -2px 20px hsla(var(--glass-shadow))",
+          boxShadow: "0 -2px 20px rgba(0,0,0,0.2)",
         }}
       >
         <textarea
@@ -61,8 +61,9 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
           onInput={handleInput}
           placeholder="Share what's on your mind..."
           rows={1}
-          className="flex-1 bg-transparent resize-none outline-none font-body text-sm text-foreground placeholder:text-muted-foreground py-1.5"
-          style={{ maxHeight: 100 }}
+          className="flex-1 bg-transparent resize-none outline-none font-body text-sm py-1.5"
+          style={{ maxHeight: 100, color: "rgba(255,255,255,0.9)" }}
+          placeholder="Share what's on your mind..."
           disabled={disabled}
         />
 
