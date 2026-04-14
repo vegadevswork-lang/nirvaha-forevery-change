@@ -2,9 +2,10 @@ import { motion } from "framer-motion";
 import { Home as HomeIcon, Sparkles, Users, Play, Headphones, Globe } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useNotifications } from "@/hooks/use-notifications";
+import { useMoodLog } from "@/hooks/use-mood-log";
 
 const navItems = [
-  { label: "Home", icon: HomeIcon, route: "/home", badgeKey: null },
+  { label: "Home", icon: HomeIcon, route: "/home", badgeKey: "home" as const },
   { label: "Inner Guide", icon: Sparkles, route: "/chat", badgeKey: null },
   { label: "Companion", icon: Users, route: "/companion", badgeKey: null },
   { label: "Collection", icon: Play, route: "/collection", badgeKey: "new" as const },
