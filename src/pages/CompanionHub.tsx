@@ -167,7 +167,7 @@ const CompanionHub = () => {
         </AnimatePresence>
       </div>
 
-      <BottomNav active="Home" onSelect={() => {}} />
+      <BottomNav />
     </div>
   );
 };

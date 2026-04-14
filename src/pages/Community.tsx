@@ -19,6 +19,7 @@ import CreatePostFlow from "@/components/community/CreatePostFlow";
 import FABMenu from "@/components/community/FABMenu";
 import { usePageLoading } from "@/hooks/use-page-loading";
 import CommunitySkeleton from "@/components/skeletons/CommunitySkeleton";
+import BottomNav from "@/components/home/BottomNav";
 
 /* ─── Panels (Insights, Notifications, Topics, Circles) ─── */
 
@@ -523,6 +524,7 @@ const Community = () => {
       <AnimatePresence>{showTopics && <TopicsPanel onClose={() => setShowTopics(false)} />}</AnimatePresence>
       <AnimatePresence>{showCircles && <CirclesPanel onClose={() => setShowCircles(false)} />}</AnimatePresence>
       <AnimatePresence>{editingPost && <EditPostModal post={editingPost} onClose={() => setEditingPostId(null)} onSave={handleEditPost} />}</AnimatePresence>
+      <BottomNav />
     </motion.div>
   );
 };
