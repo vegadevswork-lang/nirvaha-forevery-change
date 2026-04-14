@@ -66,7 +66,7 @@ const MoodTracker = ({ onMoodSelect, onDismiss }: MoodTrackerProps) => {
               <span
                 className="font-body text-[10px] font-medium"
                 style={{
-                  color: isSelected ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))",
+                  color: isSelected ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.6)",
                 }}
               >
                 {mood.label}
@@ -78,7 +78,7 @@ const MoodTracker = ({ onMoodSelect, onDismiss }: MoodTrackerProps) => {
 
       <button
         onClick={onDismiss}
-        className="w-full mt-3 text-[11px] font-body text-muted-foreground"
+        className="w-full mt-3 text-[11px] font-body" style={{ color: "rgba(255,255,255,0.45)" }}
       >
         Skip for now
       </button>
