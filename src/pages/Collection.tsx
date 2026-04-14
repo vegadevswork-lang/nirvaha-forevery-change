@@ -15,6 +15,7 @@ import {
 import { usePageLoading } from "@/hooks/use-page-loading";
 import CollectionSkeleton from "@/components/skeletons/CollectionSkeleton";
 import { useSavedContent } from "@/hooks/use-saved-content";
+import NirvahaIntro from "@/components/collection/NirvahaIntro";
 
 const typeColor: Record<string, string> = {
   series: "hsl(var(--healing-green))",
@@ -29,6 +30,12 @@ const typeColor: Record<string, string> = {
 const Collection = () => {
   const navigate = useNavigate();
   const isLoading = usePageLoading(800);
+  const [showIntro, setShowIntro] = useState(() => {
+    const key = "nirvaha-collection-intro-seen";
+    if (sessionStorage.getItem(key)) return false;
+    sessionStorage.setItem(key, "1");
+    return true;
+  });
   const [activeNav, setActiveNav] = useState("Home");
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchOpen, setSearchOpen] = useState(false);
@@ -46,6 +53,10 @@ const Collection = () => {
     const timer = setInterval(nextSlide, 5000);
     return () => clearInterval(timer);
   }, [nextSlide]);
+
+  if (showIntro) {
+    return <NirvahaIntro onComplete={() => setShowIntro(false)} />;
+  }
 
   const hero = heroSlides[heroIndex];
 
