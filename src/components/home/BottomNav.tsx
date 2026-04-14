@@ -22,12 +22,22 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { unreadCount } = useNotifications();
+  const { entries: moodEntries } = useMoodLog();
 
   const currentActive = active || navItems.find(n => location.pathname.startsWith(n.route))?.label || "Home";
 
+  // Home badge: show if no mood logged today or journal prompt available
+  const hasTodayMood = moodEntries.some(e => {
+    const d = new Date(e.date);
+    const now = new Date();
+    return d.toDateString() === now.toDateString();
+  });
+  const homeBadge = !hasTodayMood ? 1 : 0;
+
   const getBadgeCount = (badgeKey: string | null): number => {
     if (badgeKey === "notifications") return unreadCount;
-    if (badgeKey === "new") return 0; // Could show a dot for new content
+    if (badgeKey === "home") return homeBadge;
+    if (badgeKey === "new") return 0;
     return 0;
   };
 
