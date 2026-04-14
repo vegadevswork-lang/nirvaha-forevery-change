@@ -28,7 +28,7 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
 
   // Home badge: show if no mood logged today or journal prompt available
   const hasTodayMood = moodLog.some(e => {
-    const d = new Date(e.date);
+    const d = new Date(e.timestamp);
     const now = new Date();
     return d.toDateString() === now.toDateString();
   });
