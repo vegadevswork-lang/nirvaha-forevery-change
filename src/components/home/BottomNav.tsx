@@ -26,7 +26,6 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
 
   const currentActive = active || navItems.find(n => location.pathname.startsWith(n.route))?.label || "Home";
 
-  // Home badge: show if no mood logged today or journal prompt available
   const hasTodayMood = moodLog.some(e => {
     const d = new Date(e.timestamp);
     const now = new Date();
@@ -44,11 +43,10 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
       <div
-        className="mx-3 mb-3 rounded-2xl px-1 py-2 flex items-center justify-around"
+        className="mx-3 mb-3 rounded-full px-2 py-2 flex items-center justify-between"
         style={{
-          background: "hsla(var(--foreground) / 0.92)",
-          backdropFilter: "blur(24px)",
-          boxShadow: "0 -2px 24px hsla(var(--foreground) / 0.2)",
+          background: "hsl(var(--foreground))",
+          boxShadow: "0 -2px 24px hsla(var(--foreground) / 0.25)",
         }}
       >
         {navItems.map((item) => {
@@ -57,73 +55,80 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
           const showDot = item.badgeKey === "new";
 
           return (
-            <button
+            <motion.button
               key={item.label}
               onClick={() => {
                 onSelect?.(item.label);
                 navigate(item.route);
               }}
-              className="flex flex-col items-center justify-center gap-0.5 relative"
-              style={{ width: `${100 / navItems.length}%`, minHeight: 48 }}
+              className="relative flex items-center justify-center"
+              style={{ minHeight: 40 }}
+              layout
+              transition={{ type: "spring", stiffness: 500, damping: 32 }}
             >
-              {/* Active pill background */}
+              {/* Active pill */}
               {isActive && (
                 <motion.div
                   layoutId="nav-pill"
-                  className="absolute inset-x-1 -inset-y-0.5 rounded-xl"
+                  className="absolute inset-0 rounded-full"
                   style={{ background: "hsl(var(--primary))" }}
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 32 }}
                 />
               )}
 
-              <motion.div
-                className="relative z-10"
-                animate={{ scale: isActive ? 1.08 : 1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              >
-                <item.icon
-                  size={20}
-                  strokeWidth={isActive ? 2.4 : 2}
-                  style={{
-                    color: isActive
-                      ? "hsl(var(--primary-foreground))"
-                      : "hsla(var(--primary-foreground) / 0.6)",
-                  }}
-                />
-
-                {/* Badge count */}
-                {badgeCount > 0 && (
-                  <span
-                    className="absolute -top-1.5 -right-2.5 min-w-[16px] h-4 rounded-full flex items-center justify-center text-[9px] font-bold px-1"
-                    style={{
-                      background: "hsl(var(--destructive))",
-                      color: "hsl(var(--destructive-foreground))",
-                    }}
-                  >
-                    {badgeCount > 9 ? "9+" : badgeCount}
-                  </span>
-                )}
-
-                {/* New content dot */}
-                {showDot && badgeCount === 0 && (
-                  <span
-                    className="absolute -top-0.5 -right-1 w-2 h-2 rounded-full"
-                    style={{ background: "hsl(var(--accent))" }}
-                  />
-                )}
-              </motion.div>
-
-              <span
-                className="text-[9px] font-body font-semibold tracking-wide relative z-10 leading-none mt-0.5"
+              <div
+                className="relative z-10 flex items-center gap-1.5"
                 style={{
-                  color: isActive
-                    ? "hsl(var(--primary-foreground))"
-                    : "hsla(var(--primary-foreground) / 0.55)",
+                  padding: isActive ? "8px 14px" : "8px 10px",
                 }}
               >
-                {item.label}
-              </span>
-            </button>
+                <div className="relative">
+                  <item.icon
+                    size={19}
+                    strokeWidth={isActive ? 2.4 : 1.8}
+                    style={{
+                      color: isActive
+                        ? "hsl(var(--primary-foreground))"
+                        : "hsla(var(--primary-foreground) / 0.5)",
+                    }}
+                  />
+
+                  {/* Badge count */}
+                  {badgeCount > 0 && (
+                    <span
+                      className="absolute -top-1.5 -right-2 min-w-[14px] h-3.5 rounded-full flex items-center justify-center text-[8px] font-bold px-0.5"
+                      style={{
+                        background: "hsl(var(--destructive))",
+                        color: "hsl(var(--destructive-foreground))",
+                      }}
+                    >
+                      {badgeCount > 9 ? "9+" : badgeCount}
+                    </span>
+                  )}
+
+                  {/* New content dot */}
+                  {showDot && badgeCount === 0 && (
+                    <span
+                      className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full"
+                      style={{ background: "hsl(var(--accent))" }}
+                    />
+                  )}
+                </div>
+
+                {/* Label only when active */}
+                {isActive && (
+                  <motion.span
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: "auto" }}
+                    exit={{ opacity: 0, width: 0 }}
+                    className="text-[11px] font-body font-semibold whitespace-nowrap"
+                    style={{ color: "hsl(var(--primary-foreground))" }}
+                  >
+                    {item.label}
+                  </motion.span>
+                )}
+              </div>
+            </motion.button>
           );
         })}
       </div>
