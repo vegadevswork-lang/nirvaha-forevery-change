@@ -32,9 +32,9 @@ const QuickReplies = ({ suggestions, onSelect }: QuickRepliesProps) => (
           onClick={() => onSelect(text)}
           className="flex items-center gap-1.5 rounded-full px-3.5 py-2 font-body text-xs font-medium border transition-all duration-200"
           style={{
-            background: "hsla(var(--glass-bg))",
-            borderColor: "hsla(var(--glass-border))",
-            color: "hsl(var(--primary))",
+            background: "rgba(0,0,0,0.35)",
+            borderColor: "rgba(255,255,255,0.12)",
+            color: "rgba(255,255,255,0.85)",
             backdropFilter: "blur(12px)",
           }}
         >

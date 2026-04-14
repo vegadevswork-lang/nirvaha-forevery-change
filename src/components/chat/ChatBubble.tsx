@@ -38,17 +38,17 @@ const ChatBubble = ({ message, index }: ChatBubbleProps) => {
         className="max-w-[78%] rounded-2xl px-4 py-3"
         style={{
           background: isUser
-            ? "hsl(var(--primary))"
-            : "hsla(var(--glass-bg))",
+            ? "hsla(var(--primary) / 0.75)"
+            : "rgba(0, 0, 0, 0.35)",
           color: isUser
             ? "hsl(var(--primary-foreground))"
-            : "hsl(var(--foreground))",
-          borderColor: isUser ? "transparent" : "hsla(var(--glass-border))",
+            : "rgba(255, 255, 255, 0.9)",
+          borderColor: isUser ? "transparent" : "rgba(255, 255, 255, 0.1)",
           borderWidth: isUser ? 0 : 1,
-          backdropFilter: isUser ? "none" : "blur(20px)",
+          backdropFilter: "blur(20px)",
           boxShadow: isUser
-            ? "0 4px 16px hsla(var(--healing-green) / 0.25)"
-            : "0 2px 12px hsla(var(--glass-shadow)), inset 0 1px 0 hsla(var(--glass-border))",
+            ? "0 4px 16px rgba(0, 0, 0, 0.2)"
+            : "0 2px 12px rgba(0, 0, 0, 0.15)",
           borderBottomRightRadius: isUser ? "6px" : "18px",
           borderBottomLeftRadius: isUser ? "18px" : "6px",
         }}
