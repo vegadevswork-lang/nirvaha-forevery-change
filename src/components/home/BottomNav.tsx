@@ -27,7 +27,7 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
   const currentActive = active || navItems.find(n => location.pathname.startsWith(n.route))?.label || "Home";
 
   // Home badge: show if no mood logged today or journal prompt available
-  const hasTodayMood = moodEntries.some(e => {
+  const hasTodayMood = moodLog.some(e => {
     const d = new Date(e.date);
     const now = new Date();
     return d.toDateString() === now.toDateString();
