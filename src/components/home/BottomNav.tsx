@@ -96,7 +96,7 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
             top: 5,
             bottom: 5,
             background: "hsl(var(--primary))",
-            boxShadow: "0 2px 16px hsla(var(--primary) / 0.5)",
+            boxShadow: "0 2px 20px hsla(var(--primary) / 0.55), 0 0 40px hsla(var(--primary) / 0.25), inset 0 1px 0 hsla(0 0% 100% / 0.15)",
           }}
         />
 
