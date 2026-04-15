@@ -105,6 +105,8 @@ const Collection = () => {
 
   if (isLoading && !showIntro) return <CollectionSkeleton />;
 
+  const showSearchResults = searchQuery.length > 0;
+
   if (showIntro) {
     return (
       <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
