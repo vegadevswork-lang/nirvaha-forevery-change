@@ -97,10 +97,23 @@ const Collection = () => {
 
   const showSearchResults = searchQuery.length > 0;
 
+  const introVideoRef = useRef<HTMLVideoElement>(null);
+
+  // Force play on mount — autoPlay can be blocked by browsers
+  useEffect(() => {
+    if (showIntro && introVideoRef.current) {
+      introVideoRef.current.play().catch(() => {
+        // If autoplay blocked even muted, skip intro
+        triggerFadeOut();
+      });
+    }
+  }, [showIntro, triggerFadeOut]);
+
   if (showIntro) {
     return (
       <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
         <video
+          ref={introVideoRef}
           autoPlay
           muted
           playsInline
