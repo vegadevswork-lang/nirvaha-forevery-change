@@ -35,10 +35,6 @@ const Collection = () => {
     return !sessionStorage.getItem("nirvaha-collection-intro-seen");
   });
 
-  const handleIntroEnd = useCallback(() => {
-    sessionStorage.setItem("nirvaha-collection-intro-seen", "1");
-    setShowIntro(false);
-  }, []);
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -87,36 +83,52 @@ const Collection = () => {
     }))
     .filter((row) => row.items.length > 0);
 
+  const [fadingOut, setFadingOut] = useState(false);
+
+  const triggerFadeOut = useCallback(() => {
+    setFadingOut(true);
+    setTimeout(() => {
+      sessionStorage.setItem("nirvaha-collection-intro-seen", "1");
+      setShowIntro(false);
+    }, 800);
+  }, []);
+
   if (isLoading && !showIntro) return <CollectionSkeleton />;
 
   const showSearchResults = searchQuery.length > 0;
 
   if (showIntro) {
     return (
-      <AnimatePresence>
-        <motion.div
-          key="collection-intro"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6 }}
-          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
-        >
-          <video
-            autoPlay
-            muted
-            playsInline
-            onEnded={handleIntroEnd}
-            className="absolute inset-0 w-full h-full object-contain bg-black"
-            src="/videos/nirvaha-collection-intro.mp4"
-          />
+      <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
+        <video
+          autoPlay
+          muted
+          playsInline
+          onEnded={triggerFadeOut}
+          className="absolute inset-0 w-full h-full object-contain bg-black"
+          src="/videos/nirvaha-collection-intro.mp4"
+          style={{
+            opacity: fadingOut ? 0 : 1,
+            transition: "opacity 0.8s ease-in-out",
+          }}
+        />
+        {/* Fade-to-black overlay */}
+        <div
+          className="absolute inset-0 bg-black pointer-events-none z-10"
+          style={{
+            opacity: fadingOut ? 1 : 0,
+            transition: "opacity 0.8s ease-in-out",
+          }}
+        />
+        {!fadingOut && (
           <button
-            onClick={handleIntroEnd}
+            onClick={triggerFadeOut}
             className="absolute bottom-10 right-6 font-body text-xs tracking-wider text-white/40 hover:text-white/70 transition-colors uppercase z-20"
           >
             Skip
           </button>
-        </motion.div>
-      </AnimatePresence>
+        )}
+      </div>
     );
   }
 
