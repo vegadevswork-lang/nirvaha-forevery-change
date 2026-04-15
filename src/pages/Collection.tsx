@@ -15,8 +15,6 @@ import {
 import { usePageLoading } from "@/hooks/use-page-loading";
 import CollectionSkeleton from "@/components/skeletons/CollectionSkeleton";
 import { useSavedContent } from "@/hooks/use-saved-content";
-import NirvahaIntro from "@/components/collection/NirvahaIntro";
-
 const typeColor: Record<string, string> = {
   series: "hsl(var(--healing-green))",
   film: "hsl(var(--gold))",
