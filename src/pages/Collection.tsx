@@ -100,12 +100,6 @@ const Collection = () => {
   if (isLoading && !showIntro) return <CollectionSkeleton />;
 
   const showSearchResults = searchQuery.length > 0;
-    setFadingOut(true);
-    setTimeout(() => {
-      sessionStorage.setItem("nirvaha-collection-intro-seen", "1");
-      setShowIntro(false);
-    }, 800);
-  }, []);
 
   if (showIntro) {
     return (
