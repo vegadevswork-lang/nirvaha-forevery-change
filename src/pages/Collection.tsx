@@ -30,10 +30,10 @@ const Collection = () => {
   const location = useLocation();
   const isLoading = usePageLoading(800);
   const [activeNav, setActiveNav] = useState("Home");
-  const shouldForceIntro = Boolean(location.state && (location.state as { playIntro?: boolean }).playIntro);
+  const shouldForceIntro = new URLSearchParams(location.search).get("intro") === "1";
   const [showIntro, setShowIntro] = useState(() => {
     if (typeof window === "undefined") return false;
-    return !sessionStorage.getItem("nirvaha-collection-intro-seen");
+    return shouldForceIntro || !sessionStorage.getItem("nirvaha-collection-intro-seen");
   });
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchOpen, setSearchOpen] = useState(false);
@@ -67,10 +67,13 @@ const Collection = () => {
     const playPromise = introVideoRef.current.play();
     if (playPromise) {
       playPromise.catch(() => {
+        if (shouldForceIntro) {
+          navigate("/collection", { replace: true });
+        }
         setShowIntro(false);
       });
     }
-  }, [showIntro, shouldForceIntro]);
+  }, [showIntro, shouldForceIntro, navigate]);
 
   useEffect(() => {
     return () => {
@@ -118,8 +121,11 @@ const Collection = () => {
       sessionStorage.setItem("nirvaha-collection-intro-seen", "1");
       setShowIntro(false);
       setFadingOut(false);
+      if (shouldForceIntro) {
+        navigate("/collection", { replace: true });
+      }
     }, 800);
-  }, []);
+  }, [navigate, shouldForceIntro]);
 
   if (isLoading && !showIntro) return <CollectionSkeleton />;
 

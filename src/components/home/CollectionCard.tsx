@@ -95,7 +95,7 @@ const CollectionCard = () => {
         {/* CTA */}
         <motion.button
           whileTap={{ scale: 0.97 }}
-          onClick={() => navigate("/collection", { state: { playIntro: true } })}
+          onClick={() => navigate("/collection?intro=1")}
           className="flex items-center justify-center gap-2.5 w-full py-3.5 rounded-2xl font-body font-medium text-sm"
           style={{
             background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--healing-green)))",

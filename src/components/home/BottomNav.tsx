@@ -111,7 +111,7 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
               ref={(el) => { itemRefs.current[index] = el; }}
               onClick={() => {
                 onSelect?.(item.label);
-                navigate(item.route, item.route === "/collection" ? { state: { playIntro: true } } : undefined);
+                navigate(item.route === "/collection" ? "/collection?intro=1" : item.route);
               }}
               className="relative z-10 flex items-center justify-center gap-1.5 transition-all duration-300 ease-out"
               style={{
