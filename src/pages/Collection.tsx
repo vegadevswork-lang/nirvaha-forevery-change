@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Search, Play, Star, Clock, Bookmark, BookmarkCheck, X, Sparkles } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BottomNav from "@/components/home/BottomNav";
 import {
   heroSlides,
@@ -27,22 +27,31 @@ const typeColor: Record<string, string> = {
 
 const Collection = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const isLoading = usePageLoading(800);
   const [activeNav, setActiveNav] = useState("Home");
-
-  // Show video intro once per session
+  const shouldForceIntro = new URLSearchParams(location.search).get("intro") === "1";
   const [showIntro, setShowIntro] = useState(() => {
-    return !sessionStorage.getItem("nirvaha-collection-intro-seen");
+    if (typeof window === "undefined") return false;
+    return shouldForceIntro || !sessionStorage.getItem("nirvaha-collection-intro-seen");
   });
-
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [heroIndex, setHeroIndex] = useState(0);
+  const [fadingOut, setFadingOut] = useState(false);
   const scrollRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const introVideoRef = useRef<HTMLVideoElement>(null);
+  const fadeTimeoutRef = useRef<number | null>(null);
   const { isSaved, toggleSave } = useSavedContent();
 
-  // Auto-slide hero
+  useEffect(() => {
+    if (shouldForceIntro) {
+      setFadingOut(false);
+      setShowIntro(true);
+    }
+  }, [shouldForceIntro]);
+
   const nextSlide = useCallback(() => {
     setHeroIndex((i) => (i + 1) % heroSlides.length);
   }, []);
@@ -52,10 +61,30 @@ const Collection = () => {
     return () => clearInterval(timer);
   }, [nextSlide]);
 
+  useEffect(() => {
+    if (!showIntro || !introVideoRef.current) return;
+    introVideoRef.current.currentTime = 0;
+    const playPromise = introVideoRef.current.play();
+    if (playPromise) {
+      playPromise.catch(() => {
+        if (shouldForceIntro) {
+          navigate("/collection", { replace: true });
+        }
+        setShowIntro(false);
+      });
+    }
+  }, [showIntro, shouldForceIntro, navigate]);
+
+  useEffect(() => {
+    return () => {
+      if (fadeTimeoutRef.current) {
+        window.clearTimeout(fadeTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const hero = heroSlides[heroIndex];
 
-  // Full search across all content
   const allContent = getAllContent();
   const searchResults = searchQuery
     ? allContent.filter(
@@ -83,25 +112,20 @@ const Collection = () => {
     }))
     .filter((row) => row.items.length > 0);
 
-  const [fadingOut, setFadingOut] = useState(false);
-  const introVideoRef = useRef<HTMLVideoElement>(null);
-
   const triggerFadeOut = useCallback(() => {
+    if (fadeTimeoutRef.current) {
+      window.clearTimeout(fadeTimeoutRef.current);
+    }
     setFadingOut(true);
-    setTimeout(() => {
+    fadeTimeoutRef.current = window.setTimeout(() => {
       sessionStorage.setItem("nirvaha-collection-intro-seen", "1");
       setShowIntro(false);
+      setFadingOut(false);
+      if (shouldForceIntro) {
+        navigate("/collection", { replace: true });
+      }
     }, 800);
-  }, []);
-
-  // Force play on mount — autoPlay can be blocked by browsers
-  useEffect(() => {
-    if (showIntro && introVideoRef.current) {
-      introVideoRef.current.play().catch(() => {
-        triggerFadeOut();
-      });
-    }
-  }, [showIntro, triggerFadeOut]);
+  }, [navigate, shouldForceIntro]);
 
   if (isLoading && !showIntro) return <CollectionSkeleton />;
 
@@ -115,6 +139,7 @@ const Collection = () => {
           autoPlay
           muted
           playsInline
+          preload="auto"
           onEnded={triggerFadeOut}
           className="absolute inset-0 w-full h-full object-contain bg-black"
           src="/videos/nirvaha-collection-intro.mp4"
@@ -123,7 +148,6 @@ const Collection = () => {
             transition: "opacity 0.8s ease-in-out",
           }}
         />
-        {/* Fade-to-black overlay */}
         <div
           className="absolute inset-0 bg-black pointer-events-none z-10"
           style={{
