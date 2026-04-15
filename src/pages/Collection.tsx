@@ -84,6 +84,7 @@ const Collection = () => {
     .filter((row) => row.items.length > 0);
 
   const [fadingOut, setFadingOut] = useState(false);
+  const introVideoRef = useRef<HTMLVideoElement>(null);
 
   const triggerFadeOut = useCallback(() => {
     setFadingOut(true);
@@ -93,6 +94,15 @@ const Collection = () => {
     }, 800);
   }, []);
 
+  // Force play on mount — autoPlay can be blocked by browsers
+  useEffect(() => {
+    if (showIntro && introVideoRef.current) {
+      introVideoRef.current.play().catch(() => {
+        triggerFadeOut();
+      });
+    }
+  }, [showIntro, triggerFadeOut]);
+
   if (isLoading && !showIntro) return <CollectionSkeleton />;
 
   const showSearchResults = searchQuery.length > 0;
@@ -101,6 +111,7 @@ const Collection = () => {
     return (
       <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
         <video
+          ref={introVideoRef}
           autoPlay
           muted
           playsInline
