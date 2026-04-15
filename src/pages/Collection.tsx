@@ -49,9 +49,6 @@ const Collection = () => {
     return () => clearInterval(timer);
   }, [nextSlide]);
 
-  if (showIntro) {
-    return <NirvahaIntro onComplete={() => setShowIntro(false)} />;
-  }
 
   const hero = heroSlides[heroIndex];
 
