@@ -28,8 +28,17 @@ const typeColor: Record<string, string> = {
 const Collection = () => {
   const navigate = useNavigate();
   const isLoading = usePageLoading(800);
-  const showIntro = false;
   const [activeNav, setActiveNav] = useState("Home");
+
+  // Show video intro once per session
+  const [showIntro, setShowIntro] = useState(() => {
+    return !sessionStorage.getItem("nirvaha-collection-intro-seen");
+  });
+
+  const handleIntroEnd = useCallback(() => {
+    sessionStorage.setItem("nirvaha-collection-intro-seen", "1");
+    setShowIntro(false);
+  }, []);
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
