@@ -13,100 +13,98 @@ const { fontFamily } = loadFont("normal", {
 });
 
 const GREEN = "#4a7c59";
+const GREEN_BRIGHT = "#5ecc7e";
 const GREEN_LIGHT = "#6ba37a";
 
 /*
- * Timeline (19s @ 30fps = 570 frames):
+ * Timeline (12s @ 30fps = 360 frames):
  *
- * 0–60:    Black. A single soft beam fades in from left edge.
- * 60–120:  Beam sweeps rightward across the frame (slow, elegant).
- * 120–150: Beam reaches first letter position, slows, deposits "N".
- * 150–180: Beam continues, deposits "I".
- * 180–210: Beam deposits "R".
- * 210–240: Beam deposits "V".
- * 240–270: Beam deposits "A".
- * 270–300: Beam deposits "H".
- * 300–330: Beam deposits final "A", beam fades out.
- * 330–400: All letters glow brighter — hero reveal bloom.
- * 400–440: "COLLECTION" subtitle + divider appear.
- * 440–520: Hold with gentle shimmer.
- * 520–570: Elegant fade to black.
+ * 0–30:    Black. Arrow glow appears from left.
+ * 30–50:   Arrow speeds across, accelerating.
+ * 50–70:   Arrow deposits "N" with flash.
+ * 70–85:   Arrow deposits "I".
+ * 85–100:  Arrow deposits "R".
+ * 100–115: Arrow deposits "V".
+ * 115–130: Arrow deposits "A".
+ * 130–145: Arrow deposits "H".
+ * 145–165: Arrow deposits final "A", arrow fades with trail.
+ * 165–230: Hero bloom — letters glow bright green, dramatic reveal.
+ * 230–270: "COLLECTION" subtitle + divider appear.
+ * 270–330: Hold with shimmer.
+ * 330–360: Elegant fade to black.
  */
 
 const TITLE = "NIRVAHA";
-
-// Letter x-positions (centered around 960)
-const LETTER_SPACING = 110;
+const LETTER_SPACING = 105;
 const TITLE_WIDTH = (TITLE.length - 1) * LETTER_SPACING;
 const TITLE_START_X = 960 - TITLE_WIDTH / 2;
 const LETTER_POSITIONS = TITLE.split("").map((_, i) => TITLE_START_X + i * LETTER_SPACING);
 
-// Each letter deposits at these frames
-const DEPOSIT_START = 120;
-const DEPOSIT_GAP = 28; // frames between each letter deposit
+const DEPOSIT_START = 55;
+const DEPOSIT_GAP = 16;
 const LETTER_DEPOSIT_FRAMES = TITLE.split("").map((_, i) => DEPOSIT_START + i * DEPOSIT_GAP);
+const LAST_DEPOSIT = LETTER_DEPOSIT_FRAMES[6];
 
-const BEAM_Y = 475; // vertical center for beam
+const BEAM_Y = 470;
 
 export const MainVideo: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // ── Beam position along X axis ──
-  // Beam enters from -200 and travels to each letter position, pausing briefly at each
-  const beamProgress = interpolate(
+  // ── Arrow position (fast, sweeping) ──
+  const arrowX = interpolate(
     frame,
-    [20, 60, ...LETTER_DEPOSIT_FRAMES, LETTER_DEPOSIT_FRAMES[6] + 25],
-    [-200, -100, ...LETTER_POSITIONS, LETTER_POSITIONS[6] + 200],
+    [15, 40, ...LETTER_DEPOSIT_FRAMES, LAST_DEPOSIT + 18],
+    [-300, -50, ...LETTER_POSITIONS, LETTER_POSITIONS[6] + 400],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
 
-  // Beam visibility
-  const beamOpacity = interpolate(
+  // Arrow visibility
+  const arrowOpacity = interpolate(
     frame,
-    [10, 40, LETTER_DEPOSIT_FRAMES[6], LETTER_DEPOSIT_FRAMES[6] + 35],
+    [8, 25, LAST_DEPOSIT - 5, LAST_DEPOSIT + 22],
     [0, 1, 1, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
 
-  // Beam length varies — shorter when depositing, longer when traveling
+  // Arrow shape — elongated when traveling, compact when depositing
   const isDepositing = LETTER_DEPOSIT_FRAMES.some(
-    (f) => frame >= f - 5 && frame <= f + 15
+    (f) => frame >= f - 3 && frame <= f + 8
   );
-  const beamLength = isDepositing ? 120 : 280;
+  const arrowLength = isDepositing ? 90 : 220;
 
-  // ── Hero reveal bloom (after all letters deposited) ──
+  // ── Hero bloom ──
   const heroBloom = interpolate(
     frame,
-    [340, 390, 430, 520, 560],
-    [0, 0.6, 0.35, 0.35, 0],
+    [170, 210, 260, 325, 355],
+    [0, 0.9, 0.6, 0.6, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
 
   // ── Global fade ──
-  const globalFade = interpolate(frame, [520, 570], [1, 0], {
+  const globalFade = interpolate(frame, [330, 360], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  // ── Particles trailing the beam ──
-  const trailParticles = Array.from({ length: 30 }, (_, i) => {
-    const age = (frame - 30 - i * 4) * 0.8;
-    if (age < 0 || age > 60) return null;
+  // ── Arrow trail particles ──
+  const trailParticles = Array.from({ length: 24 }, (_, i) => {
+    const age = (frame - 20 - i * 3) * 1.0;
+    if (age < 0 || age > 40) return null;
     const trailX = interpolate(
-      frame - i * 4,
-      [20, 60, ...LETTER_DEPOSIT_FRAMES, LETTER_DEPOSIT_FRAMES[6] + 25],
-      [-200, -100, ...LETTER_POSITIONS, LETTER_POSITIONS[6] + 200],
+      frame - i * 3,
+      [15, 40, ...LETTER_DEPOSIT_FRAMES, LAST_DEPOSIT + 18],
+      [-300, -50, ...LETTER_POSITIONS, LETTER_POSITIONS[6] + 400],
       { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
     );
-    const drift = Math.sin(i * 2.1 + frame * 0.05) * (15 + i * 0.8);
-    const particleOpacity = interpolate(age, [0, 5, 40, 60], [0, 0.5, 0.2, 0]);
-    const size = interpolate(age, [0, 60], [2.5, 0.5]);
-    return { x: trailX - i * 8, y: BEAM_Y + drift, opacity: particleOpacity * beamOpacity, size };
+    const drift = Math.sin(i * 2.3 + frame * 0.07) * (12 + i * 0.6);
+    const pOp = interpolate(age, [0, 3, 25, 40], [0, 0.6, 0.15, 0]);
+    const size = interpolate(age, [0, 40], [3, 0.5]);
+    return { x: trailX - i * 10, y: BEAM_Y + drift, opacity: pOp * arrowOpacity, size };
   });
 
-  // ── Ambient floating dust ──
-  const dust = Array.from({ length: 20 }, (_, i) => ({
+  // ── Ambient dust ──
+  const dust = Array.from({ length: 16 }, (_, i) => ({
     x: (i * 137.508 + 15) % 100,
     y: (i * 61.803 + 8) % 100,
     size: 1 + (i % 2),
@@ -114,7 +112,7 @@ export const MainVideo: React.FC = () => {
 
   // ── Subtitle ──
   const subtitle = "COLLECTION";
-  const subStart = 405;
+  const subStart = 240;
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#000", opacity: globalFade }}>
@@ -122,12 +120,12 @@ export const MainVideo: React.FC = () => {
       {dust.map((d, i) => {
         const dOp = interpolate(
           frame,
-          [40 + i * 6, 80 + i * 6, 510, 560],
-          [0, 0.08, 0.12, 0],
+          [30 + i * 4, 60 + i * 4, 320, 355],
+          [0, 0.06, 0.1, 0],
           { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
         );
-        const dx = d.x + Math.sin(frame * 0.008 + i * 3) * 1.5;
-        const dy = ((d.y - frame * 0.02 * (0.3 + (i % 3) * 0.1)) % 100 + 100) % 100;
+        const dx = d.x + Math.sin(frame * 0.01 + i * 3) * 1.2;
+        const dy = ((d.y - frame * 0.025 * (0.3 + (i % 3) * 0.1)) % 100 + 100) % 100;
         return (
           <div
             key={`d${i}`}
@@ -145,67 +143,81 @@ export const MainVideo: React.FC = () => {
         );
       })}
 
-      {/* ── THE BEAM ── */}
-      {beamOpacity > 0.01 && (
+      {/* ── THE ARROW ── */}
+      {arrowOpacity > 0.01 && (
         <>
-          {/* Core bright line */}
+          {/* Arrow core — bright leading edge tapering back */}
           <div
             style={{
               position: "absolute",
-              left: beamProgress - beamLength,
+              left: arrowX - arrowLength,
               top: BEAM_Y - 1.5,
-              width: beamLength,
+              width: arrowLength,
               height: 3,
-              background: `linear-gradient(90deg, transparent 0%, rgba(255,255,255,${beamOpacity * 0.3}) 20%, rgba(255,255,255,${beamOpacity}) 80%, rgba(255,255,255,${beamOpacity}) 100%)`,
-              filter: "blur(0.5px)",
+              background: `linear-gradient(90deg, transparent 0%, rgba(255,255,255,${arrowOpacity * 0.15}) 30%, rgba(255,255,255,${arrowOpacity * 0.8}) 85%, rgba(255,255,255,${arrowOpacity}) 100%)`,
+              filter: "blur(0.3px)",
             }}
           />
-          {/* Warm glow around beam */}
+          {/* Warm golden aura */}
           <div
             style={{
               position: "absolute",
-              left: beamProgress - beamLength * 1.3,
-              top: BEAM_Y - 25,
-              width: beamLength * 1.6,
-              height: 50,
-              background: `linear-gradient(90deg, transparent 0%, rgba(255,220,160,${beamOpacity * 0.15}) 30%, rgba(255,240,200,${beamOpacity * 0.35}) 85%, rgba(255,255,255,${beamOpacity * 0.4}) 100%)`,
-              filter: "blur(12px)",
-            }}
-          />
-          {/* Cool chromatic fringe */}
-          <div
-            style={{
-              position: "absolute",
-              left: beamProgress - beamLength * 1.5,
-              top: BEAM_Y - 40,
-              width: beamLength * 1.8,
-              height: 80,
-              background: `linear-gradient(90deg, transparent 0%, rgba(120,160,255,${beamOpacity * 0.06}) 40%, rgba(180,200,255,${beamOpacity * 0.1}) 90%, transparent 100%)`,
-              filter: "blur(20px)",
-            }}
-          />
-          {/* Bright head point */}
-          <div
-            style={{
-              position: "absolute",
-              left: beamProgress - 20,
+              left: arrowX - arrowLength * 1.4,
               top: BEAM_Y - 20,
-              width: 40,
+              width: arrowLength * 1.8,
               height: 40,
-              borderRadius: "50%",
-              background: `radial-gradient(circle, rgba(255,255,255,${beamOpacity * 0.9}) 0%, rgba(255,245,220,${beamOpacity * 0.4}) 40%, transparent 70%)`,
-              filter: "blur(3px)",
+              background: `linear-gradient(90deg, transparent 0%, rgba(255,220,140,${arrowOpacity * 0.12}) 40%, rgba(255,240,180,${arrowOpacity * 0.35}) 90%, rgba(255,255,230,${arrowOpacity * 0.45}) 100%)`,
+              filter: "blur(10px)",
             }}
           />
-          {/* Vertical cross-flare at head */}
+          {/* Green-tinted glow (brand color) */}
           <div
             style={{
               position: "absolute",
-              left: beamProgress - 1,
-              top: BEAM_Y - 50,
+              left: arrowX - arrowLength * 1.6,
+              top: BEAM_Y - 35,
+              width: arrowLength * 2,
+              height: 70,
+              background: `linear-gradient(90deg, transparent 0%, rgba(74,124,89,${arrowOpacity * 0.08}) 50%, rgba(94,204,126,${arrowOpacity * 0.12}) 95%, transparent 100%)`,
+              filter: "blur(18px)",
+            }}
+          />
+          {/* Arrowhead point */}
+          <div
+            style={{
+              position: "absolute",
+              left: arrowX - 15,
+              top: BEAM_Y - 15,
+              width: 30,
+              height: 30,
+              borderRadius: "50%",
+              background: `radial-gradient(circle, rgba(255,255,255,${arrowOpacity * 0.95}) 0%, rgba(255,250,220,${arrowOpacity * 0.5}) 35%, transparent 70%)`,
+              filter: "blur(2px)",
+            }}
+          />
+          {/* Arrowhead chevron shape */}
+          <div
+            style={{
+              position: "absolute",
+              left: arrowX - 6,
+              top: BEAM_Y - 8,
+              width: 0,
+              height: 0,
+              borderTop: `8px solid transparent`,
+              borderBottom: `8px solid transparent`,
+              borderLeft: `14px solid rgba(255,255,255,${arrowOpacity * 0.7})`,
+              filter: "blur(1px)",
+            }}
+          />
+          {/* Vertical cross-flare */}
+          <div
+            style={{
+              position: "absolute",
+              left: arrowX - 1,
+              top: BEAM_Y - 40,
               width: 2,
-              height: 100,
-              background: `linear-gradient(180deg, transparent, rgba(255,255,255,${beamOpacity * 0.3}) 40%, rgba(255,255,255,${beamOpacity * 0.3}) 60%, transparent)`,
+              height: 80,
+              background: `linear-gradient(180deg, transparent, rgba(255,255,255,${arrowOpacity * 0.25}) 35%, rgba(255,255,255,${arrowOpacity * 0.25}) 65%, transparent)`,
               filter: "blur(2px)",
             }}
           />
@@ -225,98 +237,118 @@ export const MainVideo: React.FC = () => {
               width: p.size,
               height: p.size,
               borderRadius: "50%",
-              backgroundColor: "rgba(255,240,210,1)",
+              backgroundColor: "rgba(255,245,210,1)",
               opacity: p.opacity,
-              filter: `blur(${p.size > 1.5 ? 1 : 0}px)`,
+              filter: `blur(${p.size > 2 ? 1 : 0}px)`,
             }}
           />
         );
       })}
 
-      {/* ── LETTERS — deposited one by one ── */}
+      {/* ── LETTERS ── */}
       {TITLE.split("").map((letter, i) => {
         const depositFrame = LETTER_DEPOSIT_FRAMES[i];
         const localFrame = frame - depositFrame;
 
-        // Letter doesn't exist before deposit
-        if (localFrame < -5) return null;
+        if (localFrame < -3) return null;
 
-        // Initial flash (beam deposits letter)
+        // Deposit flash — brighter and more dramatic
         const flashIntensity = interpolate(
           localFrame,
-          [-5, 0, 8, 25],
-          [0, 1, 0.6, 0],
+          [-3, 0, 5, 18],
+          [0, 1, 0.7, 0],
           { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
         );
 
-        // Letter opacity: emerges from beam
+        // Letter spring — snappier
         const letterSpring = spring({
           frame: Math.max(0, localFrame),
           fps,
-          config: { damping: 35, stiffness: 50, mass: 1.8 },
+          config: { damping: 25, stiffness: 120, mass: 1.2 },
         });
 
-        // Start dark, transition to green during hero reveal
+        // Color transition: white flash → dim → bright green hero
         const heroPhase = interpolate(
           frame,
-          [340, 400],
+          [170, 220],
           [0, 1],
           { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
         );
 
-        const r = Math.round(25 + (74 - 25) * heroPhase);
-        const g = Math.round(28 + (124 - 28) * heroPhase);
-        const b = Math.round(25 + (89 - 25) * heroPhase);
+        // Start with a subtle warm tone, transition to vivid green
+        const initialR = 60, initialG = 65, initialB = 55;
+        const heroR = 94, heroG = 204, heroB = 126;
+        const r = Math.round(initialR + (heroR - initialR) * heroPhase);
+        const g = Math.round(initialG + (heroG - initialG) * heroPhase);
+        const b = Math.round(initialB + (heroB - initialB) * heroPhase);
 
-        // Subtle per-letter shimmer during hold
-        const shimmer = frame > 400
-          ? Math.sin(frame * 0.025 + i * 1.4) * 0.05 + 0.95
+        // Per-letter shimmer
+        const shimmer = frame > 230
+          ? Math.sin(frame * 0.03 + i * 1.5) * 0.04 + 0.96
           : 1;
 
-        const letterY = interpolate(letterSpring, [0, 1], [8, 0]);
+        const letterY = interpolate(letterSpring, [0, 1], [6, 0]);
         const letterOpacity = interpolate(letterSpring, [0, 1], [0, 1]) * shimmer;
 
-        // Hero glow per letter
+        // Hero glow — much stronger
         const heroGlow = interpolate(
           frame,
-          [350 + i * 5, 390 + i * 5, 440],
-          [0, 1, 0.5],
+          [175 + i * 4, 215 + i * 4, 270],
+          [0, 1, 0.65],
           { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
         );
 
         return (
           <div key={i} style={{ position: "absolute", left: LETTER_POSITIONS[i], top: BEAM_Y, transform: "translate(-50%, -50%)" }}>
-            {/* Deposit flash */}
+            {/* Deposit flash — green-white burst */}
             {flashIntensity > 0.01 && (
-              <div
-                style={{
-                  position: "absolute",
-                  left: "50%",
-                  top: "50%",
-                  width: 80,
-                  height: 80,
-                  marginLeft: -40,
-                  marginTop: -40,
-                  borderRadius: "50%",
-                  background: `radial-gradient(circle, rgba(255,255,255,${flashIntensity * 0.7}) 0%, rgba(255,240,200,${flashIntensity * 0.3}) 40%, transparent 70%)`,
-                  filter: "blur(8px)",
-                }}
-              />
+              <>
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    width: 100,
+                    height: 100,
+                    marginLeft: -50,
+                    marginTop: -50,
+                    borderRadius: "50%",
+                    background: `radial-gradient(circle, rgba(255,255,255,${flashIntensity * 0.85}) 0%, rgba(94,204,126,${flashIntensity * 0.4}) 35%, transparent 70%)`,
+                    filter: "blur(6px)",
+                  }}
+                />
+                {/* Vertical flash spike */}
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    width: 2,
+                    height: 60 * flashIntensity,
+                    marginLeft: -1,
+                    marginTop: -30 * flashIntensity,
+                    background: `linear-gradient(180deg, transparent, rgba(255,255,255,${flashIntensity * 0.5}), transparent)`,
+                    filter: "blur(1px)",
+                  }}
+                />
+              </>
             )}
             {/* The letter */}
             <span
               style={{
                 fontFamily,
-                fontSize: 140,
+                fontSize: 130,
                 fontWeight: 300,
-                letterSpacing: 8,
+                letterSpacing: 6,
                 color: `rgb(${r},${g},${b})`,
                 opacity: letterOpacity,
                 transform: `translateY(${letterY}px)`,
                 display: "inline-block",
                 textShadow: heroGlow > 0.01
-                  ? `0 0 ${30 * heroGlow}px rgba(74,124,89,${heroGlow * 0.5}), 0 0 ${60 * heroGlow}px rgba(74,124,89,${heroGlow * 0.25}), 0 0 ${100 * heroGlow}px rgba(74,124,89,${heroGlow * 0.1})`
-                  : "none",
+                  ? `0 0 ${25 * heroGlow}px rgba(94,204,126,${heroGlow * 0.7}), 0 0 ${55 * heroGlow}px rgba(74,124,89,${heroGlow * 0.4}), 0 0 ${90 * heroGlow}px rgba(74,124,89,${heroGlow * 0.15})`
+                  : flashIntensity > 0.01
+                    ? `0 0 ${20 * flashIntensity}px rgba(255,255,255,${flashIntensity * 0.6})`
+                    : "none",
               }}
             >
               {letter}
@@ -325,33 +357,48 @@ export const MainVideo: React.FC = () => {
         );
       })}
 
-      {/* ── Hero bloom (centered glow after full reveal) ── */}
+      {/* ── Hero bloom (full word glow) ── */}
       {heroBloom > 0.01 && (
         <>
+          {/* Wide green bloom behind title */}
           <div
             style={{
               position: "absolute",
               left: "50%",
               top: BEAM_Y,
-              width: 900,
-              height: 200,
-              marginLeft: -450,
-              marginTop: -100,
-              background: `radial-gradient(ellipse, rgba(74,124,89,${heroBloom * 0.25}) 0%, rgba(74,124,89,${heroBloom * 0.08}) 50%, transparent 80%)`,
-              filter: "blur(40px)",
+              width: 1000,
+              height: 250,
+              marginLeft: -500,
+              marginTop: -125,
+              background: `radial-gradient(ellipse, rgba(94,204,126,${heroBloom * 0.2}) 0%, rgba(74,124,89,${heroBloom * 0.1}) 45%, transparent 75%)`,
+              filter: "blur(45px)",
             }}
           />
-          {/* Subtle horizontal light sweep during hero reveal */}
+          {/* Bright center line sweep */}
           <div
             style={{
               position: "absolute",
               left: "50%",
               top: BEAM_Y - 1,
-              width: interpolate(frame, [345, 395], [0, 700], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+              width: interpolate(frame, [175, 215], [0, 800], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
               height: 2,
-              marginLeft: -350,
-              background: `linear-gradient(90deg, transparent, rgba(255,255,255,${heroBloom * 0.15}), transparent)`,
+              marginLeft: -400,
+              background: `linear-gradient(90deg, transparent, rgba(94,204,126,${heroBloom * 0.25}), rgba(255,255,255,${heroBloom * 0.15}), rgba(94,204,126,${heroBloom * 0.25}), transparent)`,
               filter: "blur(1px)",
+            }}
+          />
+          {/* Ambient green haze */}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: BEAM_Y,
+              width: 600,
+              height: 400,
+              marginLeft: -300,
+              marginTop: -200,
+              background: `radial-gradient(ellipse, rgba(74,124,89,${heroBloom * 0.06}) 0%, transparent 70%)`,
+              filter: "blur(60px)",
             }}
           />
         </>
@@ -360,14 +407,14 @@ export const MainVideo: React.FC = () => {
       {/* ── Divider line ── */}
       {(() => {
         const lineSpring = spring({
-          frame: frame - 395,
+          frame: frame - 232,
           fps,
           config: { damping: 200 },
         });
         const lineOp = interpolate(
           frame,
-          [393, 405, 515, 560],
-          [0, 0.4, 0.4, 0],
+          [230, 242, 325, 355],
+          [0, 0.45, 0.45, 0],
           { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
         );
         return (
@@ -375,11 +422,11 @@ export const MainVideo: React.FC = () => {
             style={{
               position: "absolute",
               left: "50%",
-              top: BEAM_Y + 85,
+              top: BEAM_Y + 80,
               transform: "translateX(-50%)",
-              width: 200 * lineSpring,
+              width: 180 * lineSpring,
               height: 1,
-              background: `linear-gradient(90deg, transparent, ${GREEN_LIGHT}, transparent)`,
+              background: `linear-gradient(90deg, transparent, ${GREEN_BRIGHT}, transparent)`,
               opacity: lineOp,
             }}
           />
@@ -391,36 +438,36 @@ export const MainVideo: React.FC = () => {
         style={{
           position: "absolute",
           left: "50%",
-          top: BEAM_Y + 110,
+          top: BEAM_Y + 105,
           transform: "translate(-50%, 0)",
           display: "flex",
-          gap: 3,
+          gap: 2,
         }}
       >
         {subtitle.split("").map((letter, i) => {
-          const lDelay = subStart + i * 4;
+          const lDelay = subStart + i * 3;
           const lSpring = spring({
             frame: frame - lDelay,
             fps,
-            config: { damping: 30, stiffness: 80 },
+            config: { damping: 28, stiffness: 90 },
           });
           const lOp = interpolate(lSpring, [0, 1], [0, 1]) *
-            interpolate(frame, [515, 560], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-          const lY = interpolate(lSpring, [0, 1], [10, 0]);
+            interpolate(frame, [325, 355], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+          const lY = interpolate(lSpring, [0, 1], [8, 0]);
 
           return (
             <span
               key={i}
               style={{
                 fontFamily,
-                fontSize: 28,
+                fontSize: 26,
                 fontWeight: 400,
-                letterSpacing: 16,
+                letterSpacing: 14,
                 color: GREEN_LIGHT,
                 opacity: lOp,
                 transform: `translateY(${lY}px)`,
                 display: "inline-block",
-                textShadow: `0 0 15px rgba(74,124,89,0.2)`,
+                textShadow: `0 0 12px rgba(94,204,126,0.25)`,
               }}
             >
               {letter}
