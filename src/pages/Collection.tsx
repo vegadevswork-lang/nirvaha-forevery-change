@@ -30,12 +30,7 @@ const typeColor: Record<string, string> = {
 const Collection = () => {
   const navigate = useNavigate();
   const isLoading = usePageLoading(800);
-  const [showIntro, setShowIntro] = useState(() => {
-    const key = "nirvaha-collection-intro-seen";
-    if (sessionStorage.getItem(key)) return false;
-    sessionStorage.setItem(key, "1");
-    return true;
-  });
+  const showIntro = false;
   const [activeNav, setActiveNav] = useState("Home");
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchOpen, setSearchOpen] = useState(false);
@@ -54,9 +49,6 @@ const Collection = () => {
     return () => clearInterval(timer);
   }, [nextSlide]);
 
-  if (showIntro) {
-    return <NirvahaIntro onComplete={() => setShowIntro(false)} />;
-  }
 
   const hero = heroSlides[heroIndex];
 
