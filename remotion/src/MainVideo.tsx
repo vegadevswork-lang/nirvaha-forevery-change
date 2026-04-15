@@ -8,386 +8,366 @@ import {
 import { loadFont } from "@remotion/google-fonts/Cormorant";
 
 const { fontFamily } = loadFont("normal", {
-  weights: ["300", "400", "600"],
+  weights: ["300", "400"],
   subsets: ["latin"],
 });
 
-const BRAND_GREEN = "#4a7c59";
-const BRAND_GREEN_LIGHT = "#6ba37a";
+const GREEN = "#4a7c59";
+const GREEN_LIGHT = "#6ba37a";
 
 /*
- * Animation timeline (18s @ 30fps = 540 frames):
+ * Timeline (19s @ 30fps = 570 frames):
  *
- * Phase 1 (0–90):    Ambient darkness, first light streak sweeps left→right
- * Phase 2 (90–210):  Multiple light beams sweep & trace, building energy
- * Phase 3 (210–300): Light converges to center, flare blooms, letters emerge dark
- * Phase 4 (300–380): Letters reveal with brand green color + glow
- * Phase 5 (380–440): Divider line + "COLLECTION" subtitle appears
- * Phase 6 (440–540): Hold with gentle shimmer, elegant fade to black
+ * 0–60:    Black. A single soft beam fades in from left edge.
+ * 60–120:  Beam sweeps rightward across the frame (slow, elegant).
+ * 120–150: Beam reaches first letter position, slows, deposits "N".
+ * 150–180: Beam continues, deposits "I".
+ * 180–210: Beam deposits "R".
+ * 210–240: Beam deposits "V".
+ * 240–270: Beam deposits "A".
+ * 270–300: Beam deposits "H".
+ * 300–330: Beam deposits final "A", beam fades out.
+ * 330–400: All letters glow brighter — hero reveal bloom.
+ * 400–440: "COLLECTION" subtitle + divider appear.
+ * 440–520: Hold with gentle shimmer.
+ * 520–570: Elegant fade to black.
  */
 
-/* ── Light streak component ─────────────────────────────────── */
-const LightStreak = ({
-  frame,
-  startFrame,
-  duration,
-  startX,
-  startY,
-  endX,
-  endY,
-  width: w,
-  warmth = 0.5,
-}: {
-  frame: number;
-  startFrame: number;
-  duration: number;
-  startX: number;
-  startY: number;
-  endX: number;
-  endY: number;
-  width: number;
-  warmth?: number;
-}) => {
-  const localFrame = frame - startFrame;
-  if (localFrame < -10 || localFrame > duration + 30) return null;
+const TITLE = "NIRVAHA";
 
-  const progress = interpolate(localFrame, [0, duration], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
+// Letter x-positions (centered around 960)
+const LETTER_SPACING = 110;
+const TITLE_WIDTH = (TITLE.length - 1) * LETTER_SPACING;
+const TITLE_START_X = 960 - TITLE_WIDTH / 2;
+const LETTER_POSITIONS = TITLE.split("").map((_, i) => TITLE_START_X + i * LETTER_SPACING);
 
-  const fadeIn = interpolate(localFrame, [0, 8], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const fadeOut = interpolate(localFrame, [duration - 15, duration + 20], [1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
+// Each letter deposits at these frames
+const DEPOSIT_START = 120;
+const DEPOSIT_GAP = 28; // frames between each letter deposit
+const LETTER_DEPOSIT_FRAMES = TITLE.split("").map((_, i) => DEPOSIT_START + i * DEPOSIT_GAP);
 
-  const cx = startX + (endX - startX) * progress;
-  const cy = startY + (endY - startY) * progress;
+const BEAM_Y = 475; // vertical center for beam
 
-  const angle = Math.atan2(endY - startY, endX - startX) * (180 / Math.PI);
-  const opacity = fadeIn * fadeOut;
-
-  // Chromatic aberration colors
-  const warmColor = `rgba(255, ${180 + warmth * 75}, ${100 + warmth * 50}, ${opacity * 0.9})`;
-  const coolColor = `rgba(${150 - warmth * 50}, ${180 + warmth * 30}, 255, ${opacity * 0.4})`;
-
-  return (
-    <>
-      {/* Main bright core */}
-      <div
-        style={{
-          position: "absolute",
-          left: cx - w * 2,
-          top: cy - 2,
-          width: w * 4,
-          height: 4,
-          background: `linear-gradient(90deg, transparent 0%, rgba(255,255,255,${opacity}) 30%, rgba(255,255,255,${opacity}) 70%, transparent 100%)`,
-          transform: `rotate(${angle}deg)`,
-          transformOrigin: "center center",
-          filter: "blur(1px)",
-        }}
-      />
-      {/* Warm glow */}
-      <div
-        style={{
-          position: "absolute",
-          left: cx - w * 3,
-          top: cy - 20,
-          width: w * 6,
-          height: 40,
-          background: `radial-gradient(ellipse, ${warmColor} 0%, transparent 70%)`,
-          transform: `rotate(${angle}deg)`,
-          transformOrigin: "center center",
-          filter: "blur(8px)",
-        }}
-      />
-      {/* Cool chromatic edge */}
-      <div
-        style={{
-          position: "absolute",
-          left: cx - w * 2.5,
-          top: cy - 30,
-          width: w * 5,
-          height: 60,
-          background: `radial-gradient(ellipse, ${coolColor} 0%, transparent 60%)`,
-          transform: `rotate(${angle + 2}deg)`,
-          transformOrigin: "center center",
-          filter: "blur(15px)",
-        }}
-      />
-      {/* Bright head flare */}
-      <div
-        style={{
-          position: "absolute",
-          left: cx - 30,
-          top: cy - 30,
-          width: 60,
-          height: 60,
-          borderRadius: "50%",
-          background: `radial-gradient(circle, rgba(255,255,255,${opacity * 0.8}) 0%, rgba(255,245,220,${opacity * 0.3}) 40%, transparent 70%)`,
-          filter: "blur(4px)",
-        }}
-      />
-    </>
-  );
-};
-
-/* ── Central flare bloom ────────────────────────────────────── */
-const CenterFlare = ({ frame }: { frame: number }) => {
-  const opacity = interpolate(
-    frame,
-    [200, 260, 310, 350],
-    [0, 0.9, 0.6, 0],
-    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-  );
-  const scale = interpolate(frame, [200, 280], [0.3, 1.5], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
-  if (opacity <= 0) return null;
-
-  return (
-    <>
-      {/* Core white flash */}
-      <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          top: "46%",
-          width: 400,
-          height: 8,
-          marginLeft: -200,
-          marginTop: -4,
-          background: `linear-gradient(90deg, transparent, rgba(255,255,255,${opacity}) 30%, rgba(255,255,255,${opacity}) 70%, transparent)`,
-          transform: `scaleX(${scale})`,
-          filter: "blur(2px)",
-        }}
-      />
-      {/* Vertical cross flare */}
-      <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          top: "46%",
-          width: 4,
-          height: 200,
-          marginLeft: -2,
-          marginTop: -100,
-          background: `linear-gradient(180deg, transparent, rgba(255,255,255,${opacity * 0.5}) 30%, rgba(255,255,255,${opacity * 0.5}) 70%, transparent)`,
-          transform: `scaleY(${scale * 0.6})`,
-          filter: "blur(3px)",
-        }}
-      />
-      {/* Warm bloom */}
-      <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          top: "46%",
-          width: 600,
-          height: 300,
-          marginLeft: -300,
-          marginTop: -150,
-          borderRadius: "50%",
-          background: `radial-gradient(ellipse, rgba(255,220,160,${opacity * 0.3}) 0%, rgba(255,200,100,${opacity * 0.1}) 40%, transparent 70%)`,
-          transform: `scale(${scale})`,
-          filter: "blur(30px)",
-        }}
-      />
-    </>
-  );
-};
-
-/* ── Main composition ───────────────────────────────────────── */
 export const MainVideo: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // ── Light streaks timeline ──
-  const streaks = [
-    // Phase 1: Initial sweep from left
-    { start: 15, dur: 50, x1: -200, y1: 520, x2: 2100, y2: 480, w: 180, warmth: 0.7 },
-    // Phase 2: Multiple crossing beams
-    { start: 70, dur: 45, x1: 2100, y1: 300, x2: -200, y2: 550, w: 150, warmth: 0.3 },
-    { start: 100, dur: 55, x1: -200, y1: 400, x2: 1200, y2: 380, w: 200, warmth: 0.6 },
-    { start: 120, dur: 40, x1: 1800, y1: 200, x2: 400, y2: 600, w: 120, warmth: 0.4 },
-    { start: 145, dur: 50, x1: -100, y1: 600, x2: 2000, y2: 350, w: 160, warmth: 0.8 },
-    // Phase 2b: Tighter beams converging to center area
-    { start: 170, dur: 45, x1: 2100, y1: 500, x2: 700, y2: 460, w: 140, warmth: 0.5 },
-    { start: 185, dur: 50, x1: -200, y1: 350, x2: 1300, y2: 470, w: 170, warmth: 0.6 },
-    { start: 200, dur: 40, x1: 960, y1: -50, x2: 960, y2: 550, w: 100, warmth: 0.9 },
-    // Phase 3: Final convergence to center
-    { start: 220, dur: 35, x1: -100, y1: 490, x2: 960, y2: 490, w: 200, warmth: 0.7 },
-    { start: 230, dur: 35, x1: 2020, y1: 490, x2: 960, y2: 490, w: 200, warmth: 0.7 },
-  ];
+  // ── Beam position along X axis ──
+  // Beam enters from -200 and travels to each letter position, pausing briefly at each
+  const beamProgress = interpolate(
+    frame,
+    [20, 60, ...LETTER_DEPOSIT_FRAMES, LETTER_DEPOSIT_FRAMES[6] + 25],
+    [-200, -100, ...LETTER_POSITIONS, LETTER_POSITIONS[6] + 200],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+  );
 
-  // ── Title: NIRVAHA ──
-  const title = "NIRVAHA";
-  const titleRevealStart = 290;
+  // Beam visibility
+  const beamOpacity = interpolate(
+    frame,
+    [10, 40, LETTER_DEPOSIT_FRAMES[6], LETTER_DEPOSIT_FRAMES[6] + 35],
+    [0, 1, 1, 0],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+  );
 
-  // ── Subtitle: COLLECTION ──
-  const subtitle = "COLLECTION";
-  const subRevealStart = 400;
+  // Beam length varies — shorter when depositing, longer when traveling
+  const isDepositing = LETTER_DEPOSIT_FRAMES.some(
+    (f) => frame >= f - 5 && frame <= f + 15
+  );
+  const beamLength = isDepositing ? 120 : 280;
 
-  // ── Global fade out ──
-  const globalFade = interpolate(frame, [490, 540], [1, 0], {
+  // ── Hero reveal bloom (after all letters deposited) ──
+  const heroBloom = interpolate(
+    frame,
+    [340, 390, 430, 520, 560],
+    [0, 0.6, 0.35, 0.35, 0],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+  );
+
+  // ── Global fade ──
+  const globalFade = interpolate(frame, [520, 570], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  // ── Ambient particles (very subtle floating dust) ──
-  const dustParticles = Array.from({ length: 25 }, (_, i) => ({
-    x: (i * 137.508 + 20) % 100,
-    y: (i * 61.803 + 10) % 100,
+  // ── Particles trailing the beam ──
+  const trailParticles = Array.from({ length: 30 }, (_, i) => {
+    const age = (frame - 30 - i * 4) * 0.8;
+    if (age < 0 || age > 60) return null;
+    const trailX = interpolate(
+      frame - i * 4,
+      [20, 60, ...LETTER_DEPOSIT_FRAMES, LETTER_DEPOSIT_FRAMES[6] + 25],
+      [-200, -100, ...LETTER_POSITIONS, LETTER_POSITIONS[6] + 200],
+      { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+    );
+    const drift = Math.sin(i * 2.1 + frame * 0.05) * (15 + i * 0.8);
+    const particleOpacity = interpolate(age, [0, 5, 40, 60], [0, 0.5, 0.2, 0]);
+    const size = interpolate(age, [0, 60], [2.5, 0.5]);
+    return { x: trailX - i * 8, y: BEAM_Y + drift, opacity: particleOpacity * beamOpacity, size };
+  });
+
+  // ── Ambient floating dust ──
+  const dust = Array.from({ length: 20 }, (_, i) => ({
+    x: (i * 137.508 + 15) % 100,
+    y: (i * 61.803 + 8) % 100,
     size: 1 + (i % 2),
-    speed: 0.2 + (i % 4) * 0.1,
   }));
 
-  return (
-    <AbsoluteFill style={{ backgroundColor: "#000000", opacity: globalFade }}>
-      {/* Very subtle ambient gradient — barely visible */}
-      <AbsoluteFill
-        style={{
-          background: `radial-gradient(ellipse 60% 40% at 50% 50%, rgba(15,15,15,1) 0%, rgba(0,0,0,1) 100%)`,
-        }}
-      />
+  // ── Subtitle ──
+  const subtitle = "COLLECTION";
+  const subStart = 405;
 
-      {/* Ambient dust particles */}
-      {dustParticles.map((p, i) => {
-        const pOpacity = interpolate(
+  return (
+    <AbsoluteFill style={{ backgroundColor: "#000", opacity: globalFade }}>
+      {/* Ambient dust */}
+      {dust.map((d, i) => {
+        const dOp = interpolate(
           frame,
-          [60 + i * 5, 90 + i * 5, 480, 530],
-          [0, 0.15, 0.2, 0],
+          [40 + i * 6, 80 + i * 6, 510, 560],
+          [0, 0.08, 0.12, 0],
           { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
         );
-        const px = p.x + Math.sin(frame * 0.01 + i * 2) * 2;
-        const py = p.y - frame * p.speed * 0.05;
-        const wpy = ((py % 100) + 100) % 100;
+        const dx = d.x + Math.sin(frame * 0.008 + i * 3) * 1.5;
+        const dy = ((d.y - frame * 0.02 * (0.3 + (i % 3) * 0.1)) % 100 + 100) % 100;
         return (
           <div
-            key={i}
+            key={`d${i}`}
             style={{
               position: "absolute",
-              left: `${px}%`,
-              top: `${wpy}%`,
-              width: p.size,
-              height: p.size,
+              left: `${dx}%`,
+              top: `${dy}%`,
+              width: d.size,
+              height: d.size,
               borderRadius: "50%",
-              backgroundColor: "rgba(255,255,255,1)",
-              opacity: pOpacity,
+              backgroundColor: "#fff",
+              opacity: dOp,
             }}
           />
         );
       })}
 
-      {/* Light streaks */}
-      {streaks.map((s, i) => (
-        <LightStreak
-          key={i}
-          frame={frame}
-          startFrame={s.start}
-          duration={s.dur}
-          startX={s.x1}
-          startY={s.y1}
-          endX={s.x2}
-          endY={s.y2}
-          width={s.w}
-          warmth={s.warmth}
-        />
-      ))}
+      {/* ── THE BEAM ── */}
+      {beamOpacity > 0.01 && (
+        <>
+          {/* Core bright line */}
+          <div
+            style={{
+              position: "absolute",
+              left: beamProgress - beamLength,
+              top: BEAM_Y - 1.5,
+              width: beamLength,
+              height: 3,
+              background: `linear-gradient(90deg, transparent 0%, rgba(255,255,255,${beamOpacity * 0.3}) 20%, rgba(255,255,255,${beamOpacity}) 80%, rgba(255,255,255,${beamOpacity}) 100%)`,
+              filter: "blur(0.5px)",
+            }}
+          />
+          {/* Warm glow around beam */}
+          <div
+            style={{
+              position: "absolute",
+              left: beamProgress - beamLength * 1.3,
+              top: BEAM_Y - 25,
+              width: beamLength * 1.6,
+              height: 50,
+              background: `linear-gradient(90deg, transparent 0%, rgba(255,220,160,${beamOpacity * 0.15}) 30%, rgba(255,240,200,${beamOpacity * 0.35}) 85%, rgba(255,255,255,${beamOpacity * 0.4}) 100%)`,
+              filter: "blur(12px)",
+            }}
+          />
+          {/* Cool chromatic fringe */}
+          <div
+            style={{
+              position: "absolute",
+              left: beamProgress - beamLength * 1.5,
+              top: BEAM_Y - 40,
+              width: beamLength * 1.8,
+              height: 80,
+              background: `linear-gradient(90deg, transparent 0%, rgba(120,160,255,${beamOpacity * 0.06}) 40%, rgba(180,200,255,${beamOpacity * 0.1}) 90%, transparent 100%)`,
+              filter: "blur(20px)",
+            }}
+          />
+          {/* Bright head point */}
+          <div
+            style={{
+              position: "absolute",
+              left: beamProgress - 20,
+              top: BEAM_Y - 20,
+              width: 40,
+              height: 40,
+              borderRadius: "50%",
+              background: `radial-gradient(circle, rgba(255,255,255,${beamOpacity * 0.9}) 0%, rgba(255,245,220,${beamOpacity * 0.4}) 40%, transparent 70%)`,
+              filter: "blur(3px)",
+            }}
+          />
+          {/* Vertical cross-flare at head */}
+          <div
+            style={{
+              position: "absolute",
+              left: beamProgress - 1,
+              top: BEAM_Y - 50,
+              width: 2,
+              height: 100,
+              background: `linear-gradient(180deg, transparent, rgba(255,255,255,${beamOpacity * 0.3}) 40%, rgba(255,255,255,${beamOpacity * 0.3}) 60%, transparent)`,
+              filter: "blur(2px)",
+            }}
+          />
+        </>
+      )}
 
-      {/* Center flare bloom */}
-      <CenterFlare frame={frame} />
+      {/* ── Trail particles ── */}
+      {trailParticles.map((p, i) => {
+        if (!p) return null;
+        return (
+          <div
+            key={`tp${i}`}
+            style={{
+              position: "absolute",
+              left: p.x,
+              top: p.y,
+              width: p.size,
+              height: p.size,
+              borderRadius: "50%",
+              backgroundColor: "rgba(255,240,210,1)",
+              opacity: p.opacity,
+              filter: `blur(${p.size > 1.5 ? 1 : 0}px)`,
+            }}
+          />
+        );
+      })}
 
-      {/* ── NIRVAHA title — per-letter reveal ── */}
-      <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          top: "44%",
-          transform: "translate(-50%, -50%)",
-          display: "flex",
-          gap: 20,
-        }}
-      >
-        {title.split("").map((letter, i) => {
-          const letterDelay = titleRevealStart + i * 10;
+      {/* ── LETTERS — deposited one by one ── */}
+      {TITLE.split("").map((letter, i) => {
+        const depositFrame = LETTER_DEPOSIT_FRAMES[i];
+        const localFrame = frame - depositFrame;
 
-          // Dark silhouette phase (appears first)
-          const darkReveal = interpolate(
-            frame,
-            [letterDelay - 20, letterDelay],
-            [0, 1],
-            { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-          );
+        // Letter doesn't exist before deposit
+        if (localFrame < -5) return null;
 
-          // Color fill phase
-          const colorSpring = spring({
-            frame: frame - letterDelay,
-            fps,
-            config: { damping: 25, stiffness: 60, mass: 1.5 },
-          });
+        // Initial flash (beam deposits letter)
+        const flashIntensity = interpolate(
+          localFrame,
+          [-5, 0, 8, 25],
+          [0, 1, 0.6, 0],
+          { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+        );
 
-          // Glow intensity
-          const glowIntensity = interpolate(
-            frame,
-            [letterDelay, letterDelay + 20, letterDelay + 60],
-            [0, 1, 0.4],
-            { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-          );
+        // Letter opacity: emerges from beam
+        const letterSpring = spring({
+          frame: Math.max(0, localFrame),
+          fps,
+          config: { damping: 35, stiffness: 50, mass: 1.8 },
+        });
 
-          const letterY = interpolate(colorSpring, [0, 1], [20, 0]);
-          const letterScale = interpolate(colorSpring, [0, 1], [0.95, 1]);
+        // Start dark, transition to green during hero reveal
+        const heroPhase = interpolate(
+          frame,
+          [340, 400],
+          [0, 1],
+          { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+        );
 
-          // Subtle shimmer
-          const shimmer = Math.sin(frame * 0.03 + i * 1.2) * 0.06 + 0.94;
+        const r = Math.round(25 + (74 - 25) * heroPhase);
+        const g = Math.round(28 + (124 - 28) * heroPhase);
+        const b = Math.round(25 + (89 - 25) * heroPhase);
 
-          // Color transition: dark → green
-          const colorMix = interpolate(colorSpring, [0, 1], [0, 1]);
-          const r = Math.round(30 + (74 - 30) * colorMix);
-          const g = Math.round(30 + (124 - 30) * colorMix);
-          const b = Math.round(30 + (89 - 30) * colorMix);
+        // Subtle per-letter shimmer during hold
+        const shimmer = frame > 400
+          ? Math.sin(frame * 0.025 + i * 1.4) * 0.05 + 0.95
+          : 1;
 
-          return (
+        const letterY = interpolate(letterSpring, [0, 1], [8, 0]);
+        const letterOpacity = interpolate(letterSpring, [0, 1], [0, 1]) * shimmer;
+
+        // Hero glow per letter
+        const heroGlow = interpolate(
+          frame,
+          [350 + i * 5, 390 + i * 5, 440],
+          [0, 1, 0.5],
+          { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+        );
+
+        return (
+          <div key={i} style={{ position: "absolute", left: LETTER_POSITIONS[i], top: BEAM_Y, transform: "translate(-50%, -50%)" }}>
+            {/* Deposit flash */}
+            {flashIntensity > 0.01 && (
+              <div
+                style={{
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  width: 80,
+                  height: 80,
+                  marginLeft: -40,
+                  marginTop: -40,
+                  borderRadius: "50%",
+                  background: `radial-gradient(circle, rgba(255,255,255,${flashIntensity * 0.7}) 0%, rgba(255,240,200,${flashIntensity * 0.3}) 40%, transparent 70%)`,
+                  filter: "blur(8px)",
+                }}
+              />
+            )}
+            {/* The letter */}
             <span
-              key={i}
               style={{
                 fontFamily,
                 fontSize: 140,
                 fontWeight: 300,
-                letterSpacing: 12,
+                letterSpacing: 8,
                 color: `rgb(${r},${g},${b})`,
-                opacity: darkReveal * shimmer,
-                transform: `translateY(${letterY}px) scale(${letterScale})`,
-                textShadow:
-                  glowIntensity > 0.01
-                    ? `0 0 ${40 * glowIntensity}px rgba(255,255,255,${glowIntensity * 0.5}), 0 0 ${80 * glowIntensity}px rgba(74,124,89,${glowIntensity * 0.4}), 0 0 ${120 * glowIntensity}px rgba(74,124,89,${glowIntensity * 0.2})`
-                    : "none",
+                opacity: letterOpacity,
+                transform: `translateY(${letterY}px)`,
                 display: "inline-block",
+                textShadow: heroGlow > 0.01
+                  ? `0 0 ${30 * heroGlow}px rgba(74,124,89,${heroGlow * 0.5}), 0 0 ${60 * heroGlow}px rgba(74,124,89,${heroGlow * 0.25}), 0 0 ${100 * heroGlow}px rgba(74,124,89,${heroGlow * 0.1})`
+                  : "none",
               }}
             >
               {letter}
             </span>
-          );
-        })}
-      </div>
+          </div>
+        );
+      })}
 
-      {/* ── Horizontal divider ── */}
+      {/* ── Hero bloom (centered glow after full reveal) ── */}
+      {heroBloom > 0.01 && (
+        <>
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: BEAM_Y,
+              width: 900,
+              height: 200,
+              marginLeft: -450,
+              marginTop: -100,
+              background: `radial-gradient(ellipse, rgba(74,124,89,${heroBloom * 0.25}) 0%, rgba(74,124,89,${heroBloom * 0.08}) 50%, transparent 80%)`,
+              filter: "blur(40px)",
+            }}
+          />
+          {/* Subtle horizontal light sweep during hero reveal */}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: BEAM_Y - 1,
+              width: interpolate(frame, [345, 395], [0, 700], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+              height: 2,
+              marginLeft: -350,
+              background: `linear-gradient(90deg, transparent, rgba(255,255,255,${heroBloom * 0.15}), transparent)`,
+              filter: "blur(1px)",
+            }}
+          />
+        </>
+      )}
+
+      {/* ── Divider line ── */}
       {(() => {
         const lineSpring = spring({
-          frame: frame - (subRevealStart - 15),
+          frame: frame - 395,
           fps,
           config: { damping: 200 },
         });
-        const lineOpacity = interpolate(
+        const lineOp = interpolate(
           frame,
-          [subRevealStart - 15, subRevealStart, 490, 530],
-          [0, 0.5, 0.5, 0],
+          [393, 405, 515, 560],
+          [0, 0.4, 0.4, 0],
           { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
         );
         return (
@@ -395,12 +375,12 @@ export const MainVideo: React.FC = () => {
             style={{
               position: "absolute",
               left: "50%",
-              top: "52.5%",
+              top: BEAM_Y + 85,
               transform: "translateX(-50%)",
-              width: 240 * lineSpring,
+              width: 200 * lineSpring,
               height: 1,
-              background: `linear-gradient(90deg, transparent, ${BRAND_GREEN_LIGHT}, transparent)`,
-              opacity: lineOpacity,
+              background: `linear-gradient(90deg, transparent, ${GREEN_LIGHT}, transparent)`,
+              opacity: lineOp,
             }}
           />
         );
@@ -411,35 +391,36 @@ export const MainVideo: React.FC = () => {
         style={{
           position: "absolute",
           left: "50%",
-          top: "56%",
+          top: BEAM_Y + 110,
           transform: "translate(-50%, 0)",
           display: "flex",
-          gap: 4,
+          gap: 3,
         }}
       >
         {subtitle.split("").map((letter, i) => {
-          const lDelay = subRevealStart + i * 5;
+          const lDelay = subStart + i * 4;
           const lSpring = spring({
             frame: frame - lDelay,
             fps,
             config: { damping: 30, stiffness: 80 },
           });
-          const lOpacity = interpolate(lSpring, [0, 1], [0, 1]);
-          const lY = interpolate(lSpring, [0, 1], [12, 0]);
+          const lOp = interpolate(lSpring, [0, 1], [0, 1]) *
+            interpolate(frame, [515, 560], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+          const lY = interpolate(lSpring, [0, 1], [10, 0]);
 
           return (
             <span
               key={i}
               style={{
                 fontFamily,
-                fontSize: 30,
+                fontSize: 28,
                 fontWeight: 400,
-                letterSpacing: 18,
-                color: BRAND_GREEN_LIGHT,
-                opacity: lOpacity,
+                letterSpacing: 16,
+                color: GREEN_LIGHT,
+                opacity: lOp,
                 transform: `translateY(${lY}px)`,
-                textShadow: `0 0 20px rgba(74,124,89,0.3)`,
                 display: "inline-block",
+                textShadow: `0 0 15px rgba(74,124,89,0.2)`,
               }}
             >
               {letter}
@@ -448,7 +429,7 @@ export const MainVideo: React.FC = () => {
         })}
       </div>
 
-      {/* ── Subtle vignette ── */}
+      {/* ── Vignette ── */}
       <AbsoluteFill
         style={{
           background:
