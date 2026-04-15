@@ -35,10 +35,6 @@ const Collection = () => {
     return !sessionStorage.getItem("nirvaha-collection-intro-seen");
   });
 
-  const handleIntroEnd = useCallback(() => {
-    sessionStorage.setItem("nirvaha-collection-intro-seen", "1");
-    setShowIntro(false);
-  }, []);
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
