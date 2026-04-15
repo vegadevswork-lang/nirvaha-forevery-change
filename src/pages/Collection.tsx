@@ -87,13 +87,19 @@ const Collection = () => {
     }))
     .filter((row) => row.items.length > 0);
 
-  if (isLoading && !showIntro) return <CollectionSkeleton />;
-
-  const showSearchResults = searchQuery.length > 0;
-
   const [fadingOut, setFadingOut] = useState(false);
 
   const triggerFadeOut = useCallback(() => {
+    setFadingOut(true);
+    setTimeout(() => {
+      sessionStorage.setItem("nirvaha-collection-intro-seen", "1");
+      setShowIntro(false);
+    }, 800);
+  }, []);
+
+  if (isLoading && !showIntro) return <CollectionSkeleton />;
+
+  const showSearchResults = searchQuery.length > 0;
     setFadingOut(true);
     setTimeout(() => {
       sessionStorage.setItem("nirvaha-collection-intro-seen", "1");
