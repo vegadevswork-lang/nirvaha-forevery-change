@@ -87,9 +87,38 @@ const Collection = () => {
     }))
     .filter((row) => row.items.length > 0);
 
-  if (isLoading) return <CollectionSkeleton />;
+  if (isLoading && !showIntro) return <CollectionSkeleton />;
 
   const showSearchResults = searchQuery.length > 0;
+
+  if (showIntro) {
+    return (
+      <AnimatePresence>
+        <motion.div
+          key="collection-intro"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.6 }}
+          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+        >
+          <video
+            autoPlay
+            muted
+            playsInline
+            onEnded={handleIntroEnd}
+            className="absolute inset-0 w-full h-full object-contain bg-black"
+            src="/videos/nirvaha-collection-intro.mp4"
+          />
+          <button
+            onClick={handleIntroEnd}
+            className="absolute bottom-10 right-6 font-body text-xs tracking-wider text-white/40 hover:text-white/70 transition-colors uppercase z-20"
+          >
+            Skip
+          </button>
+        </motion.div>
+      </AnimatePresence>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
