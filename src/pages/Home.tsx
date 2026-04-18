@@ -5,14 +5,8 @@ import { useNavigate } from "react-router-dom";
 import SparkleEffect from "@/components/onboarding/SparkleEffect";
 import EmotionChips from "@/components/home/EmotionChips";
 import AiHeroCard from "@/components/home/AiHeroCard";
-import SmartActions from "@/components/home/SmartActions";
-import WellnessStats from "@/components/home/WellnessStats";
-import WisdomSelfieCard from "@/components/home/WisdomSelfieCard";
-import JournalCard from "@/components/home/JournalCard";
-import CompanionCard from "@/components/home/CompanionCard";
-import CollectionCard from "@/components/home/CollectionCard";
-import CommunityCard from "@/components/home/CommunityCard";
-import SoundHealingCard from "@/components/home/SoundHealingCard";
+import FeatureTiles from "@/components/home/FeatureTiles";
+import QuietActions from "@/components/home/QuietActions";
 import BottomNav from "@/components/home/BottomNav";
 import { useMoodLog } from "@/hooks/use-mood-log";
 import { usePageLoading } from "@/hooks/use-page-loading";
@@ -47,31 +41,31 @@ const Home = () => {
     >
       <SparkleEffect origin={sparkleOrigin} trigger={sparkleTrigger} />
 
-      {/* Ambient background orbs */}
+      {/* Single soft ambient orb — calmer background */}
       <div
         className="ambient-orb animate-pulse-soft"
-        style={{ width: 280, height: 280, top: "3%", right: "-8%", background: "hsl(var(--healing-green))" }}
+        style={{ width: 320, height: 320, top: "-6%", right: "-12%", background: "hsl(var(--healing-green))", opacity: 0.5 }}
       />
       <div
         className="ambient-orb animate-pulse-soft"
-        style={{ width: 220, height: 220, bottom: "25%", left: "-8%", background: "hsl(var(--gold))", animationDelay: "2s" }}
+        style={{ width: 240, height: 240, bottom: "20%", left: "-15%", background: "hsl(var(--gold))", animationDelay: "3s", opacity: 0.35 }}
       />
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto pb-28 px-5 pt-12 relative z-10">
         {/* Profile Header */}
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center justify-between mb-5"
+          className="flex items-center justify-between mb-6"
         >
           <div>
-            <h1 className="font-display text-xl text-foreground font-semibold leading-tight">
+            <h1 className="font-display text-[19px] text-foreground font-semibold leading-tight">
               Welcome back
             </h1>
             <p className="font-body text-xs text-muted-foreground mt-0.5">
-              How are you feeling today?
+              How are you, really?
             </p>
           </div>
           <motion.button
@@ -84,29 +78,21 @@ const Home = () => {
               backdropFilter: "blur(12px)",
             }}
           >
-            <User size={18} className="text-muted-foreground" />
+            <User size={17} className="text-muted-foreground" />
           </motion.button>
         </motion.div>
 
+        {/* Mood — quick, scrollable, ~4 visible */}
         <EmotionChips selected={selectedEmotion} onSelect={handleEmotionTap} />
 
+        {/* Primary focal CTA */}
         <AiHeroCard />
 
-        <CompanionCard />
+        {/* Compact secondary grid */}
+        <FeatureTiles />
 
-        <CollectionCard />
-
-        <SoundHealingCard />
-
-        <CommunityCard />
-
-        <WisdomSelfieCard />
-
-        <JournalCard />
-
-        <WellnessStats />
-
-        <SmartActions />
+        {/* Tertiary, quieter actions */}
+        <QuietActions />
       </div>
 
       <BottomNav active={activeNav} onSelect={setActiveNav} />
