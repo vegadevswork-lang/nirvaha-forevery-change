@@ -65,20 +65,33 @@ const AiHeroCard = () => {
         </motion.div>
       </div>
 
-      {/* CTA Button */}
+      {/* Dominant CTA Button */}
       <motion.button
-        whileTap={{ scale: 0.97 }}
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.98 }}
+        animate={{
+          boxShadow: [
+            "0 6px 24px hsla(var(--foreground) / 0.18), 0 0 0 hsla(var(--gold) / 0)",
+            "0 8px 32px hsla(var(--foreground) / 0.22), 0 0 24px hsla(var(--gold) / 0.25)",
+            "0 6px 24px hsla(var(--foreground) / 0.18), 0 0 0 hsla(var(--gold) / 0)",
+          ],
+        }}
+        transition={{ boxShadow: { duration: 3.5, repeat: Infinity, ease: "easeInOut" } }}
         onClick={() => navigate("/chat")}
-        className="flex items-center justify-center gap-2.5 py-3.5 rounded-2xl font-body font-medium text-sm transition-all"
+        className="relative flex items-center justify-center gap-3 py-5 rounded-2xl font-body font-semibold text-base w-full overflow-hidden"
         style={{
           background: "hsl(var(--card))",
           color: "hsl(var(--primary))",
-          boxShadow: "0 4px 16px hsla(var(--foreground) / 0.1)",
         }}
       >
-        <MessageCircle size={18} />
-        Talk to Nirvaha
-        <ArrowRight size={14} />
+        <MessageCircle size={20} strokeWidth={2.2} />
+        <span className="tracking-wide">Talk to Nirvaha</span>
+        <motion.span
+          animate={{ x: [0, 4, 0] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <ArrowRight size={18} strokeWidth={2.4} />
+        </motion.span>
       </motion.button>
     </div>
   </motion.div>
