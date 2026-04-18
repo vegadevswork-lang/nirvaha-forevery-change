@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Play, CheckCircle2, Circle, Lock, Sparkles } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { usePageLoading } from "@/hooks/use-page-loading";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import SoundPlayer from "@/components/sound-healing/SoundPlayer";
 import BottomNav from "@/components/home/BottomNav";
@@ -24,7 +24,6 @@ const JourneySkeleton = () => (
 const SoundJourney = () => {
   const { journeyId } = useParams<{ journeyId: string }>();
   const navigate = useNavigate();
-  const isLoading = usePageLoading(400);
   const [activeNav, setActiveNav] = useState("Home");
   const [activeTrack, setActiveTrack] = useState<any>(null);
   const [completedSessions, setCompletedSessions] = useState<Set<string>>(new Set());
@@ -33,7 +32,6 @@ const SoundJourney = () => {
   const pkg = wellnessPackages.find((p) => p.id === journeyId);
   const sessions = journeySessions[journeyId || ""] || [];
 
-  if (isLoading) return <JourneySkeleton />;
   if (!pkg) {
     navigate("/sound-healing");
     return null;

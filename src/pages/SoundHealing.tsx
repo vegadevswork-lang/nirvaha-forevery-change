@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Sparkles, Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { usePageLoading } from "@/hooks/use-page-loading";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import SoundPlayer from "@/components/sound-healing/SoundPlayer";
 import BottomNav from "@/components/home/BottomNav";
@@ -65,11 +65,8 @@ const SoundHealingSkeleton = () => (
 
 const SoundHealing = () => {
   const navigate = useNavigate();
-  const isLoading = usePageLoading(600);
   const [activeNav, setActiveNav] = useState("Home");
   const [activeTrack, setActiveTrack] = useState<typeof sampleTracks[0] | null>(null);
-
-  if (isLoading) return <SoundHealingSkeleton />;
 
   return (
     <motion.div

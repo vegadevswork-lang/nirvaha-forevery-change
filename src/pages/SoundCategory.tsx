@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Play, Headphones } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { usePageLoading } from "@/hooks/use-page-loading";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import SoundPlayer from "@/components/sound-healing/SoundPlayer";
 import BottomNav from "@/components/home/BottomNav";
@@ -25,14 +25,12 @@ const CategorySkeleton = () => (
 const SoundCategory = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
   const navigate = useNavigate();
-  const isLoading = usePageLoading(400);
   const [activeNav, setActiveNav] = useState("Home");
   const [activeTrack, setActiveTrack] = useState<any>(null);
 
   const category = soundCategories.find((c) => c.id === categoryId);
   const tracks = categoryTracks[categoryId || ""] || [];
 
-  if (isLoading) return <CategorySkeleton />;
   if (!category) {
     navigate("/sound-healing");
     return null;
