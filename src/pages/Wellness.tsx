@@ -54,7 +54,9 @@ const Wellness = () => {
         </motion.div>
 
         {/* Mood Chart */}
-        <MoodChart moodLog={moodLog} />
+        <Suspense fallback={<div className="glass-card h-56 mb-5 animate-pulse-soft" />}>
+          <MoodChart moodLog={moodLog} />
+        </Suspense>
 
         {/* Weekly Insight + Pattern Cards */}
         <WeeklyInsight moodLog={moodLog} />
