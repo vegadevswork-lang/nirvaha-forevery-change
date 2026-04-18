@@ -6,11 +6,8 @@ import WeeklyInsight from "@/components/wellness/WeeklyInsight";
 import WellnessActions from "@/components/wellness/WellnessActions";
 import StreakSection from "@/components/wellness/StreakSection";
 import { useMoodLog } from "@/hooks/use-mood-log";
-import { usePageLoading } from "@/hooks/use-page-loading";
-import WellnessSkeleton from "@/components/skeletons/WellnessSkeleton";
 
 const Wellness = () => {
-  const isLoading = usePageLoading(600);
   const [activeNav, setActiveNav] = useState("Wellness");
   const { moodLog } = useMoodLog();
 
@@ -24,8 +21,6 @@ const Wellness = () => {
     const scores = moodLog.map((e) => moodScores[e.mood.toLowerCase()] || 3);
     return scores.reduce((a, b) => a + b, 0) / scores.length;
   }, [moodLog]);
-
-  if (isLoading) return <WellnessSkeleton />;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
