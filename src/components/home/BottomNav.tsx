@@ -105,25 +105,28 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
           const showDot = item.badgeKey === "new";
 
           return (
-            <button
+            <motion.button
               key={item.label}
               ref={(el) => { itemRefs.current[index] = el; }}
               onClick={() => {
                 onSelect?.(item.label);
                 navigate(item.route === "/collection" ? "/collection?intro=1" : item.route);
               }}
-              className="relative z-10 flex items-center justify-center gap-1.5 transition-all duration-300 ease-out"
+              animate={{ flexGrow: isActive ? 1.6 : 1 }}
+              transition={{ type: "spring", stiffness: 280, damping: 30, mass: 0.7 }}
+              className="relative z-10 flex items-center justify-center gap-1.5 flex-1"
               style={{
-                flex: isActive ? 1.5 : 1,
-                padding: isActive ? "9px 12px" : "9px 4px",
+                padding: "10px 8px",
                 minHeight: 42,
+                flexBasis: 0,
               }}
             >
-              <div className="relative">
+              <div className="relative flex items-center justify-center">
                 <motion.div
                   key={`icon-${item.label}-${bounceKey}`}
                   animate={isActive ? { scale: [1, 1.1, 1] } : { scale: 1 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="flex items-center justify-center"
                 >
                   <item.icon
                     size={18}
@@ -160,22 +163,25 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
               </div>
 
               {/* Label */}
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="wait" initial={false}>
                 {isActive && (
                   <motion.span
                     key={`label-${item.label}`}
-                    initial={{ opacity: 0, width: 0, x: -4 }}
-                    animate={{ opacity: 1, width: "auto", x: 0 }}
-                    exit={{ opacity: 0, width: 0, x: -4 }}
-                    transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-                    className="text-[10.5px] font-body font-medium whitespace-nowrap overflow-hidden leading-none tracking-wide"
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: "auto" }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{
+                      opacity: { duration: 0.2, ease: "easeOut" },
+                      width: { type: "spring", stiffness: 280, damping: 30, mass: 0.7 },
+                    }}
+                    className="text-[10.5px] font-body font-medium whitespace-nowrap overflow-hidden leading-none tracking-wide flex items-center"
                     style={{ color: "hsl(var(--primary-foreground))" }}
                   >
                     {item.label}
                   </motion.span>
                 )}
               </AnimatePresence>
-            </button>
+            </motion.button>
           );
         })}
       </div>
