@@ -68,23 +68,14 @@ const OnboardingQuestion = ({ question, subtitle, options, onSelect }: Props) =>
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: 0.05 * i }}
                 onClick={() => toggleOption(i)}
-                className="w-full px-6 py-4 rounded-2xl text-center font-body text-[15px] font-medium transition-all duration-200 cursor-pointer border"
-                style={{
-                  background: isSelected
-                    ? "hsla(40 33% 96% / 0.95)"
-                    : "hsla(0 0% 0% / 0.45)",
-                  color: isSelected
-                    ? "hsl(150 25% 18%)"
-                    : "hsla(40 33% 96% / 0.95)",
-                  borderColor: isSelected
-                    ? "hsla(42 60% 72% / 0.8)"
-                    : "hsla(40 33% 96% / 0.25)",
-                  backdropFilter: "blur(12px)",
-                  WebkitBackdropFilter: "blur(12px)",
-                  boxShadow: isSelected
-                    ? "0 4px 20px hsla(42 60% 72% / 0.3)"
-                    : "0 2px 8px hsla(0 0% 0% / 0.3)",
-                }}
+                className={`
+                  w-full px-6 py-4 rounded-2xl text-center font-body text-[15px] font-medium
+                  transition-all duration-200 cursor-pointer
+                  ${isSelected
+                    ? "bg-foreground text-background"
+                    : "bg-[hsl(0_0%_18%)] text-foreground/90 hover:bg-[hsl(0_0%_22%)]"
+                  }
+                `}
               >
                 {opt.label}
               </motion.button>

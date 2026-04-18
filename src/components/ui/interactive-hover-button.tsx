@@ -44,10 +44,10 @@ const InteractiveHoverButton = React.forwardRef<
         border: "hsl(var(--glass-border))",
       },
       gold: {
-        bg: "hsl(var(--gold) / 0.28)",
+        bg: "hsl(var(--gold) / 0.12)",
         text: "hsl(var(--foreground))",
-        sweep: sweepColor || "hsl(var(--gold) / 0.4)",
-        border: "hsl(var(--gold) / 0.6)",
+        sweep: sweepColor || "hsl(var(--gold) / 0.2)",
+        border: "hsl(var(--gold) / 0.3)",
       },
       outline: {
         bg: "transparent",
