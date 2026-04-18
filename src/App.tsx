@@ -5,7 +5,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { GlobalPlayerProvider } from "@/hooks/use-global-player";
-import GlobalMiniPlayer from "@/components/player/GlobalMiniPlayer";
+
+// Lazy-load the mini player — it only renders when audio is active,
+// so keep its framer-motion + icon deps out of the main bundle.
+const GlobalMiniPlayer = lazy(() => import("@/components/player/GlobalMiniPlayer"));
 
 // Lazy-loaded pages for code splitting
 const Index = lazy(() => import("./pages/Index.tsx"));
@@ -83,7 +86,9 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
-          <GlobalMiniPlayer />
+          <Suspense fallback={null}>
+            <GlobalMiniPlayer />
+          </Suspense>
         </BrowserRouter>
       </GlobalPlayerProvider>
     </TooltipProvider>
