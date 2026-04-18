@@ -218,7 +218,7 @@ const NirvahaIntro = ({ onComplete }: NirvahaIntroProps) => {
                 className="relative z-10 flex flex-col items-center gap-1"
               >
                 <h1
-                  className="font-display text-4xl md:text-6xl font-bold tracking-[0.35em] text-white"
+                  className="font-display text-2xl sm:text-4xl md:text-6xl font-bold tracking-[0.2em] sm:tracking-[0.3em] md:tracking-[0.35em] text-white whitespace-nowrap"
                   style={{
                     textShadow: "0 0 40px rgba(255,255,255,0.3), 0 0 80px rgba(255,255,255,0.1)",
                   }}
