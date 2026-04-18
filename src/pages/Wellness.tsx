@@ -1,11 +1,13 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import BottomNav from "@/components/home/BottomNav";
-import MoodChart from "@/components/wellness/MoodChart";
 import WeeklyInsight from "@/components/wellness/WeeklyInsight";
 import WellnessActions from "@/components/wellness/WellnessActions";
 import StreakSection from "@/components/wellness/StreakSection";
 import { useMoodLog } from "@/hooks/use-mood-log";
+
+// Lazy-load the chart — recharts is ~370 KiB and only one section needs it
+const MoodChart = lazy(() => import("@/components/wellness/MoodChart"));
 
 const Wellness = () => {
   const [activeNav, setActiveNav] = useState("Wellness");
