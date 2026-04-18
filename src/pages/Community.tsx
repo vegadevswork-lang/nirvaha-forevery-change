@@ -17,8 +17,6 @@ import PostCard from "@/components/community/PostCard";
 import PostDetailView from "@/components/community/PostDetailView";
 import CreatePostFlow from "@/components/community/CreatePostFlow";
 import FABMenu from "@/components/community/FABMenu";
-import { usePageLoading } from "@/hooks/use-page-loading";
-import CommunitySkeleton from "@/components/skeletons/CommunitySkeleton";
 import BottomNav from "@/components/home/BottomNav";
 
 /* ─── Panels (Insights, Notifications, Topics, Circles) ─── */
@@ -305,7 +303,6 @@ const EditPostModal = ({ post, onClose, onSave }: { post: CommunityPost; onClose
 /* ═══════════════ MAIN COMMUNITY PAGE ═══════════════ */
 const Community = () => {
   const navigate = useNavigate();
-  const isLoading = usePageLoading(700);
   const [posts, setPosts] = useState<CommunityPost[]>(samplePosts);
   const [showCreate, setShowCreate] = useState(false);
   const [activePost, setActivePost] = useState<CommunityPost | null>(null);
@@ -370,8 +367,6 @@ const Community = () => {
     }), [posts, activePath, searchQuery, sortMode]);
 
   const editingPost = editingPostId ? posts.find((p) => p.id === editingPostId) : null;
-
-  if (isLoading) return <CommunitySkeleton />;
 
   return (
     <motion.div

@@ -2,29 +2,16 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Play, CheckCircle2, Circle, Lock, Sparkles } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { usePageLoading } from "@/hooks/use-page-loading";
-import { Skeleton } from "@/components/ui/skeleton";
+
 import SoundPlayer from "@/components/sound-healing/SoundPlayer";
 import BottomNav from "@/components/home/BottomNav";
 import { wellnessPackages } from "@/data/soundHealingData";
 import { journeySessions } from "@/data/soundCategoryData";
 
-const JourneySkeleton = () => (
-  <div className="min-h-screen bg-background flex flex-col">
-    <div className="flex-1 pb-28 px-5 pt-14">
-      <Skeleton className="h-44 w-full rounded-3xl mb-6" />
-      <Skeleton className="h-5 w-40 mb-4" />
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Skeleton key={i} className="h-20 w-full rounded-2xl mb-3" />
-      ))}
-    </div>
-  </div>
-);
 
 const SoundJourney = () => {
   const { journeyId } = useParams<{ journeyId: string }>();
   const navigate = useNavigate();
-  const isLoading = usePageLoading(400);
   const [activeNav, setActiveNav] = useState("Home");
   const [activeTrack, setActiveTrack] = useState<any>(null);
   const [completedSessions, setCompletedSessions] = useState<Set<string>>(new Set());
@@ -33,7 +20,6 @@ const SoundJourney = () => {
   const pkg = wellnessPackages.find((p) => p.id === journeyId);
   const sessions = journeySessions[journeyId || ""] || [];
 
-  if (isLoading) return <JourneySkeleton />;
   if (!pkg) {
     navigate("/sound-healing");
     return null;
