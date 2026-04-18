@@ -1,4 +1,6 @@
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronRight } from "lucide-react";
 
 interface EmotionDef {
   label: string;
@@ -160,71 +162,106 @@ interface EmotionChipsProps {
   onSelect: (label: string, e: React.MouseEvent) => void;
 }
 
-const EmotionChips = ({ selected, onSelect }: EmotionChipsProps) => (
-  <motion.div
-    initial={{ opacity: 0, y: 12 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay: 0.15 }}
-    className="mb-6 -mx-5 px-5"
-  >
-    <div
-      className="flex gap-3 overflow-x-auto pb-2"
-      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+const EmotionChips = ({ selected, onSelect }: EmotionChipsProps) => {
+  const [expanded, setExpanded] = useState(false);
+  // Show 4 primary emotions by default; rest revealed via "More"
+  const visibleEmotions = expanded ? emotions : emotions.slice(0, 4);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.15 }}
+      className="mb-6 -mx-5 px-5"
     >
-      {emotions.map((e, i) => {
-        const isSelected = selected === e.label;
-        return (
-          <motion.button
-            key={e.label}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 + i * 0.04 }}
-            whileTap={{ scale: 0.88 }}
-            onClick={(ev) => onSelect(e.label, ev)}
-            className="flex flex-col items-center gap-1.5 flex-shrink-0"
-          >
-            <motion.div
-              animate={isSelected ? { scale: 1.15, y: -2 } : { scale: 1, y: 0 }}
-              transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              className="relative"
-            >
-              <svg
-                width="52"
-                height="52"
-                viewBox="0 0 44 44"
-                className="drop-shadow-sm"
-                style={{
-                  filter: isSelected
-                    ? `drop-shadow(0 0 10px hsl(${e.color} / 0.5))`
-                    : `drop-shadow(0 2px 4px hsl(${e.color} / 0.2))`,
-                }}
+      <div
+        className="flex gap-4 overflow-x-auto pb-2 items-start"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
+        <AnimatePresence initial={false}>
+          {visibleEmotions.map((e, i) => {
+            const isSelected = selected === e.label;
+            return (
+              <motion.button
+                key={e.label}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.85 }}
+                transition={{ delay: 0.15 + i * 0.04, duration: 0.3 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={(ev) => onSelect(e.label, ev)}
+                className="flex flex-col items-center gap-1.5 flex-shrink-0"
               >
-                <path
-                  d={getShapePath(e.shape)}
-                  fill={`hsl(${e.color})`}
-                  stroke={isSelected ? "hsl(var(--foreground) / 0.2)" : "none"}
-                  strokeWidth={isSelected ? "1.5" : "0"}
-                />
-                <g color="hsl(var(--foreground) / 0.85)">
-                  {getFaceSvg(e.face)}
-                </g>
-              </svg>
+                <motion.div
+                  animate={isSelected ? { scale: 1.12, y: -2 } : { scale: 1, y: 0 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  className="relative"
+                >
+                  <svg
+                    width="46"
+                    height="46"
+                    viewBox="0 0 44 44"
+                    style={{
+                      filter: isSelected
+                        ? `drop-shadow(0 0 8px hsl(${e.color} / 0.4))`
+                        : `drop-shadow(0 1px 3px hsl(${e.color} / 0.15))`,
+                      opacity: isSelected ? 1 : 0.85,
+                    }}
+                  >
+                    <path
+                      d={getShapePath(e.shape)}
+                      fill={`hsl(${e.color})`}
+                      stroke={isSelected ? "hsl(var(--foreground) / 0.18)" : "none"}
+                      strokeWidth={isSelected ? "1.5" : "0"}
+                    />
+                    <g color="hsl(var(--foreground) / 0.85)">
+                      {getFaceSvg(e.face)}
+                    </g>
+                  </svg>
+                </motion.div>
+                <span
+                  className="text-[10px] font-body transition-colors duration-300"
+                  style={{
+                    color: isSelected
+                      ? "hsl(var(--foreground))"
+                      : "hsl(var(--muted-foreground) / 0.75)",
+                    fontWeight: isSelected ? 600 : 400,
+                  }}
+                >
+                  {e.label}
+                </span>
+              </motion.button>
+            );
+          })}
+        </AnimatePresence>
+
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setExpanded((v) => !v)}
+          className="flex flex-col items-center gap-1.5 flex-shrink-0"
+          aria-label={expanded ? "Show fewer emotions" : "Show more emotions"}
+        >
+          <div
+            className="w-[46px] h-[46px] rounded-full flex items-center justify-center"
+            style={{
+              background: "hsl(var(--muted) / 0.25)",
+              border: "1px solid hsl(var(--border) / 0.4)",
+            }}
+          >
+            <motion.div animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.3 }}>
+              <ChevronRight size={18} style={{ color: "hsl(var(--muted-foreground))" }} />
             </motion.div>
-            <span
-              className="text-[10px] font-body font-medium transition-colors duration-300"
-              style={{
-                color: isSelected
-                  ? "hsl(var(--foreground))"
-                  : "hsl(var(--muted-foreground))",
-              }}
-            >
-              {e.label}
-            </span>
-          </motion.button>
-        );
-      })}
-    </div>
-  </motion.div>
-);
+          </div>
+          <span
+            className="text-[10px] font-body"
+            style={{ color: "hsl(var(--muted-foreground) / 0.75)" }}
+          >
+            {expanded ? "Less" : "More"}
+          </span>
+        </motion.button>
+      </div>
+    </motion.div>
+  );
+};
 
 export default EmotionChips;

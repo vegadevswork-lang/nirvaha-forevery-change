@@ -68,35 +68,34 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
   }, [measurePill]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 px-3 pb-3">
+    <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4">
       <div
         ref={navRef}
-        className="relative rounded-full px-1.5 py-1.5 flex items-center"
+        className="relative rounded-full px-1 py-1 flex items-center"
         style={{
-          background: "#1a2a22",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2)",
+          background: "hsl(var(--background) / 0.72)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          border: "1px solid hsl(var(--border) / 0.25)",
+          boxShadow: "0 4px 24px hsl(var(--background) / 0.4)",
         }}
       >
-        {/* Sliding pill */}
+        {/* Soft active indicator */}
         <motion.div
           className="absolute rounded-full"
           animate={{
             left: pillPos.left,
             width: pillPos.width,
-            scaleX: [1, 1.04, 1],
-            scaleY: [1, 0.96, 1],
           }}
           transition={{
-            left: { type: "spring", stiffness: 300, damping: 28, mass: 0.9 },
-            width: { type: "spring", stiffness: 300, damping: 28, mass: 0.9 },
-            scaleX: { duration: 0.35, ease: "easeOut" },
-            scaleY: { duration: 0.35, ease: "easeOut" },
+            left: { type: "spring", stiffness: 320, damping: 30, mass: 0.8 },
+            width: { type: "spring", stiffness: 320, damping: 30, mass: 0.8 },
           }}
           style={{
-            top: 5,
-            bottom: 5,
-            background: "hsl(var(--primary))",
-            boxShadow: "0 2px 20px hsla(var(--primary) / 0.55), 0 0 40px hsla(var(--primary) / 0.25), inset 0 1px 0 hsla(0 0% 100% / 0.15)",
+            top: 4,
+            bottom: 4,
+            background: "hsl(var(--primary) / 0.18)",
+            border: "1px solid hsl(var(--primary) / 0.3)",
           }}
         />
 
@@ -115,22 +114,24 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
               }}
               className="relative z-10 flex items-center justify-center gap-1.5 transition-all duration-300 ease-out"
               style={{
-                flex: isActive ? 1.7 : 1,
-                padding: isActive ? "10px 14px" : "10px 6px",
-                minHeight: 44,
+                flex: isActive ? 1.5 : 1,
+                padding: isActive ? "9px 12px" : "9px 4px",
+                minHeight: 42,
               }}
             >
               <div className="relative">
                 <motion.div
                   key={`icon-${item.label}-${bounceKey}`}
-                  animate={isActive ? { scale: [1, 1.15, 1] } : { scale: 1 }}
+                  animate={isActive ? { scale: [1, 1.1, 1] } : { scale: 1 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                 >
                   <item.icon
-                    size={19}
-                    strokeWidth={isActive ? 2.3 : 1.6}
+                    size={18}
+                    strokeWidth={isActive ? 2 : 1.5}
                     style={{
-                      color: isActive ? "#f5f0e8" : "rgba(245,240,232,0.35)",
+                      color: isActive
+                        ? "hsl(var(--primary-foreground))"
+                        : "hsl(var(--muted-foreground) / 0.65)",
                       transition: "color 0.3s ease",
                     }}
                   />
@@ -139,11 +140,10 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
                 {/* Badge */}
                 {badgeCount > 0 && (
                   <span
-                    className="absolute -top-1.5 -right-2.5 min-w-[15px] h-[15px] rounded-full flex items-center justify-center text-[8px] font-bold px-0.5"
+                    className="absolute -top-1.5 -right-2 min-w-[14px] h-[14px] rounded-full flex items-center justify-center text-[8px] font-semibold px-0.5"
                     style={{
-                      background: "hsl(var(--destructive))",
-                      color: "#fff",
-                      boxShadow: "0 2px 6px rgba(200,50,50,0.4)",
+                      background: "hsl(var(--destructive) / 0.9)",
+                      color: "hsl(var(--destructive-foreground))",
                     }}
                   >
                     {badgeCount > 9 ? "9+" : badgeCount}
@@ -154,7 +154,7 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
                 {showDot && badgeCount === 0 && (
                   <span
                     className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full"
-                    style={{ background: "hsl(var(--accent))", boxShadow: "0 0 6px hsl(var(--accent))" }}
+                    style={{ background: "hsl(var(--accent) / 0.8)" }}
                   />
                 )}
               </div>
@@ -164,12 +164,12 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
                 {isActive && (
                   <motion.span
                     key={`label-${item.label}`}
-                    initial={{ opacity: 0, width: 0, x: -6 }}
+                    initial={{ opacity: 0, width: 0, x: -4 }}
                     animate={{ opacity: 1, width: "auto", x: 0 }}
-                    exit={{ opacity: 0, width: 0, x: -6 }}
+                    exit={{ opacity: 0, width: 0, x: -4 }}
                     transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-                    className="text-[11px] font-body font-bold whitespace-nowrap overflow-hidden leading-none"
-                    style={{ color: "#f5f0e8" }}
+                    className="text-[10.5px] font-body font-medium whitespace-nowrap overflow-hidden leading-none tracking-wide"
+                    style={{ color: "hsl(var(--primary-foreground))" }}
                   >
                     {item.label}
                   </motion.span>
