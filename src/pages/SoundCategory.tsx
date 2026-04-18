@@ -3,24 +3,11 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Play, Headphones } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import SoundPlayer from "@/components/sound-healing/SoundPlayer";
 import BottomNav from "@/components/home/BottomNav";
 import { soundCategories } from "@/data/soundHealingData";
 import { categoryTracks } from "@/data/soundCategoryData";
 
-const CategorySkeleton = () => (
-  <div className="min-h-screen bg-background flex flex-col">
-    <div className="flex-1 pb-28 px-5 pt-14">
-      <Skeleton className="h-5 w-32 mb-2" />
-      <Skeleton className="h-8 w-56 mb-1" />
-      <Skeleton className="h-4 w-72 mb-6" />
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Skeleton key={i} className="h-24 w-full rounded-2xl mb-3" />
-      ))}
-    </div>
-  </div>
-);
 
 const SoundCategory = () => {
   const { categoryId } = useParams<{ categoryId: string }>();

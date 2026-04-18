@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Sparkles, Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import SoundPlayer from "@/components/sound-healing/SoundPlayer";
 import BottomNav from "@/components/home/BottomNav";
 import { recommendations, soundCategories, wellnessPackages, sampleTracks } from "@/data/soundHealingData";
@@ -45,23 +44,6 @@ const journeyImages: Record<string, string> = {
   anxiety: anxietyImg,
 };
 
-const SoundHealingSkeleton = () => (
-  <div className="min-h-screen bg-background flex flex-col">
-    <div className="flex-1 pb-28 px-5 pt-12">
-      <Skeleton className="h-48 w-full rounded-3xl mb-6" />
-      <div className="flex gap-3 mb-6 overflow-hidden">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-28 w-32 rounded-2xl flex-shrink-0" />
-        ))}
-      </div>
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-40 rounded-2xl" />
-        ))}
-      </div>
-    </div>
-  </div>
-);
 
 const SoundHealing = () => {
   const navigate = useNavigate();
