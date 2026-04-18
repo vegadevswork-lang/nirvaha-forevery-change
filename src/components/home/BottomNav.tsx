@@ -6,7 +6,7 @@ import { useNotifications } from "@/hooks/use-notifications";
 import { useMoodLog } from "@/hooks/use-mood-log";
 
 const navItems = [
-  { label: "Home", icon: HomeIcon, route: "/home", badgeKey: "home" as const },
+  { label: "Home", icon: HomeIcon, route: "/home", badgeKey: null },
   { label: "Inner Guide", icon: Sparkles, route: "/chat", badgeKey: null },
   { label: "Companion", icon: Users, route: "/companion", badgeKey: null },
   { label: "Collection", icon: Play, route: "/collection", badgeKey: "new" as const },
