@@ -13,7 +13,7 @@ const OnboardingStepper = ({ currentStep, totalSteps }: OnboardingStepperProps) 
         const isActive = i === currentStep;
 
         return (
-          <div key={i} className="flex-1 h-1.5 rounded-full overflow-hidden bg-muted">
+          <div key={i} className="flex-1 h-1.5 rounded-full overflow-hidden bg-white/15">
             <motion.div
               className="h-full rounded-full"
               initial={{ width: "0%" }}
@@ -23,8 +23,8 @@ const OnboardingStepper = ({ currentStep, totalSteps }: OnboardingStepperProps) 
               transition={{ duration: 0.5, ease: "easeOut" }}
               style={{
                 background: isCompleted
-                  ? "hsl(var(--primary))"
-                  : "hsl(var(--accent))",
+                  ? "hsl(var(--gold))"
+                  : "hsl(var(--gold) / 0.7)",
               }}
             />
           </div>

@@ -124,7 +124,7 @@ const Onboarding = () => {
             className="absolute top-6 left-4 z-20 p-2 rounded-full hover:bg-white/10 transition-colors"
             aria-label="Go back"
           >
-            <ChevronLeft size={22} className="text-foreground" />
+            <ChevronLeft size={22} className="text-white" />
           </motion.button>
         )}
       </AnimatePresence>
@@ -138,7 +138,8 @@ const Onboarding = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             onClick={handleSkip}
-            className="absolute top-7 right-5 z-20 font-body text-sm font-semibold text-foreground hover:text-foreground/70 transition-colors"
+            className="absolute top-7 right-5 z-20 font-body text-sm font-semibold text-white/90 hover:text-white transition-colors"
+            style={{ textShadow: "0 1px 6px rgba(0,0,0,0.4)" }}
           >
             Skip
           </motion.button>

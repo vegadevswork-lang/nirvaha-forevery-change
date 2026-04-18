@@ -42,8 +42,8 @@ const OnboardingRecap = ({ answers }: Props) => {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="font-display text-2xl sm:text-3xl text-foreground mb-8 font-semibold"
-        style={{ textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}
+        className="font-display text-2xl sm:text-3xl text-white mb-8 font-semibold"
+        style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6), 0 1px 3px rgba(0,0,0,0.5)" }}
       >
         So, to recap
       </motion.h1>
@@ -61,13 +61,13 @@ const OnboardingRecap = ({ answers }: Props) => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.3 + qIdx * 0.12 }}
-              className="bg-[hsl(0_0%_18%)] rounded-2xl px-5 py-4 flex items-center gap-4"
+              className="bg-white/10 border border-white/15 backdrop-blur-md rounded-2xl px-5 py-4 flex items-center gap-4"
             >
               <div>
-                <p className="font-body text-xs text-muted-foreground uppercase tracking-wider">
+                <p className="font-body text-xs text-white/60 uppercase tracking-wider">
                   {recapLabels[qIdx] || "You chose"}
                 </p>
-                <p className="font-body text-sm font-semibold text-foreground mt-0.5">
+                <p className="font-body text-sm font-semibold text-white mt-0.5">
                   {chosen.label}
                 </p>
               </div>

@@ -68,7 +68,7 @@ const OnboardingIntro = ({ onBegin }: Props) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
-        className="font-display text-3xl sm:text-4xl text-foreground mb-3 font-semibold leading-tight"
+        className="font-display text-3xl sm:text-4xl text-white mb-3 font-semibold leading-tight"
       >
         Hi there!
       </motion.h1>
@@ -77,7 +77,7 @@ const OnboardingIntro = ({ onBegin }: Props) => {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.6 }}
-        className="font-display text-lg text-muted-foreground mb-1"
+        className="font-display text-lg text-white/80 mb-1"
       >
         Before you start, we have
       </motion.p>
@@ -85,7 +85,7 @@ const OnboardingIntro = ({ onBegin }: Props) => {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.7 }}
-        className="font-display text-lg text-muted-foreground mb-10"
+        className="font-display text-lg text-white/80 mb-10"
       >
         just a few questions
       </motion.p>

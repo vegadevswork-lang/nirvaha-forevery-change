@@ -39,8 +39,8 @@ const OnboardingQuestion = ({ question, subtitle, options, onSelect }: Props) =>
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="font-display text-[1.65rem] sm:text-3xl text-center text-foreground mb-2 leading-tight font-semibold"
-          style={{ textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}
+          className="font-display text-[1.65rem] sm:text-3xl text-center text-white mb-2 leading-tight font-semibold"
+          style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6), 0 1px 3px rgba(0,0,0,0.5)" }}
         >
           {question}
         </motion.h2>
@@ -50,8 +50,8 @@ const OnboardingQuestion = ({ question, subtitle, options, onSelect }: Props) =>
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="font-body text-sm text-muted-foreground mb-8 text-center"
-            style={{ textShadow: "0 1px 8px rgba(0,0,0,0.4)" }}
+            className="font-body text-sm text-white/80 mb-8 text-center"
+            style={{ textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
           >
             {subtitle}
           </motion.p>
@@ -70,10 +70,10 @@ const OnboardingQuestion = ({ question, subtitle, options, onSelect }: Props) =>
                 onClick={() => toggleOption(i)}
                 className={`
                   w-full px-6 py-4 rounded-2xl text-center font-body text-[15px] font-medium
-                  transition-all duration-200 cursor-pointer
+                  transition-all duration-200 cursor-pointer border
                   ${isSelected
-                    ? "bg-foreground text-background"
-                    : "bg-[hsl(0_0%_18%)] text-foreground/90 hover:bg-[hsl(0_0%_22%)]"
+                    ? "bg-white text-black border-white shadow-[0_4px_20px_rgba(255,255,255,0.25)]"
+                    : "bg-white/10 text-white border-white/15 hover:bg-white/15 backdrop-blur-md"
                   }
                 `}
               >
@@ -88,8 +88,8 @@ const OnboardingQuestion = ({ question, subtitle, options, onSelect }: Props) =>
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="font-body text-xs text-muted-foreground/70 mt-5 text-center"
-          style={{ textShadow: "0 1px 6px rgba(0,0,0,0.3)" }}
+          className="font-body text-xs text-white/60 mt-5 text-center"
+          style={{ textShadow: "0 1px 6px rgba(0,0,0,0.4)" }}
         >
           Your selections won't limit access to any features.
         </motion.p>
