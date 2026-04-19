@@ -9,38 +9,42 @@ interface SoundRailProps {
 }
 
 // Curated photo + gradient per category — sets the mood instantly
+// HD images — w=1200 with auto format/compression for crisp retina rendering
+const IMG = (id: string) =>
+  `https://images.unsplash.com/${id}?w=1200&q=90&auto=format&fit=crop&dpr=2`;
+
 const categoryVisuals: Record<string, { image: string; gradient: string }> = {
   binaural: {
-    image: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=600&q=80",
-    gradient: "linear-gradient(160deg, hsl(220 60% 25% / 0.85), hsl(260 50% 20% / 0.95))",
+    image: IMG("photo-1518609878373-06d740f60d8b"),
+    gradient: "linear-gradient(160deg, hsl(220 60% 25% / 0.78), hsl(260 50% 20% / 0.92))",
   },
   mantras: {
-    image: "https://images.unsplash.com/photo-1545389336-cf090694435e?w=600&q=80",
-    gradient: "linear-gradient(160deg, hsl(35 60% 25% / 0.8), hsl(20 70% 20% / 0.95))",
+    image: IMG("photo-1545389336-cf090694435e"),
+    gradient: "linear-gradient(160deg, hsl(35 60% 25% / 0.72), hsl(20 70% 20% / 0.92))",
   },
   nature: {
-    image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80",
-    gradient: "linear-gradient(160deg, hsl(150 50% 18% / 0.7), hsl(160 60% 14% / 0.95))",
+    image: IMG("photo-1441974231531-c6227db76b6e"),
+    gradient: "linear-gradient(160deg, hsl(150 50% 18% / 0.62), hsl(160 60% 14% / 0.92))",
   },
   frequency: {
-    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&q=80",
-    gradient: "linear-gradient(160deg, hsl(280 50% 25% / 0.8), hsl(300 45% 18% / 0.95))",
+    image: IMG("photo-1511671782779-c97d3d27a1d4"),
+    gradient: "linear-gradient(160deg, hsl(280 50% 25% / 0.72), hsl(300 45% 18% / 0.92))",
   },
   breath: {
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80",
-    gradient: "linear-gradient(160deg, hsl(195 55% 22% / 0.78), hsl(210 60% 16% / 0.95))",
+    image: IMG("photo-1506905925346-21bda4d32df4"),
+    gradient: "linear-gradient(160deg, hsl(195 55% 22% / 0.7), hsl(210 60% 16% / 0.92))",
   },
   grounding: {
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80",
-    gradient: "linear-gradient(160deg, hsl(25 45% 22% / 0.8), hsl(15 55% 16% / 0.95))",
+    image: IMG("photo-1507525428034-b723cf961d3e"),
+    gradient: "linear-gradient(160deg, hsl(25 45% 22% / 0.72), hsl(15 55% 16% / 0.92))",
   },
   sleep: {
-    image: "https://images.unsplash.com/photo-1532978879514-6cb1a3a82e4d?w=600&q=80",
-    gradient: "linear-gradient(160deg, hsl(240 55% 18% / 0.85), hsl(250 60% 12% / 0.95))",
+    image: IMG("photo-1532978879514-6cb1a3a82e4d"),
+    gradient: "linear-gradient(160deg, hsl(240 55% 18% / 0.78), hsl(250 60% 12% / 0.92))",
   },
   focus: {
-    image: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=600&q=80",
-    gradient: "linear-gradient(160deg, hsl(170 50% 20% / 0.82), hsl(180 55% 14% / 0.95))",
+    image: IMG("photo-1499209974431-9dddcece7f88"),
+    gradient: "linear-gradient(160deg, hsl(170 50% 20% / 0.74), hsl(180 55% 14% / 0.92))",
   },
 };
 
