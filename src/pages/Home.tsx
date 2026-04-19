@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Users, BookOpen, Sparkles, TrendingUp } from "lucide-react";
 import SparkleEffect from "@/components/onboarding/SparkleEffect";
 import EmotionChips from "@/components/home/EmotionChips";
-import AiHeroCard from "@/components/home/AiHeroCard";
+import HeroCarousel from "@/components/home/HeroCarousel";
 import SmartActions from "@/components/home/SmartActions";
 import GreetingHeader from "@/components/home/GreetingHeader";
 import MentorRail from "@/components/home/MentorRail";
@@ -100,11 +100,11 @@ const Home = () => {
           )}
         </AnimatePresence>
 
-        {/* Tier 1: Hero */}
-        <AiHeroCard />
+        {/* Tier 1: Hero carousel — swipe between AI, Companion, Collection */}
+        <HeroCarousel />
 
         {/* Trust microcopy */}
-        <p className="font-body text-[10px] text-muted-foreground/80 text-center mb-7 mt-2 px-4">
+        <p className="font-body text-[10px] text-muted-foreground/80 text-center mb-7 mt-1 px-4">
           Private · Anonymous · Not a substitute for medical care
         </p>
 
