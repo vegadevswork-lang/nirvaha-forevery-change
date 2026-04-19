@@ -49,8 +49,12 @@ const CollectionRail = ({ emotion }: CollectionRailProps) => {
         onViewAll={() => navigate("/collection")}
       />
       <div
-        className="flex gap-3 overflow-x-auto -mx-5 px-5 pb-1"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        className="flex gap-3 overflow-x-auto -mx-5 px-5 pb-2 snap-x snap-mandatory overscroll-x-contain"
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          WebkitOverflowScrolling: "touch",
+        }}
       >
         {visible.map((item, i) => (
           <motion.button
@@ -60,7 +64,7 @@ const CollectionRail = ({ emotion }: CollectionRailProps) => {
             transition={{ delay: 0.3 + i * 0.04, duration: 0.3 }}
             whileTap={{ scale: 0.96 }}
             onClick={() => navigate(`/collection/${item.id}`)}
-            className="flex flex-col flex-shrink-0 w-36 text-left"
+            className="flex flex-col flex-shrink-0 w-36 text-left snap-start"
           >
             <div className="relative w-36 h-24 rounded-xl overflow-hidden mb-2 border border-border/40">
               <img
