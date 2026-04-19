@@ -9,9 +9,20 @@ interface CompactTileProps {
   to: string;
   highlighted?: boolean;
   delay?: number;
+  image?: string;
+  gradient?: string;
 }
 
-const CompactTile = ({ title, subtitle, icon: Icon, to, highlighted, delay = 0 }: CompactTileProps) => {
+const CompactTile = ({
+  title,
+  subtitle,
+  icon: Icon,
+  to,
+  highlighted,
+  delay = 0,
+  image,
+  gradient,
+}: CompactTileProps) => {
   const navigate = useNavigate();
   return (
     <motion.button
@@ -20,24 +31,61 @@ const CompactTile = ({ title, subtitle, icon: Icon, to, highlighted, delay = 0 }
       transition={{ duration: 0.4, delay }}
       whileTap={{ scale: 0.97 }}
       onClick={() => navigate(to)}
-      className="glass-card p-3.5 flex flex-col items-start text-left h-28 justify-between transition-all"
+      className="relative overflow-hidden rounded-2xl p-3.5 flex flex-col items-start text-left h-28 justify-between transition-all border border-border/40"
       style={{
-        boxShadow: highlighted ? "0 0 0 1px hsl(var(--gold) / 0.5), 0 4px 16px hsl(var(--gold) / 0.15)" : undefined,
+        boxShadow: highlighted
+          ? "0 0 0 1px hsl(var(--gold) / 0.5), 0 4px 16px hsl(var(--gold) / 0.15)"
+          : "0 4px 16px hsl(var(--background) / 0.3)",
       }}
     >
+      {/* Background image */}
+      {image && (
+        <img
+          src={image}
+          alt=""
+          aria-hidden
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
+      {/* Gradient overlay (always — provides legibility + glass feel) */}
       <div
-        className="w-9 h-9 rounded-xl flex items-center justify-center"
+        className="absolute inset-0"
         style={{
-          background: "linear-gradient(135deg, hsl(var(--healing-green) / 0.18), hsl(var(--gold) / 0.12))",
+          background:
+            gradient ||
+            "linear-gradient(160deg, hsl(var(--card) / 0.85), hsl(var(--card) / 0.95))",
+          backdropFilter: image ? "blur(0.5px)" : undefined,
+        }}
+      />
+
+      {/* Content */}
+      <div
+        className="relative w-9 h-9 rounded-xl flex items-center justify-center"
+        style={{
+          background:
+            "linear-gradient(135deg, hsl(var(--healing-green) / 0.25), hsl(var(--gold) / 0.18))",
+          backdropFilter: "blur(8px)",
+          border: "1px solid hsl(0 0% 100% / 0.1)",
         }}
       >
-        <Icon size={16} className="text-primary" />
+        <Icon size={16} className={image ? "text-white" : "text-primary"} />
       </div>
-      <div className="min-w-0 w-full">
-        <p className="font-display text-sm text-foreground font-semibold leading-tight truncate">
+      <div className="relative min-w-0 w-full">
+        <p
+          className="font-display text-sm font-semibold leading-tight truncate"
+          style={{ color: image ? "hsl(0 0% 100%)" : "hsl(var(--foreground))" }}
+        >
           {title}
         </p>
-        <p className="font-body text-[10px] text-muted-foreground mt-0.5 line-clamp-1">
+        <p
+          className="font-body text-[10px] mt-0.5 line-clamp-1"
+          style={{
+            color: image
+              ? "hsl(0 0% 100% / 0.8)"
+              : "hsl(var(--muted-foreground))",
+          }}
+        >
           {subtitle}
         </p>
       </div>
