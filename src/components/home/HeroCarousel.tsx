@@ -2,11 +2,19 @@ import { useRef, useState, useEffect } from "react";
 import AiHeroCard from "./AiHeroCard";
 import CompanionCard from "./CompanionCard";
 import CollectionCard from "./CollectionCard";
+import SoundHealingCard from "./SoundHealingCard";
+import CommunityCard from "./CommunityCard";
+import WisdomSelfieCard from "./WisdomSelfieCard";
+import WellnessCard from "./WellnessCard";
 
 const slides = [
   { id: "ai", node: <AiHeroCard /> },
   { id: "companion", node: <CompanionCard /> },
   { id: "collection", node: <CollectionCard /> },
+  { id: "sound", node: <SoundHealingCard /> },
+  { id: "community", node: <CommunityCard /> },
+  { id: "selfie", node: <WisdomSelfieCard /> },
+  { id: "wellness", node: <WellnessCard /> },
 ];
 
 const HeroCarousel = () => {
