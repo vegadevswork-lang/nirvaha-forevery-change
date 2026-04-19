@@ -102,7 +102,7 @@ const SoundRail = ({ emotion }: SoundRailProps) => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.35 + i * 0.05, duration: 0.35 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => navigate(`/sound-healing/${cat.id}`)}
+              onClick={() => navigate(`/sound-healing/category/${cat.id}`)}
               className="relative flex-shrink-0 w-48 h-36 rounded-2xl overflow-hidden text-left border border-border/30 snap-start"
               style={{
                 boxShadow: "0 8px 24px hsl(var(--background) / 0.4)",

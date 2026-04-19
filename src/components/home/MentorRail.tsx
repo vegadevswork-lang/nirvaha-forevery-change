@@ -63,7 +63,11 @@ const MentorRail = ({ emotion }: MentorRailProps) => {
       />
       <div
         className="flex gap-3 overflow-x-auto -mx-5 px-5 pb-2 snap-x snap-mandatory overscroll-x-contain"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          WebkitOverflowScrolling: "touch",
+        }}
       >
         {visible.map((m, i) => {
           const photo = portraits[m.id] || fallbackPortrait;
@@ -76,7 +80,7 @@ const MentorRail = ({ emotion }: MentorRailProps) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 + i * 0.04, duration: 0.3 }}
               whileTap={{ scale: 0.96 }}
-              onClick={() => navigate(`/mentor/${m.id}`)}
+              onClick={() => navigate(`/companion/mentor/${m.id}`)}
               className="relative flex-shrink-0 w-32 h-44 rounded-2xl overflow-hidden snap-start text-left border border-border/40"
               style={{
                 boxShadow: isMatch
