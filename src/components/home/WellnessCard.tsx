@@ -52,10 +52,11 @@ const WellnessCard = () => {
               e.stopPropagation();
               navigate("/wellness");
             }}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/95 hover:bg-white transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-white/95 transition-colors shadow-md"
+            style={{ color: "hsl(195 40% 18%)" }}
           >
-            <span className="font-body text-sm text-foreground font-medium">View Insights</span>
-            <ArrowRight size={14} className="text-foreground" />
+            <span className="font-body text-sm font-semibold">View Insights</span>
+            <ArrowRight size={14} strokeWidth={2.5} />
           </button>
           <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/10 border border-white/15">
             <Flame size={13} className="text-white/90" />
