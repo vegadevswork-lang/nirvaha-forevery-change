@@ -1,75 +1,88 @@
 
-## Companion Mode — Deep Analysis & Build Plan
 
-### 🧠 Strategic Analysis (Lead PM Lens)
+# Nirvaha Home — Optimization Plan
 
-**Positioning**: Companion Mode is Nirvaha's monetization & differentiation layer — it bridges AI self-help with human expertise, creating a flywheel:
-- AI conversations → surface user needs → recommend mentors → sessions improve AI context → better recommendations
+Restructure Home into a 3-tier hierarchy (hero → rails → tiles), make emotion chips functional, and surface real content above the fold. Brand, routes, and animations preserved.
 
-**Key Insight**: The user provided specs for TWO distinct experiences:
-1. **General Mentors** (Career, Relationships, Purpose, Emotional Regulation) — marketplace model with ratings, pricing, instant booking
-2. **Spiritual Guides** (Monks, Practitioners, Meditation teachers) — sacred model with donation-based, request-based, no ratings
+## New Home Structure
 
-These require **different UX flows, different trust signals, different booking mechanics**.
-
----
-
-### 📐 Feature Architecture (Phased)
-
-#### Phase 1: UI Foundation (What we build NOW — frontend-only, no backend)
-1. **Companion Mode Entry Point** — New card on Home page with two paths: "Talk to a Companion" / "Become a Companion"
-2. **Companion Hub Page** (`/companion`) — Landing with two sections: Mentors & Spiritual Guides
-3. **Mentor Listing Page** — Browse/filter mentors with "For You" top 3 + full list
-4. **Spiritual Guide Listing Page** — Separate browse experience (humble, no ratings)
-5. **Mentor Profile Page** — Full profile with all layers (trust, connection, specificity, social proof, logistics)
-6. **Spiritual Guide Profile Page** — Different structure (teaching-focused, donation-based, request model)
-7. **Booking Flow** — Session type selection → time slot → payment summary → confirmation
-8. **Become a Companion Flow** — Application/onboarding entry point
-
-#### Phase 2: Backend (Requires Lovable Cloud)
-- Mentor/Guide profiles table, reviews, bookings, payments
-- Matching algorithm, session infrastructure, moderation
-
----
-
-### 🎨 UX Flow Map
-
-```
-Home Page
-  └─ Companion Mode Card
-       ├─ "Talk to a Companion" →
-       │    └─ Companion Hub
-       │         ├─ "For You" (AI-matched top 3)
-       │         ├─ Mentors Section → Mentor List → Mentor Profile → Book Session
-       │         └─ Spiritual Guides → Guide List → Guide Profile → Request Session
-       └─ "Become a Companion" →
-            └─ Application Flow (name, credentials, specialization, video intro)
+```text
+┌──────────────────────────────────────┐
+│ Good evening, Aarav      [avatar•]   │  time-aware greeting + notif dot
+│ How are you feeling?                 │
+│ [😊][😌][😟][😡] More                 │  emotion chips → re-rank below
+├──────────────────────────────────────┤
+│ AI HERO — Talk to Nirvaha            │  Tier 1: only full hero
+│ Private · Anonymous · Not medical    │  trust microcopy
+├──────────────────────────────────────┤
+│ Companions          View All →       │  Tier 2: horizontal rail
+│ (○)(○)(○)(○)(○)  ← avatars + names   │
+├──────────────────────────────────────┤
+│ From the Collection View All →       │  Tier 2: thumbnail rail
+│ [thumb 12m][thumb 8m][thumb 15m]     │  duration badges
+├──────────────────────────────────────┤
+│ Sound Healing       View All →       │  Tier 2: chip rail
+│ [Binaural][Solfeggio][Nature]        │
+├──────────────────────────────────────┤
+│ [Community]   [Journal]              │  Tier 3: compact 2-col tiles
+│ [Wisdom]      [Wellness]             │
+├──────────────────────────────────────┤
+│ Smart Actions (3 chips)              │  micro CTAs
+│ 7-day streak ▸                       │  thin stat strip
+└──────────────────────────────────────┘
 ```
 
----
+## Files Changed
 
-### 🧪 Behavior Analysis
+**New components:**
+- `src/components/home/SectionHeader.tsx` — title + subtitle + "View All →"
+- `src/components/home/MentorRail.tsx` — horizontal avatars from `companionData`
+- `src/components/home/CollectionRail.tsx` — horizontal thumbnails + duration badges from `collectionData`
+- `src/components/home/SoundRail.tsx` — horizontal chips from `soundCategoryData`
+- `src/components/home/CompactTile.tsx` — small icon + title + subtitle tile
+- `src/components/home/GreetingHeader.tsx` — time-aware greeting, avatar, notif dot
 
-**Retention Hooks**:
-- Post-session AI follow-up ("How did it go with [Mentor]?")
-- Progress tracking tied to mentor sessions
-- "Your mentor suggested..." action items in home feed
+**Edited:**
+- `src/pages/Home.tsx` — full restructure, holds `selectedEmotion` and passes to rails for re-ranking
+- `src/components/home/EmotionChips.tsx` — already emits selection (no schema change)
+- `src/components/skeletons/HomeSkeleton.tsx` — match new layout (rails + tiles)
 
-**Trust Architecture**:
-- Mentors: Verification badges + ratings + reviews (marketplace trust)
-- Guides: Lineage verification + institutional affiliation + community endorsement (sacred trust)
+**Preserved (not used on Home, kept for other surfaces):**
+- `CompanionCard`, `CollectionCard`, `CommunityCard`, `WisdomSelfieCard`, `JournalCard`, `SoundHealingCard` — left intact
 
----
+## Key Behaviors
 
-### 📋 Build Order (Phase 1)
+1. **Greeting**: "Good morning/afternoon/evening" by `new Date().getHours()`. Avatar tap → `/profile`. Red dot if notifications unread.
+2. **Emotion → re-ranking**: `selectedEmotion` state in `Home.tsx` is passed to rails. Each rail re-orders its items via a small `rankByEmotion(items, emotion)` helper:
+   - Stressed/Angry → Sound Healing rail moves above Collection; Breathing items first
+   - Sad/Hurt → Companions rail prioritized; Journal tile gets a subtle gold ring
+   - Joyful/Grateful → Community + Wisdom Selfie tiles highlighted
+   - A 1-line acknowledgment appears above AI Hero: e.g. "Let's slow it down together."
+3. **Duration badges**: Read existing `duration` fields on `collectionData` / `soundCategoryData`; render as a small pill on each thumbnail.
+4. **Trust microcopy**: One line under AI Hero — "Private · Anonymous · Not a substitute for medical care."
+5. **Smart Actions**: Compressed into a single horizontal row of 3 chips (kept, not removed).
+6. **Skeleton**: Updated to mirror rails + tiles for first-paint accuracy.
 
-1. Create Companion Mode card on Home page
-2. Build `/companion` hub page with two-path navigation
-3. Build Mentor listing with mock data (cards, filters, "For You")
-4. Build Spiritual Guide listing with different visual treatment
-5. Build Mentor Profile page (all 6 layers from spec)
-6. Build Spiritual Guide Profile page (different structure)
-7. Build Booking/Request flow
-8. Build "Become a Companion" entry page
-9. Add route to BottomNav or integrate navigation
-10. Polish animations, transitions, mobile responsiveness
+## Design Tokens (no new tokens)
+- Reuses `glass-card`, `--healing-green`, `--gold`, existing `font-display` / `font-body`.
+- Rails: `overflow-x-auto` with `scrollbar-width: none`, items `flex-shrink-0`.
+- Tiles: `aspect-square` or `h-28`, glassmorphism, `backdrop-blur-md`.
+- Light + dark mode safe (uses theme tokens, not hardcoded colors).
+
+## What This Fixes
+
+| Before | After |
+|---|---|
+| 9 full-width hero cards, ~2400px scroll | 1 hero + 3 rails + 4 tiles, ~1300px scroll |
+| Emotion chips decorative | Chips re-rank rails + show acknowledgment |
+| No durations / no faces | Real avatars + duration badges visible |
+| Flat hierarchy | 3 clear tiers |
+| No greeting personalization | Time-aware greeting + avatar + notif dot |
+| No trust signals | Privacy microcopy under hero |
+
+## Out of Scope
+- No new routes, no dependency changes, no backend.
+- AI Hero card untouched (strongest element).
+- Bottom nav untouched.
+- Existing `*Card` components preserved for reuse elsewhere.
+
