@@ -130,8 +130,8 @@ const Home = () => {
             to="/community"
             highlighted={isLight}
             delay={0.4}
-            image="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=500&q=80"
-            gradient="linear-gradient(160deg, hsl(152 40% 22% / 0.78), hsl(160 50% 14% / 0.95))"
+            image="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=1000&q=90&auto=format&fit=crop&dpr=2"
+            gradient="linear-gradient(160deg, hsl(152 40% 22% / 0.72), hsl(160 50% 14% / 0.92))"
           />
           <CompactTile
             title="Journal"
@@ -140,8 +140,8 @@ const Home = () => {
             to="/journal"
             highlighted={isHeavy}
             delay={0.45}
-            image="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=500&q=80"
-            gradient="linear-gradient(160deg, hsl(35 40% 25% / 0.78), hsl(25 50% 16% / 0.95))"
+            image="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1000&q=90&auto=format&fit=crop&dpr=2"
+            gradient="linear-gradient(160deg, hsl(35 40% 25% / 0.72), hsl(25 50% 16% / 0.92))"
           />
           <CompactTile
             title="Wisdom Selfie"
@@ -149,8 +149,8 @@ const Home = () => {
             icon={Sparkles}
             to="/legends-selfie"
             delay={0.5}
-            image="https://images.unsplash.com/photo-1528319725582-ddc096101511?w=500&q=80"
-            gradient="linear-gradient(160deg, hsl(45 55% 30% / 0.7), hsl(30 60% 18% / 0.95))"
+            image="https://images.unsplash.com/photo-1528319725582-ddc096101511?w=1000&q=90&auto=format&fit=crop&dpr=2"
+            gradient="linear-gradient(160deg, hsl(45 55% 30% / 0.65), hsl(30 60% 18% / 0.92))"
           />
           <CompactTile
             title="Wellness"
@@ -158,8 +158,8 @@ const Home = () => {
             icon={TrendingUp}
             to="/wellness"
             delay={0.55}
-            image="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=500&q=80"
-            gradient="linear-gradient(160deg, hsl(195 50% 22% / 0.78), hsl(180 55% 14% / 0.95))"
+            image="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1000&q=90&auto=format&fit=crop&dpr=2"
+            gradient="linear-gradient(160deg, hsl(195 50% 22% / 0.72), hsl(180 55% 14% / 0.92))"
           />
         </motion.div>
 
