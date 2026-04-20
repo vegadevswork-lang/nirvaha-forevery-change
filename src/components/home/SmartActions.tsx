@@ -141,11 +141,19 @@ const SmartActions = ({ emotion }: SmartActionsProps) => {
                   animate={
                     card.tone === "breathe"
                       ? { scale: [1, 1.08, 1] }
+                      : card.tone === "perspective"
+                      ? { boxShadow: [
+                          "0 2px 8px hsl(0 0% 0% / 0.18)",
+                          `0 2px 16px ${styles.glow}, 0 0 18px ${styles.glow}`,
+                          "0 2px 8px hsl(0 0% 0% / 0.18)",
+                        ] }
                       : undefined
                   }
                   transition={
                     card.tone === "breathe"
                       ? { duration: 4, repeat: Infinity, ease: "easeInOut" }
+                      : card.tone === "perspective"
+                      ? { duration: 3.2, repeat: Infinity, ease: "easeInOut", times: [0, 0.5, 1] }
                       : undefined
                   }
                 >
@@ -158,11 +166,39 @@ const SmartActions = ({ emotion }: SmartActionsProps) => {
                       transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                     />
                   )}
-                  <Icon
-                    size={17}
-                    style={{ color: styles.iconColor, position: "relative" }}
-                    strokeWidth={1.8}
-                  />
+
+                  {/* Bulb glow halo — only on the perspective card */}
+                  {card.tone === "perspective" && (
+                    <motion.span
+                      className="absolute inset-0 rounded-2xl pointer-events-none"
+                      style={{
+                        background: `radial-gradient(circle, ${styles.glow} 0%, transparent 70%)`,
+                      }}
+                      animate={{ opacity: [0.25, 0.85, 0.4, 0.85, 0.25] }}
+                      transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                  )}
+
+                  {/* Writing motion — gentle pen tilt for the journal card */}
+                  <motion.div
+                    style={{ position: "relative", transformOrigin: "70% 70%" }}
+                    animate={
+                      card.tone === "journal"
+                        ? { rotate: [-6, 6, -4, 4, -6], x: [0, 1.2, -0.6, 0.8, 0] }
+                        : undefined
+                    }
+                    transition={
+                      card.tone === "journal"
+                        ? { duration: 2.6, repeat: Infinity, ease: "easeInOut", repeatDelay: 1.4 }
+                        : undefined
+                    }
+                  >
+                    <Icon
+                      size={17}
+                      style={{ color: styles.iconColor }}
+                      strokeWidth={1.8}
+                    />
+                  </motion.div>
                 </motion.div>
                 <ArrowUpRight
                   size={13}
