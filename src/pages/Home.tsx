@@ -9,6 +9,7 @@ import GreetingHeader from "@/components/home/GreetingHeader";
 import MentorRail from "@/components/home/MentorRail";
 import CollectionRail from "@/components/home/CollectionRail";
 import SoundRail from "@/components/home/SoundRail";
+import SectionHeader from "@/components/home/SectionHeader";
 import CompactTile from "@/components/home/CompactTile";
 import BottomNav from "@/components/home/BottomNav";
 import { useMoodLog } from "@/hooks/use-mood-log";
@@ -108,60 +109,67 @@ const Home = () => {
           Private · Anonymous · Not a substitute for medical care
         </p>
 
-        {/* Tier 2: Rails (re-ordered by emotion) */}
-        {rails.map((rail) => {
-          if (rail === "companions") return <MentorRail key="companions" emotion={selectedEmotion} />;
-          if (rail === "collection") return <CollectionRail key="collection" emotion={selectedEmotion} />;
-          if (rail === "sound") return <SoundRail key="sound" emotion={selectedEmotion} />;
-          return null;
-        })}
+        {/* Tier 2: Content rails — Companions + Collection always content-first */}
+        {rails
+          .filter((r) => r !== "sound")
+          .map((rail) => {
+            if (rail === "companions") return <MentorRail key="companions" emotion={selectedEmotion} />;
+            if (rail === "collection") return <CollectionRail key="collection" emotion={selectedEmotion} />;
+            return null;
+          })}
 
-        {/* Tier 3: Compact tiles */}
+        {/* Tier 3: Your Tools — utility tiles grouped under their own header */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.35 }}
-          className="grid grid-cols-2 gap-3 mb-6"
+          transition={{ duration: 0.5, delay: 0.32 }}
+          className="mb-7"
         >
-          <CompactTile
-            title="Nirvaha Space"
-            subtitle="Anonymous community"
-            icon={Users}
-            to="/community"
-            highlighted={isLight}
-            delay={0.4}
-            image="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=1000&q=90&auto=format&fit=crop&dpr=2"
-            gradient="linear-gradient(160deg, hsl(152 40% 22% / 0.72), hsl(160 50% 14% / 0.92))"
-          />
-          <CompactTile
-            title="Journal"
-            subtitle="Reflect & release"
-            icon={BookOpen}
-            to="/journal"
-            highlighted={isHeavy}
-            delay={0.45}
-            image="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1000&q=90&auto=format&fit=crop&dpr=2"
-            gradient="linear-gradient(160deg, hsl(35 40% 25% / 0.72), hsl(25 50% 16% / 0.92))"
-          />
-          <CompactTile
-            title="Wisdom Selfie"
-            subtitle="Meet your inner legend"
-            icon={Sparkles}
-            to="/legends-selfie"
-            delay={0.5}
-            image="https://images.unsplash.com/photo-1528319725582-ddc096101511?w=1000&q=90&auto=format&fit=crop&dpr=2"
-            gradient="linear-gradient(160deg, hsl(45 55% 30% / 0.65), hsl(30 60% 18% / 0.92))"
-          />
-          <CompactTile
-            title="Wellness"
-            subtitle="Your weekly insights"
-            icon={TrendingUp}
-            to="/wellness"
-            delay={0.55}
-            image="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1000&q=90&auto=format&fit=crop&dpr=2"
-            gradient="linear-gradient(160deg, hsl(195 50% 22% / 0.72), hsl(180 55% 14% / 0.92))"
-          />
+          <SectionHeader title="Your Tools" subtitle="Reflect, explore, and track" />
+          <div className="grid grid-cols-2 gap-3">
+            <CompactTile
+              title="Nirvaha Space"
+              subtitle="Anonymous community"
+              icon={Users}
+              to="/community"
+              highlighted={isLight}
+              delay={0.4}
+              image="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=1000&q=90&auto=format&fit=crop&dpr=2"
+              gradient="linear-gradient(160deg, hsl(152 40% 22% / 0.72), hsl(160 50% 14% / 0.92))"
+            />
+            <CompactTile
+              title="Journal"
+              subtitle="Reflect & release"
+              icon={BookOpen}
+              to="/journal"
+              highlighted={isHeavy}
+              delay={0.45}
+              image="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1000&q=90&auto=format&fit=crop&dpr=2"
+              gradient="linear-gradient(160deg, hsl(35 40% 25% / 0.72), hsl(25 50% 16% / 0.92))"
+            />
+            <CompactTile
+              title="Wisdom Selfie"
+              subtitle="Meet your inner legend"
+              icon={Sparkles}
+              to="/legends-selfie"
+              delay={0.5}
+              image="https://images.unsplash.com/photo-1528319725582-ddc096101511?w=1000&q=90&auto=format&fit=crop&dpr=2"
+              gradient="linear-gradient(160deg, hsl(45 55% 30% / 0.65), hsl(30 60% 18% / 0.92))"
+            />
+            <CompactTile
+              title="Wellness"
+              subtitle="Your weekly insights"
+              icon={TrendingUp}
+              to="/wellness"
+              delay={0.55}
+              image="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1000&q=90&auto=format&fit=crop&dpr=2"
+              gradient="linear-gradient(160deg, hsl(195 50% 22% / 0.72), hsl(180 55% 14% / 0.92))"
+            />
+          </div>
         </motion.div>
+
+        {/* Tier 4: Sound Healing rail — last so utility tiles surface above */}
+        <SoundRail emotion={selectedEmotion} />
 
         {/* Smart actions */}
         <SmartActions />
