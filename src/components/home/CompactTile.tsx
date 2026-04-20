@@ -67,6 +67,7 @@ const CompactTile = ({
   icon: Icon,
   to,
   tone,
+  label,
   highlighted,
   delay = 0,
   image,
