@@ -73,6 +73,7 @@ const MentorRail = ({ emotion }: MentorRailProps) => {
           const photo = portraits[m.id] || fallbackPortrait;
           const firstName = m.name.split(" ")[0];
           const isMatch = preferredDomain && m.domain === preferredDomain;
+          const isRecommended = i === 0 && !!preferredDomain;
           return (
             <motion.button
               key={m.id}
@@ -81,11 +82,14 @@ const MentorRail = ({ emotion }: MentorRailProps) => {
               transition={{ delay: 0.25 + i * 0.04, duration: 0.3 }}
               whileTap={{ scale: 0.96 }}
               onClick={() => navigate(`/companion/mentor/${m.id}`)}
-              className="relative flex-shrink-0 w-[112px] h-[150px] rounded-2xl overflow-hidden snap-start text-left border border-border/40"
+              className="relative flex-shrink-0 w-[112px] h-[150px] rounded-2xl overflow-hidden snap-start text-left"
               style={{
                 boxShadow: isMatch
                   ? "0 0 0 1px hsl(var(--gold) / 0.6), 0 8px 24px hsl(var(--gold) / 0.18)"
                   : "0 6px 20px hsl(var(--background) / 0.4)",
+                border: isMatch
+                  ? "1px solid hsl(var(--gold) / 0.5)"
+                  : "1px solid hsl(var(--border) / 0.4)",
               }}
             >
               <img
@@ -95,14 +99,27 @@ const MentorRail = ({ emotion }: MentorRailProps) => {
                 decoding="async"
                 className="absolute inset-0 w-full h-full object-cover"
               />
-              {/* Bottom gradient for text legibility */}
+              {/* Stronger bottom gradient for legibility */}
               <div
                 className="absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(180deg, hsl(0 0% 0% / 0) 40%, hsl(0 0% 0% / 0.45) 70%, hsl(0 0% 0% / 0.88) 100%)",
+                    "linear-gradient(180deg, hsl(0 0% 0% / 0) 30%, hsl(0 0% 0% / 0.55) 65%, hsl(0 0% 0% / 0.95) 100%)",
                 }}
               />
+              {/* Recommended pill */}
+              {isRecommended && (
+                <div
+                  className="absolute top-2 left-2 px-1.5 py-0.5 rounded-full font-body text-[8.5px] font-semibold uppercase"
+                  style={{
+                    background: "hsl(var(--gold) / 0.92)",
+                    color: "hsl(var(--background))",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  For you
+                </div>
+              )}
               {/* Verified dot */}
               {m.verified && (
                 <div
@@ -116,10 +133,10 @@ const MentorRail = ({ emotion }: MentorRailProps) => {
               )}
               {/* Text overlay */}
               <div className="absolute bottom-0 left-0 right-0 px-2.5 py-2">
-                <p className="font-display text-[12px] font-semibold text-white leading-tight truncate">
+                <p className="font-display text-[12px] font-semibold text-white leading-tight truncate drop-shadow-md">
                   {firstName}
                 </p>
-                <p className="font-body text-[9.5px] text-white/80 leading-tight truncate mt-0.5">
+                <p className="font-body text-[9.5px] text-white/85 leading-tight truncate mt-0.5">
                   {m.title}
                 </p>
               </div>
