@@ -128,38 +128,38 @@ const Home = () => {
               subtitle="Anonymous community"
               icon={Users}
               to="/community"
+              tone="community"
               highlighted={isLight}
               delay={0.4}
               image="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=1000&q=90&auto=format&fit=crop&dpr=2"
-              gradient="linear-gradient(160deg, hsl(150 45% 22% / 0.78), hsl(160 55% 12% / 0.95))"
             />
             <CompactTile
               title="Journal"
               subtitle="Reflect & release"
               icon={BookOpen}
               to="/journal"
+              tone="journal"
               highlighted={isHeavy}
               delay={0.45}
               image="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1000&q=90&auto=format&fit=crop&dpr=2"
-              gradient="linear-gradient(160deg, hsl(140 40% 22% / 0.78), hsl(150 50% 12% / 0.95))"
             />
             <CompactTile
               title="Wisdom Selfie"
               subtitle="Meet your inner legend"
               icon={Sparkles}
               to="/legends-selfie"
+              tone="wisdom"
               delay={0.5}
               image="https://images.unsplash.com/photo-1528319725582-ddc096101511?w=1000&q=90&auto=format&fit=crop&dpr=2"
-              gradient="linear-gradient(160deg, hsl(135 42% 24% / 0.78), hsl(145 52% 14% / 0.95))"
             />
             <CompactTile
               title="Wellness"
               subtitle="Your weekly insights"
               icon={TrendingUp}
               to="/wellness"
+              tone="wellness"
               delay={0.55}
               image="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1000&q=90&auto=format&fit=crop&dpr=2"
-              gradient="linear-gradient(160deg, hsl(155 45% 22% / 0.78), hsl(165 55% 12% / 0.95))"
             />
           </div>
         </motion.div>
