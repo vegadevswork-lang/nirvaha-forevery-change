@@ -123,19 +123,40 @@ const SoundRail = ({ emotion }: SoundRailProps) => {
                 decoding="async"
                 className="absolute inset-0 w-full h-full object-cover"
               />
-              {/* Gradient overlay */}
+              {/* Stronger gradient overlay for legibility */}
               <div
                 className="absolute inset-0"
                 style={{ background: visual.gradient }}
               />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(180deg, hsl(0 0% 0% / 0) 35%, hsl(0 0% 0% / 0.55) 75%, hsl(0 0% 0% / 0.9) 100%)",
+                }}
+              />
+
+              {/* Recommended pill */}
+              {isRecommended && (
+                <div
+                  className="absolute top-2 left-2 px-1.5 py-0.5 rounded-full font-body text-[8.5px] font-semibold uppercase tracking-wide"
+                  style={{
+                    background: "hsl(var(--gold) / 0.92)",
+                    color: "hsl(var(--background))",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  For you
+                </div>
+              )}
 
               {/* Play affordance */}
               <div
                 className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center"
                 style={{
-                  background: "hsl(var(--background) / 0.3)",
+                  background: "hsl(var(--background) / 0.35)",
                   backdropFilter: "blur(8px)",
-                  border: "1px solid hsl(0 0% 100% / 0.25)",
+                  border: "1px solid hsl(0 0% 100% / 0.28)",
                 }}
               >
                 <Play size={11} fill="currentColor" className="text-white ml-0.5" />
@@ -146,7 +167,7 @@ const SoundRail = ({ emotion }: SoundRailProps) => {
                 <p className="font-display text-[13px] text-white font-semibold leading-tight drop-shadow-md truncate">
                   {cat.title}
                 </p>
-                <p className="font-body text-[10px] text-white/85 leading-tight truncate mt-1">
+                <p className="font-body text-[10px] text-white/90 leading-tight truncate mt-1">
                   {cat.trackCount} tracks · {cat.moodTag}
                 </p>
               </div>
