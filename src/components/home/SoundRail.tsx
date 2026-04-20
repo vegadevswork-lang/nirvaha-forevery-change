@@ -95,6 +95,7 @@ const SoundRail = ({ emotion }: SoundRailProps) => {
       >
         {visible.map((cat, i) => {
           const visual = categoryVisuals[cat.id] || categoryVisuals.binaural;
+          const isRecommended = i === 0 && !!preferred;
           return (
             <motion.button
               key={cat.id}
@@ -103,9 +104,14 @@ const SoundRail = ({ emotion }: SoundRailProps) => {
               transition={{ delay: 0.35 + i * 0.05, duration: 0.35 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate(`/sound-healing/category/${cat.id}`)}
-              className="relative flex-shrink-0 w-[156px] h-[112px] rounded-2xl overflow-hidden text-left border border-border/30 snap-start"
+              className="relative flex-shrink-0 w-[156px] h-[112px] rounded-2xl overflow-hidden text-left snap-start"
               style={{
-                boxShadow: "0 8px 24px hsl(var(--background) / 0.4)",
+                boxShadow: isRecommended
+                  ? "0 0 0 1px hsl(var(--gold) / 0.65), 0 8px 24px hsl(var(--gold) / 0.22)"
+                  : "0 8px 24px hsl(var(--background) / 0.4)",
+                border: isRecommended
+                  ? "1px solid hsl(var(--gold) / 0.5)"
+                  : "1px solid hsl(var(--border) / 0.3)",
               }}
             >
               {/* Background image — HD, retina-ready */}
