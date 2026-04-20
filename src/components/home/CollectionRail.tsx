@@ -64,9 +64,9 @@ const CollectionRail = ({ emotion }: CollectionRailProps) => {
             transition={{ delay: 0.3 + i * 0.04, duration: 0.3 }}
             whileTap={{ scale: 0.96 }}
             onClick={() => navigate(`/collection/${item.id}`)}
-            className="flex flex-col flex-shrink-0 w-36 text-left snap-start"
+            className="flex flex-col flex-shrink-0 w-[140px] text-left snap-start"
           >
-            <div className="relative w-36 h-24 rounded-xl overflow-hidden mb-2 border border-border/40">
+            <div className="relative w-[140px] h-[90px] rounded-xl overflow-hidden mb-2 border border-border/40">
               <img
                 src={item.image}
                 alt={item.title}
