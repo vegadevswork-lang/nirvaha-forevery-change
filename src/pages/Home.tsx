@@ -154,7 +154,7 @@ const Home = () => {
               to="/legends-selfie"
               delay={0.5}
               image="https://images.unsplash.com/photo-1528319725582-ddc096101511?w=1000&q=90&auto=format&fit=crop&dpr=2"
-              gradient="linear-gradient(160deg, hsl(45 55% 30% / 0.65), hsl(30 60% 18% / 0.92))"
+              gradient="linear-gradient(160deg, hsl(135 42% 24% / 0.78), hsl(145 52% 14% / 0.95))"
             />
             <CompactTile
               title="Wellness"
