@@ -16,35 +16,35 @@ const IMG = (id: string) =>
 const categoryVisuals: Record<string, { image: string; gradient: string }> = {
   binaural: {
     image: IMG("photo-1518609878373-06d740f60d8b"),
-    gradient: "linear-gradient(160deg, hsl(220 60% 25% / 0.78), hsl(260 50% 20% / 0.92))",
+    gradient: "linear-gradient(160deg, hsl(220 65% 28% / 0.78), hsl(225 70% 18% / 0.94))",
   },
   mantras: {
     image: IMG("photo-1545389336-cf090694435e"),
-    gradient: "linear-gradient(160deg, hsl(35 60% 25% / 0.72), hsl(20 70% 20% / 0.92))",
+    gradient: "linear-gradient(160deg, hsl(210 55% 28% / 0.74), hsl(220 65% 18% / 0.94))",
   },
   nature: {
     image: IMG("photo-1441974231531-c6227db76b6e"),
-    gradient: "linear-gradient(160deg, hsl(150 50% 18% / 0.62), hsl(160 60% 14% / 0.92))",
+    gradient: "linear-gradient(160deg, hsl(200 55% 25% / 0.72), hsl(215 65% 16% / 0.94))",
   },
   frequency: {
     image: IMG("photo-1511671782779-c97d3d27a1d4"),
-    gradient: "linear-gradient(160deg, hsl(280 50% 25% / 0.72), hsl(300 45% 18% / 0.92))",
+    gradient: "linear-gradient(160deg, hsl(225 60% 28% / 0.76), hsl(235 65% 18% / 0.94))",
   },
   breath: {
     image: IMG("photo-1506905925346-21bda4d32df4"),
-    gradient: "linear-gradient(160deg, hsl(195 55% 22% / 0.7), hsl(210 60% 16% / 0.92))",
+    gradient: "linear-gradient(160deg, hsl(195 60% 26% / 0.74), hsl(210 65% 16% / 0.94))",
   },
   grounding: {
     image: IMG("photo-1507525428034-b723cf961d3e"),
-    gradient: "linear-gradient(160deg, hsl(25 45% 22% / 0.72), hsl(15 55% 16% / 0.92))",
+    gradient: "linear-gradient(160deg, hsl(215 50% 26% / 0.74), hsl(225 60% 16% / 0.94))",
   },
   sleep: {
     image: IMG("photo-1532978879514-6cb1a3a82e4d"),
-    gradient: "linear-gradient(160deg, hsl(240 55% 18% / 0.78), hsl(250 60% 12% / 0.92))",
+    gradient: "linear-gradient(160deg, hsl(230 60% 22% / 0.8), hsl(240 70% 12% / 0.94))",
   },
   focus: {
     image: IMG("photo-1499209974431-9dddcece7f88"),
-    gradient: "linear-gradient(160deg, hsl(170 50% 20% / 0.74), hsl(180 55% 14% / 0.92))",
+    gradient: "linear-gradient(160deg, hsl(205 55% 24% / 0.76), hsl(220 65% 14% / 0.94))",
   },
 };
 
