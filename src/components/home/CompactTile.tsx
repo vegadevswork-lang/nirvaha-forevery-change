@@ -125,17 +125,33 @@ const CompactTile = ({
         style={{ background: "linear-gradient(90deg, transparent, hsl(0 0% 100% / 0.18), transparent)" }}
       />
 
-      {/* Icon chip */}
-      <div
-        className="relative w-10 h-10 rounded-2xl flex items-center justify-center"
-        style={{
-          background: styles.iconBg,
-          backdropFilter: "blur(10px)",
-          border: "1px solid hsl(0 0% 100% / 0.18)",
-          boxShadow: "0 2px 8px hsl(0 0% 0% / 0.2)",
-        }}
-      >
-        <Icon size={17} style={{ color: styles.accent }} strokeWidth={2} />
+      {/* Top row: icon chip + category label */}
+      <div className="relative w-full flex items-center justify-between gap-2">
+        <div
+          className="w-10 h-10 rounded-2xl flex items-center justify-center"
+          style={{
+            background: styles.iconBg,
+            backdropFilter: "blur(10px)",
+            border: "1px solid hsl(0 0% 100% / 0.18)",
+            boxShadow: "0 2px 8px hsl(0 0% 0% / 0.2)",
+          }}
+        >
+          <Icon size={17} style={{ color: styles.accent }} strokeWidth={2} />
+        </div>
+        {label && (
+          <span
+            className="font-body text-[9px] font-semibold uppercase px-2 py-0.5 rounded-full"
+            style={{
+              color: styles.accent,
+              background: "hsl(0 0% 0% / 0.32)",
+              backdropFilter: "blur(8px)",
+              border: `1px solid ${styles.accent.replace(")", " / 0.35)")}`,
+              letterSpacing: "0.08em",
+            }}
+          >
+            {label}
+          </span>
+        )}
       </div>
 
       {/* Content */}
