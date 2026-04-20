@@ -109,14 +109,10 @@ const Home = () => {
           Private · Anonymous · Not a substitute for medical care
         </p>
 
-        {/* Tier 2: Content rails — Companions + Collection always content-first */}
-        {rails
-          .filter((r) => r !== "sound")
-          .map((rail) => {
-            if (rail === "companions") return <MentorRail key="companions" emotion={selectedEmotion} />;
-            if (rail === "collection") return <CollectionRail key="collection" emotion={selectedEmotion} />;
-            return null;
-          })}
+        {/* Tier 2: Content rails — Companions, Collection, then Sound Healing right after */}
+        <MentorRail emotion={selectedEmotion} />
+        <CollectionRail emotion={selectedEmotion} />
+        <SoundRail emotion={selectedEmotion} />
 
         {/* Tier 3: Your Tools — utility tiles grouped under their own header */}
         <motion.div
@@ -167,9 +163,6 @@ const Home = () => {
             />
           </div>
         </motion.div>
-
-        {/* Tier 4: Sound Healing rail — last so utility tiles surface above */}
-        <SoundRail emotion={selectedEmotion} />
 
         {/* Smart actions */}
         <SmartActions />
