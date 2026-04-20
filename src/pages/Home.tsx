@@ -101,7 +101,7 @@ const Home = () => {
         </AnimatePresence>
 
         {/* Tier 1: Hero carousel — swipe between AI, Companion, Collection */}
-        <HeroCarousel />
+        <HeroCarousel emotion={selectedEmotion} />
 
         {/* Trust microcopy */}
         <p className="font-body text-[10px] text-muted-foreground/80 text-center mb-7 mt-1 px-4">

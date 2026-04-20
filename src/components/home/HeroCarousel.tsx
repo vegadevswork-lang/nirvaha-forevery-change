@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import AiHeroCard from "./AiHeroCard";
@@ -9,7 +9,9 @@ import CommunityCard from "./CommunityCard";
 import WisdomSelfieCard from "./WisdomSelfieCard";
 import WellnessCard from "./WellnessCard";
 
-const slides = [
+type SlideId = "ai" | "companion" | "collection" | "sound" | "community" | "selfie" | "wellness";
+
+const baseSlides: { id: SlideId; node: JSX.Element }[] = [
   { id: "ai", node: <AiHeroCard /> },
   { id: "companion", node: <CompanionCard /> },
   { id: "collection", node: <CollectionCard /> },
@@ -19,16 +21,64 @@ const slides = [
   { id: "wellness", node: <WellnessCard /> },
 ];
 
+const HEAVY = ["Stressed", "Angry", "Sensitive", "Hurt", "Insecure", "Guilty"];
+const LIGHT = ["Joyful", "Grateful", "Excited"];
+const CALM = ["Calm"];
+
+const getSlideOrder = (emotion: string | null): SlideId[] => {
+  // Default order — AI first
+  const def: SlideId[] = ["ai", "companion", "collection", "sound", "community", "selfie", "wellness"];
+  if (!emotion) return def;
+  if (HEAVY.includes(emotion)) {
+    // Soothe first
+    return ["sound", "ai", "companion", "collection", "selfie", "community", "wellness"];
+  }
+  if (LIGHT.includes(emotion)) {
+    // Connection & expansion first
+    return ["community", "collection", "ai", "selfie", "companion", "sound", "wellness"];
+  }
+  if (CALM.includes(emotion)) {
+    return ["collection", "sound", "ai", "selfie", "companion", "community", "wellness"];
+  }
+  // Confused / Bored — discovery first
+  return ["selfie", "collection", "ai", "community", "companion", "sound", "wellness"];
+};
+
 const AUTO_ADVANCE_MS = 5000;
 const RESUME_AFTER_MS = 10000;
 
-const HeroCarousel = () => {
+interface HeroCarouselProps {
+  emotion?: string | null;
+}
+
+const HeroCarousel = ({ emotion = null }: HeroCarouselProps) => {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const advanceTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const progressTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const activeIdxRef = useRef(0);
+  const cycleStartRef = useRef<number>(Date.now());
+
+  const slides = useMemo(() => {
+    const order = getSlideOrder(emotion);
+    return order
+      .map((id) => baseSlides.find((s) => s.id === id))
+      .filter((s): s is { id: SlideId; node: JSX.Element } => Boolean(s));
+  }, [emotion]);
+
+  // Reset to first slide when emotion (and thus order) changes
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollTo({ left: 0, behavior: "auto" });
+    setActiveIdx(0);
+    activeIdxRef.current = 0;
+    cycleStartRef.current = Date.now();
+    setProgress(0);
+  }, [emotion]);
 
   // Track scroll → update active index
   useEffect(() => {
@@ -37,38 +87,60 @@ const HeroCarousel = () => {
     const onScroll = () => {
       const w = el.clientWidth;
       const idx = Math.round(el.scrollLeft / w);
-      setActiveIdx(idx);
-      activeIdxRef.current = idx;
+      if (idx !== activeIdxRef.current) {
+        setActiveIdx(idx);
+        activeIdxRef.current = idx;
+        cycleStartRef.current = Date.now();
+        setProgress(0);
+      }
     };
     el.addEventListener("scroll", onScroll, { passive: true });
     return () => el.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scrollToIndex = useCallback((i: number) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    const wrapped = ((i % slides.length) + slides.length) % slides.length;
-    el.scrollTo({ left: wrapped * el.clientWidth, behavior: "smooth" });
-  }, []);
+  const scrollToIndex = useCallback(
+    (i: number) => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      const wrapped = ((i % slides.length) + slides.length) % slides.length;
+      el.scrollTo({ left: wrapped * el.clientWidth, behavior: "smooth" });
+    },
+    [slides.length]
+  );
 
   // Pause auto-advance, then resume after inactivity window
   const pauseAndScheduleResume = useCallback(() => {
     setIsPaused(true);
+    setProgress(0);
     if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    resumeTimerRef.current = setTimeout(() => setIsPaused(false), RESUME_AFTER_MS);
+    resumeTimerRef.current = setTimeout(() => {
+      cycleStartRef.current = Date.now();
+      setIsPaused(false);
+    }, RESUME_AFTER_MS);
   }, []);
 
-  // Auto-advance loop
+  // Auto-advance loop + progress tick
   useEffect(() => {
     if (isPaused) return;
+    cycleStartRef.current = Date.now();
+    setProgress(0);
+
     advanceTimerRef.current = setInterval(() => {
       const next = (activeIdxRef.current + 1) % slides.length;
       scrollToIndex(next);
     }, AUTO_ADVANCE_MS);
+
+    progressTimerRef.current = setInterval(() => {
+      const elapsed = Date.now() - cycleStartRef.current;
+      const pct = Math.min(100, (elapsed / AUTO_ADVANCE_MS) * 100);
+      setProgress(pct);
+    }, 50);
+
     return () => {
       if (advanceTimerRef.current) clearInterval(advanceTimerRef.current);
+      if (progressTimerRef.current) clearInterval(progressTimerRef.current);
     };
-  }, [isPaused, scrollToIndex]);
+  }, [isPaused, scrollToIndex, slides.length]);
 
   // Pause on user interaction with the scroller (touch / wheel / pointer)
   useEffect(() => {
@@ -90,6 +162,7 @@ const HeroCarousel = () => {
     return () => {
       if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
       if (advanceTimerRef.current) clearInterval(advanceTimerRef.current);
+      if (progressTimerRef.current) clearInterval(progressTimerRef.current);
     };
   }, []);
 
@@ -106,13 +179,8 @@ const HeroCarousel = () => {
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {slides.map((s) => (
-          <div
-            key={s.id}
-            className="snap-center shrink-0 w-full px-5"
-          >
-            <div className="[&>div]:!mb-0">
-              {s.node}
-            </div>
+          <div key={s.id} className="snap-center shrink-0 w-full px-5">
+            <div className="[&>div]:!mb-0">{s.node}</div>
           </div>
         ))}
       </div>
@@ -145,25 +213,43 @@ const HeroCarousel = () => {
         <ChevronRight size={18} className="text-foreground" />
       </motion.button>
 
-      {/* Dots */}
-      <div className="flex items-center justify-center gap-1.5 mt-3">
-        {slides.map((s, i) => {
-          const active = i === activeIdx;
-          return (
-            <button
-              key={s.id}
-              aria-label={`Go to slide ${i + 1}`}
-              onClick={() => handleManualNav(i)}
-              className="h-1.5 rounded-full transition-all duration-300"
-              style={{
-                width: active ? 18 : 6,
-                background: active
-                  ? "hsl(var(--primary))"
-                  : "hsl(var(--muted-foreground) / 0.35)",
-              }}
-            />
-          );
-        })}
+      {/* Dots + progress bar */}
+      <div className="flex flex-col items-center gap-2 mt-3">
+        <div className="flex items-center justify-center gap-1.5">
+          {slides.map((s, i) => {
+            const active = i === activeIdx;
+            return (
+              <button
+                key={s.id}
+                aria-label={`Go to slide ${i + 1}`}
+                onClick={() => handleManualNav(i)}
+                className="h-1.5 rounded-full transition-all duration-300"
+                style={{
+                  width: active ? 18 : 6,
+                  background: active
+                    ? "hsl(var(--primary))"
+                    : "hsl(var(--muted-foreground) / 0.35)",
+                }}
+              />
+            );
+          })}
+        </div>
+
+        {/* Subtle progress bar — telegraphs the 5s auto-advance */}
+        <div
+          className="h-[2px] w-24 rounded-full overflow-hidden"
+          style={{ background: "hsl(var(--muted-foreground) / 0.18)" }}
+          aria-hidden="true"
+        >
+          <div
+            className="h-full rounded-full"
+            style={{
+              width: `${isPaused ? 0 : progress}%`,
+              background: "hsl(var(--primary) / 0.85)",
+              transition: isPaused ? "width 200ms ease-out" : "width 80ms linear",
+            }}
+          />
+        </div>
       </div>
     </div>
   );
