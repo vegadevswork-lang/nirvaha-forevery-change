@@ -145,7 +145,7 @@ const Home = () => {
               highlighted={isHeavy}
               delay={0.45}
               image="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1000&q=90&auto=format&fit=crop&dpr=2"
-              gradient="linear-gradient(160deg, hsl(35 40% 25% / 0.72), hsl(25 50% 16% / 0.92))"
+              gradient="linear-gradient(160deg, hsl(140 40% 22% / 0.78), hsl(150 50% 12% / 0.95))"
             />
             <CompactTile
               title="Wisdom Selfie"
