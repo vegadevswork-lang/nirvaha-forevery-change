@@ -182,12 +182,16 @@ const SmartActions = ({ emotion }: SmartActionsProps) => {
                 >
                   {card.title}
                 </p>
-                <p
+                <motion.p
+                  key={card.subtitle}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 0.72, y: 0 }}
+                  transition={{ duration: 0.35 }}
                   className="font-body text-[10.5px] mt-1.5 leading-snug"
                   style={{ color: "hsl(0 0% 100% / 0.72)" }}
                 >
                   {card.subtitle}
-                </p>
+                </motion.p>
               </div>
             </motion.button>
           );
