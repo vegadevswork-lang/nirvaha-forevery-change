@@ -71,8 +71,18 @@ const toneStyles: Record<
   },
 };
 
-const SmartActions = () => {
+interface SmartActionsProps {
+  emotion?: string | null;
+}
+
+const SmartActions = ({ emotion }: SmartActionsProps) => {
   const navigate = useNavigate();
+
+  const overrides = emotion ? subtitleByEmotion[emotion] ?? {} : {};
+  const actionCards: ActionCard[] = defaultCards.map((c) => ({
+    ...c,
+    subtitle: overrides[c.tone] ?? c.subtitle,
+  }));
 
   return (
     <motion.div
