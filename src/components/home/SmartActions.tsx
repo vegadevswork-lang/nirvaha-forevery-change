@@ -12,28 +12,26 @@ interface ActionCard {
   to: string;
 }
 
-const actionCards: ActionCard[] = [
-  {
-    title: "Ground your thoughts",
-    subtitle: "2 min calm reset",
-    icon: Wind,
-    tone: "breathe",
-    to: "/chat",
-  },
-  {
-    title: "Reflect & journal",
-    subtitle: "Let it out",
-    icon: PenLine,
-    tone: "journal",
-    to: "/journal",
-  },
-  {
-    title: "A new perspective",
-    subtitle: "See it differently",
-    icon: Lightbulb,
-    tone: "perspective",
-    to: "/chat",
-  },
+// Personalized subtitle copy per emotion. Falls back to defaults.
+const subtitleByEmotion: Record<string, Partial<Record<ActionTone, string>>> = {
+  Stressed:   { breathe: "Soften your chest", journal: "Name what's heavy", perspective: "Loosen the grip" },
+  Angry:      { breathe: "Cool the fire",     journal: "Pour it onto paper", perspective: "Step back, see wide" },
+  Sensitive:  { breathe: "Hold yourself softly", journal: "Tend to the tender", perspective: "Honor what you feel" },
+  Confused:   { breathe: "Find your center",  journal: "Untangle the threads", perspective: "Try a new angle" },
+  Bored:      { breathe: "Awaken the body",   journal: "Spark a small idea",  perspective: "Notice something new" },
+  Hurt:       { breathe: "Breathe through it", journal: "Let it out gently",  perspective: "Reframe with care" },
+  Insecure:   { breathe: "Steady your ground", journal: "Speak to yourself kindly", perspective: "Remember your worth" },
+  Guilty:     { breathe: "Soften the weight", journal: "Write what's true",   perspective: "Offer yourself grace" },
+  Joyful:     { breathe: "Savor this moment", journal: "Capture this light",  perspective: "Expand the feeling" },
+  Grateful:   { breathe: "Breathe it in",     journal: "Name three blessings", perspective: "See the abundance" },
+  Excited:    { breathe: "Channel the spark", journal: "Ground the energy",   perspective: "Imagine what's next" },
+  Calm:       { breathe: "Rest in the still", journal: "Linger in this peace", perspective: "Notice the quiet" },
+};
+
+const defaultCards: ActionCard[] = [
+  { title: "Ground your thoughts", subtitle: "2 min calm reset", icon: Wind,      tone: "breathe",     to: "/breathe" },
+  { title: "Reflect & journal",    subtitle: "Let it out",        icon: PenLine,   tone: "journal",     to: "/journal" },
+  { title: "A new perspective",    subtitle: "See it differently", icon: Lightbulb, tone: "perspective", to: "/chat"    },
 ];
 
 // Soft pastel palette — calming gradients, each card a different micro-mood
