@@ -169,7 +169,7 @@ const Home = () => {
         </motion.div>
 
         {/* Smart actions */}
-        <SmartActions />
+        <SmartActions emotion={selectedEmotion} />
       </div>
 
       <BottomNav active={activeNav} onSelect={setActiveNav} />

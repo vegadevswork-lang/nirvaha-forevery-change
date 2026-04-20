@@ -41,6 +41,7 @@ const SoundJourney = lazy(() => import("./pages/SoundJourney.tsx"));
 const PeopleChat = lazy(() => import("./pages/PeopleChat.tsx"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
+const Breathe = lazy(() => import("./pages/Breathe.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -82,6 +83,7 @@ const App = () => (
               <Route path="/people-chat" element={<PeopleChat />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/breathe" element={<Breathe />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
