@@ -41,6 +41,7 @@ const SoundJourney = lazy(() => import("./pages/SoundJourney.tsx"));
 const PeopleChat = lazy(() => import("./pages/PeopleChat.tsx"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
+const Breathe = lazy(() => import("./pages/Breathe.tsx"));
 
 const queryClient = new QueryClient();
 
