@@ -135,7 +135,7 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
                     style={{
                       color: isActive
                         ? "hsl(var(--primary-foreground))"
-                        : "hsl(var(--muted-foreground) / 0.65)",
+                        : "hsl(var(--foreground) / 0.85)",
                       transition: "color 0.3s ease",
                     }}
                   />
