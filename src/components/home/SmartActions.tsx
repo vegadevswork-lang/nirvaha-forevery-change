@@ -122,17 +122,40 @@ const SmartActions = () => {
 
               {/* Top row: icon + arrow indicator */}
               <div className="relative w-full flex items-start justify-between">
-                <div
-                  className="w-10 h-10 rounded-2xl flex items-center justify-center"
+                <motion.div
+                  className="w-10 h-10 rounded-2xl flex items-center justify-center relative"
                   style={{
                     background: styles.iconBg,
                     backdropFilter: "blur(10px)",
                     border: `1px solid ${styles.ring}`,
                     boxShadow: "0 2px 8px hsl(0 0% 0% / 0.18)",
                   }}
+                  animate={
+                    card.tone === "breathe"
+                      ? { scale: [1, 1.08, 1] }
+                      : undefined
+                  }
+                  transition={
+                    card.tone === "breathe"
+                      ? { duration: 4, repeat: Infinity, ease: "easeInOut" }
+                      : undefined
+                  }
                 >
-                  <Icon size={17} style={{ color: styles.iconColor }} strokeWidth={1.8} />
-                </div>
+                  {/* Breathing halo — only on the breathe card */}
+                  {card.tone === "breathe" && (
+                    <motion.span
+                      className="absolute inset-0 rounded-2xl pointer-events-none"
+                      style={{ background: styles.glow }}
+                      animate={{ scale: [1, 1.45, 1], opacity: [0.5, 0, 0.5] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                  )}
+                  <Icon
+                    size={17}
+                    style={{ color: styles.iconColor, position: "relative" }}
+                    strokeWidth={1.8}
+                  />
+                </motion.div>
                 <ArrowUpRight
                   size={13}
                   style={{ color: "hsl(0 0% 100% / 0.45)" }}
