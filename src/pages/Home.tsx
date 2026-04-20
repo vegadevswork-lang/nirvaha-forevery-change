@@ -129,6 +129,7 @@ const Home = () => {
               icon={Users}
               to="/community"
               tone="community"
+              label="Connect"
               highlighted={isLight}
               delay={0.4}
               image="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=1000&q=90&auto=format&fit=crop&dpr=2"
@@ -139,6 +140,7 @@ const Home = () => {
               icon={BookOpen}
               to="/journal"
               tone="journal"
+              label="Reflect"
               highlighted={isHeavy}
               delay={0.45}
               image="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1000&q=90&auto=format&fit=crop&dpr=2"
@@ -149,6 +151,7 @@ const Home = () => {
               icon={Sparkles}
               to="/legends-selfie"
               tone="wisdom"
+              label="Discover"
               delay={0.5}
               image="https://images.unsplash.com/photo-1528319725582-ddc096101511?w=1000&q=90&auto=format&fit=crop&dpr=2"
             />
@@ -158,6 +161,7 @@ const Home = () => {
               icon={TrendingUp}
               to="/wellness"
               tone="wellness"
+              label="Track"
               delay={0.55}
               image="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1000&q=90&auto=format&fit=crop&dpr=2"
             />
