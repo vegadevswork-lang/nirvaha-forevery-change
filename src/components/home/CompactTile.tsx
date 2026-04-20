@@ -10,6 +10,8 @@ interface CompactTileProps {
   icon: LucideIcon;
   to: string;
   tone: TileTone;
+  /** Tiny category label shown top-left (e.g. "Connect", "Reflect"). */
+  label?: string;
   highlighted?: boolean;
   delay?: number;
   image?: string;
