@@ -1,51 +1,169 @@
 import { motion } from "framer-motion";
-import { Wind, PenLine, Lightbulb } from "lucide-react";
-import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+import { useNavigate } from "react-router-dom";
+import { Wind, PenLine, Lightbulb, ArrowUpRight, type LucideIcon } from "lucide-react";
 
-const actionCards = [
-  { title: "Ground your thoughts", subtitle: "2 min breathing", icon: Wind, hover: "Begin breathing" },
-  { title: "Reflect & journal", subtitle: "Write freely", icon: PenLine, hover: "Open journal" },
-  { title: "A new perspective", subtitle: "Shift your mind", icon: Lightbulb, hover: "Explore" },
+type ActionTone = "breathe" | "journal" | "perspective";
+
+interface ActionCard {
+  title: string;
+  subtitle: string;
+  icon: LucideIcon;
+  tone: ActionTone;
+  to: string;
+}
+
+const actionCards: ActionCard[] = [
+  {
+    title: "Ground your thoughts",
+    subtitle: "2 min calm reset",
+    icon: Wind,
+    tone: "breathe",
+    to: "/chat",
+  },
+  {
+    title: "Reflect & journal",
+    subtitle: "Let it out",
+    icon: PenLine,
+    tone: "journal",
+    to: "/journal",
+  },
+  {
+    title: "A new perspective",
+    subtitle: "See it differently",
+    icon: Lightbulb,
+    tone: "perspective",
+    to: "/chat",
+  },
 ];
 
-const SmartActions = () => (
-  <motion.div
-    initial={{ opacity: 0, y: 12 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay: 0.4 }}
-    className="mb-6"
-  >
-    <h3 className="font-display text-base text-foreground font-medium mb-3">
-      A small step is enough
-    </h3>
-    <div className="grid grid-cols-3 gap-2.5">
-      {actionCards.map((card, i) => (
-        <motion.div
-          key={card.title}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.45 + i * 0.06 }}
-        >
-          <InteractiveHoverButton
-            variant="glass"
-            hoverContent={card.hover}
-            className="w-full p-3.5 flex flex-col items-center text-center rounded-2xl min-h-[100px]"
-          >
-            <div
-              className="w-10 h-10 rounded-2xl flex items-center justify-center mb-2.5"
+// Soft pastel palette — calming gradients, each card a different micro-mood
+const toneStyles: Record<
+  ActionTone,
+  { gradient: string; iconBg: string; iconColor: string; glow: string; ring: string }
+> = {
+  breathe: {
+    // Soft blue/green — breath, water, exhale
+    gradient:
+      "linear-gradient(160deg, hsl(180 45% 18% / 0.55) 0%, hsl(170 40% 12% / 0.85) 100%)",
+    iconBg:
+      "linear-gradient(135deg, hsl(180 60% 55% / 0.28), hsl(165 50% 40% / 0.18))",
+    iconColor: "hsl(175 65% 78%)",
+    glow: "hsl(180 55% 45% / 0.22)",
+    ring: "hsl(180 50% 60% / 0.25)",
+  },
+  journal: {
+    // Warm beige/amber — paper, candlelight
+    gradient:
+      "linear-gradient(160deg, hsl(35 35% 22% / 0.55) 0%, hsl(30 30% 12% / 0.85) 100%)",
+    iconBg:
+      "linear-gradient(135deg, hsl(40 70% 60% / 0.28), hsl(30 55% 40% / 0.18))",
+    iconColor: "hsl(40 75% 80%)",
+    glow: "hsl(40 60% 50% / 0.22)",
+    ring: "hsl(40 60% 60% / 0.25)",
+  },
+  perspective: {
+    // Soft violet/teal — insight, expansion
+    gradient:
+      "linear-gradient(160deg, hsl(265 35% 22% / 0.55) 0%, hsl(255 30% 12% / 0.85) 100%)",
+    iconBg:
+      "linear-gradient(135deg, hsl(270 65% 65% / 0.28), hsl(255 50% 45% / 0.18))",
+    iconColor: "hsl(270 70% 82%)",
+    glow: "hsl(270 55% 50% / 0.22)",
+    ring: "hsl(270 55% 65% / 0.25)",
+  },
+};
+
+const SmartActions = () => {
+  const navigate = useNavigate();
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.4 }}
+      className="mb-6"
+    >
+      <h3 className="font-display text-base text-foreground font-medium mb-3">
+        A small step is enough
+      </h3>
+      <div className="grid grid-cols-3 gap-2.5">
+        {actionCards.map((card, i) => {
+          const styles = toneStyles[card.tone];
+          const Icon = card.icon;
+          return (
+            <motion.button
+              key={card.title}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.45 + i * 0.06 }}
+              whileTap={{ scale: 0.97 }}
+              whileHover={{ y: -2 }}
+              onClick={() => navigate(card.to)}
+              className="relative overflow-hidden rounded-[20px] p-3.5 flex flex-col items-start text-left min-h-[124px] transition-all"
               style={{
-                background: "linear-gradient(135deg, hsl(var(--healing-green) / 0.12), hsl(var(--gold) / 0.1))",
+                background: styles.gradient,
+                border: "1px solid hsl(0 0% 100% / 0.08)",
+                boxShadow: `0 8px 22px ${styles.glow}, 0 4px 10px hsl(0 0% 0% / 0.22)`,
               }}
             >
-              <card.icon size={18} className="text-primary" />
-            </div>
-            <p className="font-body text-xs text-foreground font-medium leading-snug">{card.title}</p>
-            <p className="font-body text-[10px] text-muted-foreground mt-0.5">{card.subtitle}</p>
-          </InteractiveHoverButton>
-        </motion.div>
-      ))}
-    </div>
-  </motion.div>
-);
+              {/* Soft inner top highlight for floating feel */}
+              <div
+                className="absolute inset-x-0 top-0 h-px pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(90deg, transparent, hsl(0 0% 100% / 0.18), transparent)",
+                }}
+              />
+              {/* Subtle radial glow behind icon */}
+              <div
+                className="absolute -top-6 -left-6 w-24 h-24 rounded-full pointer-events-none"
+                style={{ background: styles.glow, filter: "blur(20px)" }}
+              />
+
+              {/* Top row: icon + arrow indicator */}
+              <div className="relative w-full flex items-start justify-between">
+                <div
+                  className="w-10 h-10 rounded-2xl flex items-center justify-center"
+                  style={{
+                    background: styles.iconBg,
+                    backdropFilter: "blur(10px)",
+                    border: `1px solid ${styles.ring}`,
+                    boxShadow: "0 2px 8px hsl(0 0% 0% / 0.18)",
+                  }}
+                >
+                  <Icon size={17} style={{ color: styles.iconColor }} strokeWidth={1.8} />
+                </div>
+                <ArrowUpRight
+                  size={13}
+                  style={{ color: "hsl(0 0% 100% / 0.45)" }}
+                  strokeWidth={2}
+                />
+              </div>
+
+              {/* Text block */}
+              <div className="relative mt-auto pt-3 w-full">
+                <p
+                  className="font-display text-[13px] font-semibold leading-tight"
+                  style={{
+                    color: "hsl(0 0% 100%)",
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  {card.title}
+                </p>
+                <p
+                  className="font-body text-[10.5px] mt-1.5 leading-snug"
+                  style={{ color: "hsl(0 0% 100% / 0.72)" }}
+                >
+                  {card.subtitle}
+                </p>
+              </div>
+            </motion.button>
+          );
+        })}
+      </div>
+    </motion.div>
+  );
+};
 
 export default SmartActions;
