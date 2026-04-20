@@ -73,11 +73,11 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
         ref={navRef}
         className="relative rounded-full px-1 py-1 flex items-center"
         style={{
-          background: "hsl(var(--background) / 0.72)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          border: "1px solid hsl(var(--border) / 0.25)",
-          boxShadow: "0 4px 24px hsl(var(--background) / 0.4)",
+          background: "hsl(var(--card) / 0.95)",
+          backdropFilter: "blur(24px) saturate(1.4)",
+          WebkitBackdropFilter: "blur(24px) saturate(1.4)",
+          border: "1px solid hsl(var(--border) / 0.7)",
+          boxShadow: "0 8px 32px hsl(var(--healing-green) / 0.18), 0 2px 8px hsl(var(--foreground) / 0.08), inset 0 1px 0 hsl(var(--background) / 0.6)",
         }}
       >
         {/* Soft active indicator */}
@@ -94,8 +94,9 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
           style={{
             top: 4,
             bottom: 4,
-            background: "hsl(var(--primary) / 0.18)",
-            border: "1px solid hsl(var(--primary) / 0.3)",
+            background: "hsl(var(--primary))",
+            border: "1px solid hsl(var(--primary) / 0.5)",
+            boxShadow: "0 2px 12px hsl(var(--primary) / 0.4)",
           }}
         />
 
@@ -134,7 +135,7 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
                     style={{
                       color: isActive
                         ? "hsl(var(--primary-foreground))"
-                        : "hsl(var(--muted-foreground) / 0.65)",
+                        : "hsl(var(--foreground) / 0.85)",
                       transition: "color 0.3s ease",
                     }}
                   />
