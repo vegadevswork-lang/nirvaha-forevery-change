@@ -135,7 +135,7 @@ const Home = () => {
               highlighted={isLight}
               delay={0.4}
               image="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=1000&q=90&auto=format&fit=crop&dpr=2"
-              gradient="linear-gradient(160deg, hsl(152 40% 22% / 0.72), hsl(160 50% 14% / 0.92))"
+              gradient="linear-gradient(160deg, hsl(150 45% 22% / 0.78), hsl(160 55% 12% / 0.95))"
             />
             <CompactTile
               title="Journal"
