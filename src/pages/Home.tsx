@@ -9,6 +9,7 @@ import GreetingHeader from "@/components/home/GreetingHeader";
 import MentorRail from "@/components/home/MentorRail";
 import CollectionRail from "@/components/home/CollectionRail";
 import SoundRail from "@/components/home/SoundRail";
+import SectionHeader from "@/components/home/SectionHeader";
 import CompactTile from "@/components/home/CompactTile";
 import BottomNav from "@/components/home/BottomNav";
 import { useMoodLog } from "@/hooks/use-mood-log";
