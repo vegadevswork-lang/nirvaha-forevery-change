@@ -81,7 +81,7 @@ const MentorRail = ({ emotion }: MentorRailProps) => {
               transition={{ delay: 0.25 + i * 0.04, duration: 0.3 }}
               whileTap={{ scale: 0.96 }}
               onClick={() => navigate(`/companion/mentor/${m.id}`)}
-              className="relative flex-shrink-0 w-32 h-44 rounded-2xl overflow-hidden snap-start text-left border border-border/40"
+              className="relative flex-shrink-0 w-[112px] h-[150px] rounded-2xl overflow-hidden snap-start text-left border border-border/40"
               style={{
                 boxShadow: isMatch
                   ? "0 0 0 1px hsl(var(--gold) / 0.6), 0 8px 24px hsl(var(--gold) / 0.18)"
@@ -115,11 +115,11 @@ const MentorRail = ({ emotion }: MentorRailProps) => {
                 />
               )}
               {/* Text overlay */}
-              <div className="absolute bottom-0 left-0 right-0 p-2.5">
-                <p className="font-display text-[13px] font-semibold text-white leading-tight truncate">
+              <div className="absolute bottom-0 left-0 right-0 px-2.5 py-2">
+                <p className="font-display text-[12px] font-semibold text-white leading-tight truncate">
                   {firstName}
                 </p>
-                <p className="font-body text-[10px] text-white/85 leading-tight truncate mt-0.5">
+                <p className="font-body text-[9.5px] text-white/80 leading-tight truncate mt-0.5">
                   {m.title}
                 </p>
               </div>
