@@ -1,4 +1,4 @@
-import { useState, useCallback, useSyncExternalStore } from "react";
+import { useCallback, useMemo, useSyncExternalStore } from "react";
 
 export interface Notification {
   id: string;
@@ -28,7 +28,9 @@ function getTopicsSnapshot(): string {
 
 export function useNotifications() {
   const raw = useSyncExternalStore(subscribe, getSnapshot);
-  const notifications: Notification[] = JSON.parse(raw);
+  const notifications = useMemo<Notification[]>(() => {
+    try { return JSON.parse(raw); } catch { return []; }
+  }, [raw]);
 
   const addNotification = useCallback((n: Omit<Notification, "id" | "read" | "timestamp">) => {
     const existing: Notification[] = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
