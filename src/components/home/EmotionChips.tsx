@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 
@@ -264,4 +264,4 @@ const EmotionChips = ({ selected, onSelect }: EmotionChipsProps) => {
   );
 };
 
-export default EmotionChips;
+export default memo(EmotionChips);

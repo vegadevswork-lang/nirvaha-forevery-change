@@ -1,4 +1,4 @@
-import { useState, useCallback, useSyncExternalStore } from "react";
+import { useCallback, useMemo, useSyncExternalStore } from "react";
 
 export interface MoodEntry {
   mood: string;
@@ -24,7 +24,14 @@ function getSnapshot(): string {
 
 export function useMoodLog() {
   const raw = useSyncExternalStore(subscribe, getSnapshot);
-  const moodLog: MoodEntry[] = JSON.parse(raw);
+  // Parse once per snapshot change so consumers get a stable array reference
+  const moodLog = useMemo<MoodEntry[]>(() => {
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return [];
+    }
+  }, [raw]);
 
   const logMood = useCallback((mood: string) => {
     const entry: MoodEntry = {

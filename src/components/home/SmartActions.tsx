@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Wind, PenLine, Lightbulb, ArrowUpRight, type LucideIcon } from "lucide-react";
@@ -237,4 +238,4 @@ const SmartActions = ({ emotion }: SmartActionsProps) => {
   );
 };
 
-export default SmartActions;
+export default memo(SmartActions);
