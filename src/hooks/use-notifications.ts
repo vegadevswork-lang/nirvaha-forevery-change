@@ -71,7 +71,9 @@ export function useNotifications() {
 
 export function useFollowedTopics() {
   const raw = useSyncExternalStore(subscribe, getTopicsSnapshot);
-  const topics: string[] = JSON.parse(raw);
+  const topics = useMemo<string[]>(() => {
+    try { return JSON.parse(raw); } catch { return []; }
+  }, [raw]);
 
   const followTopic = useCallback((topic: string) => {
     const existing: string[] = JSON.parse(localStorage.getItem(TOPICS_KEY) || "[]");
