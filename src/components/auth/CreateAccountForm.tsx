@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { Eye, EyeOff, Lock, Mail, Phone, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+import { createAccountSchema } from "@/lib/auth-validation";
+
+type FieldErrors = Partial<Record<"name" | "email" | "password" | "confirm" | "phone" | "agreed", string>>;
 
 const CreateAccountForm = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [agreed, setAgreed] = useState(false);
+  const [errors, setErrors] = useState<FieldErrors>({});
   const [form, setForm] = useState({
     name: "", email: "", password: "", confirm: "", phone: "",
   });
@@ -17,6 +22,19 @@ const CreateAccountForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const result = createAccountSchema.safeParse({ ...form, agreed });
+    if (!result.success) {
+      const fieldErrors: FieldErrors = {};
+      for (const issue of result.error.issues) {
+        const key = issue.path[0] as keyof FieldErrors;
+        if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
+      }
+      setErrors(fieldErrors);
+      toast.error(result.error.issues[0]?.message ?? "Please check your details");
+      return;
+    }
+    setErrors({});
+    toast.info("Demo mode — account creation is not yet connected to a backend.");
   };
 
   const fieldClass = "glass-input pl-10";
