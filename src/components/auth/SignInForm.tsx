@@ -1,15 +1,31 @@
 import { useState } from "react";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { toast } from "sonner";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+import { signInSchema } from "@/lib/auth-validation";
 
 const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const result = signInSchema.safeParse({ email, password });
+    if (!result.success) {
+      const fieldErrors: { email?: string; password?: string } = {};
+      for (const issue of result.error.issues) {
+        const key = issue.path[0] as "email" | "password";
+        if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
+      }
+      setErrors(fieldErrors);
+      toast.error(result.error.issues[0]?.message ?? "Please check your details");
+      return;
+    }
+    setErrors({});
+    toast.info("Demo mode — sign-in is not yet connected to a backend.");
   };
 
   return (
@@ -27,9 +43,15 @@ const SignInForm = () => {
             placeholder="your@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            maxLength={255}
+            autoComplete="email"
+            aria-invalid={!!errors.email}
             required
           />
         </div>
+        {errors.email && (
+          <p className="mt-1 ml-1 text-xs text-destructive font-body">{errors.email}</p>
+        )}
       </div>
 
       {/* Password */}
@@ -45,6 +67,9 @@ const SignInForm = () => {
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            maxLength={72}
+            autoComplete="current-password"
+            aria-invalid={!!errors.password}
             required
           />
           <button
@@ -56,6 +81,9 @@ const SignInForm = () => {
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
         </div>
+        {errors.password && (
+          <p className="mt-1 ml-1 text-xs text-destructive font-body">{errors.password}</p>
+        )}
       </div>
 
       {/* Remember + Forgot */}
@@ -85,7 +113,7 @@ const SignInForm = () => {
       </InteractiveHoverButton>
 
       <p className="trust-text text-center">
-        Your journey is private and secure
+        Demo only — credentials are validated locally and not stored
       </p>
 
       {/* Divider */}
