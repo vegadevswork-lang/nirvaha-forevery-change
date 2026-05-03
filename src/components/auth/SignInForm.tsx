@@ -43,9 +43,15 @@ const SignInForm = () => {
             placeholder="your@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            maxLength={255}
+            autoComplete="email"
+            aria-invalid={!!errors.email}
             required
           />
         </div>
+        {errors.email && (
+          <p className="mt-1 ml-1 text-xs text-destructive font-body">{errors.email}</p>
+        )}
       </div>
 
       {/* Password */}
@@ -61,6 +67,9 @@ const SignInForm = () => {
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            maxLength={72}
+            autoComplete="current-password"
+            aria-invalid={!!errors.password}
             required
           />
           <button
@@ -72,6 +81,9 @@ const SignInForm = () => {
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
         </div>
+        {errors.password && (
+          <p className="mt-1 ml-1 text-xs text-destructive font-body">{errors.password}</p>
+        )}
       </div>
 
       {/* Remember + Forgot */}
