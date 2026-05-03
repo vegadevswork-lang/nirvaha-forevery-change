@@ -174,7 +174,7 @@ const Home = () => {
         <SmartActions emotion={selectedEmotion} />
       </div>
 
-      <BottomNav active={activeNav} onSelect={setActiveNav} />
+      <BottomNav active={activeNav} onSelect={handleNavSelect} />
     </motion.div>
   );
 };
