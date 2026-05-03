@@ -1,8 +1,10 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Clock, Play } from "lucide-react";
 import { aiRecommendations, contentRows, type ContentItem } from "@/data/collectionData";
 import SectionHeader from "./SectionHeader";
+import { unsplash } from "@/lib/image";
 
 interface CollectionRailProps {
   emotion?: string | null;
@@ -80,9 +82,12 @@ const CollectionRail = ({ emotion }: CollectionRailProps) => {
                 }}
               >
                 <img
-                  src={item.image}
+                  src={unsplash(item.image, 280)}
                   alt={item.title}
                   loading="lazy"
+                  decoding="async"
+                  width={280}
+                  height={180}
                   className="w-full h-full object-cover"
                 />
                 {/* Stronger bottom gradient */}
@@ -136,4 +141,4 @@ const CollectionRail = ({ emotion }: CollectionRailProps) => {
   );
 };
 
-export default CollectionRail;
+export default memo(CollectionRail);

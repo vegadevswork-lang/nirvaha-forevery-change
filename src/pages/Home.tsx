@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Users, BookOpen, Sparkles, TrendingUp } from "lucide-react";
 import SparkleEffect from "@/components/onboarding/SparkleEffect";
@@ -36,13 +36,15 @@ const Home = () => {
   const [sparkleTrigger, setSparkleTrigger] = useState(0);
   const { logMood } = useMoodLog();
 
-  const handleEmotionTap = (label: string, e: React.MouseEvent) => {
+  const handleEmotionTap = useCallback((label: string, e: React.MouseEvent) => {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     setSparkleOrigin({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
     setSparkleTrigger((t) => t + 1);
     setSelectedEmotion(label);
     logMood(label);
-  };
+  }, [logMood]);
+
+  const handleNavSelect = useCallback((label: string) => setActiveNav(label), []);
 
   const ack = selectedEmotion ? acknowledgments[selectedEmotion] : null;
 

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { mentors } from "@/data/companionData";
@@ -97,6 +98,8 @@ const MentorRail = ({ emotion }: MentorRailProps) => {
                 alt={m.name}
                 loading="lazy"
                 decoding="async"
+                width={224}
+                height={300}
                 className="absolute inset-0 w-full h-full object-cover"
               />
               {/* Stronger bottom gradient for legibility */}
@@ -148,4 +151,4 @@ const MentorRail = ({ emotion }: MentorRailProps) => {
   );
 };
 
-export default MentorRail;
+export default memo(MentorRail);

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Play } from "lucide-react";
@@ -9,9 +10,9 @@ interface SoundRailProps {
 }
 
 // Curated photo + gradient per category — sets the mood instantly
-// HD images — w=1200 with auto format/compression for crisp retina rendering
+// 600px @ q=80 is plenty for a 156x112 tile even at 2x DPR; lighter than 1200@q90
 const IMG = (id: string) =>
-  `https://images.unsplash.com/${id}?w=1200&q=90&auto=format&fit=crop&dpr=2`;
+  `https://images.unsplash.com/${id}?w=600&q=80&auto=format&fit=crop&dpr=2`;
 
 const categoryVisuals: Record<string, { image: string; gradient: string }> = {
   binaural: {
@@ -121,6 +122,8 @@ const SoundRail = ({ emotion }: SoundRailProps) => {
                 aria-hidden
                 loading="lazy"
                 decoding="async"
+                width={312}
+                height={224}
                 className="absolute inset-0 w-full h-full object-cover"
               />
               {/* Stronger gradient overlay for legibility */}
@@ -179,4 +182,4 @@ const SoundRail = ({ emotion }: SoundRailProps) => {
   );
 };
 
-export default SoundRail;
+export default memo(SoundRail);

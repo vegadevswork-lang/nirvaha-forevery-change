@@ -1,6 +1,8 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ChevronRight, type LucideIcon } from "lucide-react";
+import { unsplash } from "@/lib/image";
 
 export type TileTone = "community" | "journal" | "wisdom" | "wellness";
 
@@ -94,11 +96,13 @@ const CompactTile = ({
       {/* Background image — softly blurred to reduce noise */}
       {image && (
         <img
-          src={image}
+          src={unsplash(image, 360)}
           alt=""
           aria-hidden
           loading="lazy"
           decoding="async"
+          width={360}
+          height={256}
           className="absolute inset-0 w-full h-full object-cover"
           style={{ filter: "blur(1.5px) saturate(0.85)", transform: "scale(1.05)" }}
         />
@@ -187,4 +191,4 @@ const CompactTile = ({
   );
 };
 
-export default CompactTile;
+export default memo(CompactTile);

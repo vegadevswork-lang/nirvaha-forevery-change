@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Home as HomeIcon, Sparkles, Users, Play, Headphones, Globe } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -190,4 +190,4 @@ const BottomNav = ({ active, onSelect }: BottomNavProps) => {
   );
 };
 
-export default BottomNav;
+export default memo(BottomNav);
