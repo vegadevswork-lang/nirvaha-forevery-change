@@ -81,6 +81,17 @@ const AuthPage = () => {
           </motion.p>
         </div>
 
+        {/* Demo notice — auth is not yet wired to a backend */}
+        <div
+          role="status"
+          aria-live="polite"
+          className="mb-4 rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 text-xs font-body text-foreground/90 backdrop-blur-md"
+        >
+          <strong className="font-semibold text-primary">Demo mode:</strong>{" "}
+          Authentication is not yet connected. Credentials you enter here are validated locally and{" "}
+          <span className="underline decoration-primary/40">not stored or sent anywhere</span>.
+        </div>
+
         {/* Glass Card */}
         <div className="glass-card p-6 sm:p-8">
           {/* Tab Switcher */}
