@@ -113,7 +113,7 @@ const SignInForm = () => {
       </InteractiveHoverButton>
 
       <p className="trust-text text-center">
-        Your journey is private and secure
+        Demo only — credentials are validated locally and not stored
       </p>
 
       {/* Divider */}
